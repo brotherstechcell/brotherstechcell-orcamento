@@ -1070,6 +1070,8 @@ section {
   transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
               box-shadow 0.45s cubic-bezier(0.25, 1, 0.5, 1),
               border-color 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  flex-direction: column;
 }
 
 .bento-card::after {
@@ -1729,6 +1731,68 @@ section {
   color: #FFFFFF;
   border-color: transparent;
   box-shadow: var(--shadow-green);
+}
+
+/* Destaque para a opção Premium no Seletor */
+.service-quality-row.premium-featured {
+  border: 2px solid var(--primary);
+  background: rgba(41, 162, 81, 0.03);
+  position: relative;
+  overflow: visible;
+  box-shadow: 0 4px 15px rgba(41, 162, 81, 0.08);
+}
+
+.service-quality-row.premium-featured:hover {
+  background: rgba(41, 162, 81, 0.06);
+  box-shadow: 0 6px 20px rgba(41, 162, 81, 0.15);
+}
+
+.btn-quality-order.btn-premium-cta {
+  background: var(--primary);
+  color: #FFFFFF;
+  border-color: transparent;
+  box-shadow: var(--shadow-green);
+}
+
+.btn-quality-order.btn-premium-cta:hover {
+  background: var(--primary-dark);
+  box-shadow: var(--shadow-green-lg);
+  transform: translateY(-1px);
+}
+
+/* Botões do Guia Bento Qual de Telas */
+.btn-bento-cta {
+  margin-top: auto;
+  padding: 12px 0;
+  text-align: center;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 800;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-bento-cta.basic {
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+}
+
+.btn-bento-cta.basic:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--card-bg);
+}
+
+.btn-bento-cta.intermediate {
+  border: 1px solid rgba(255, 159, 67, 0.3);
+  color: #ff9f43;
+  background: rgba(255, 159, 67, 0.04);
+}
+
+.btn-bento-cta.intermediate:hover {
+  background: rgba(255, 159, 67, 0.08);
+  border-color: #ff9f43;
 }
 
 /* ============================================================

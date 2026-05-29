@@ -191,13 +191,23 @@ function renderSelectorResults(modelName) {
         const priceText = isSobConsulta ? qData.price : `R$ ${qData.price}`;
         const installmentText = isSobConsulta ? "" : `ou ${qData.installment}`;
         
-        const whatsappMsg = `Olá! Gostaria de agendar a troca de tela (${quality}) para o iPhone ${modelName}.`;
+        const isPremium = quality.trim().toLowerCase() === 'premium';
+        const rowClass = isPremium ? 'service-quality-row premium-featured' : 'service-quality-row';
+        const btnClass = isPremium ? 'btn-quality-order btn-premium-cta' : 'btn-quality-order';
+        const buttonText = isPremium ? 'ESCOLHER PREMIUM' : 'AGENDAR';
+        
+        const whatsappMsg = isPremium 
+          ? `Olá! Gostaria de agendar a troca de tela PREMIUM (que inclui 1 Ano de Garantia + Película e Capinha de Brinde) para o iPhone ${modelName}.`
+          : `Olá! Gostaria de agendar a troca de tela (${quality}) para o iPhone ${modelName}.`;
         const whatsappUrl = `https://wa.me/${CONFIG.contact.phoneRaw}?text=${encodeURIComponent(whatsappMsg)}`;
         
         screenItemsHtml += `
-          <div class="service-quality-row">
+          <div class="${rowClass}">
             <div class="quality-label">
-              <span class="quality-badge ${quality.toLowerCase()}">${quality}</span>
+              <div class="quality-badge-wrapper" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span class="quality-badge ${quality.toLowerCase()}">${quality}</span>
+                ${isPremium ? '<span class="premium-recommend-badge" style="font-size: 0.6rem; background: var(--primary); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800; letter-spacing: 0.03em;">★ RECOMENDADA</span>' : ''}
+              </div>
               ${getQualityBenefitsHtml(quality)}
             </div>
             <div class="quality-pricing">
@@ -205,8 +215,8 @@ function renderSelectorResults(modelName) {
               <span class="quality-price-install">${installmentText}</span>
             </div>
             <div class="quality-action">
-              <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-quality-order" aria-label="Pedir troca de tela ${quality} para iPhone ${modelName}">
-                AGENDAR
+              <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="${btnClass}" aria-label="Pedir troca de tela ${quality} para iPhone ${modelName}">
+                ${buttonText}
               </a>
             </div>
           </div>
