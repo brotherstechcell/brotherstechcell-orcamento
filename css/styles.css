@@ -785,22 +785,25 @@ section {
 /* RESPONSIVIDADE ADICIONAL DO HERO */
 @media (max-width: 1023px) {
   .hero-section {
-    height: 200vh;
+    height: auto;
+    min-height: calc(100vh - 80px);
     background-color: var(--bg-primary);
-    padding: 0;
+    padding: 120px 0 60px 0;
+    display: flex;
+    align-items: center;
   }
 
   .hero-sticky-container {
-    position: sticky;
-    top: 0;
-    height: 100vh;
+    position: relative;
+    top: auto;
+    height: auto;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
+    overflow: visible;
+    will-change: auto;
+    transform: none;
   }
 
   .hero-split-wrapper {
@@ -808,64 +811,17 @@ section {
     justify-content: center;
     align-items: center;
     gap: 0;
-    height: 100%;
+    height: auto;
     margin-top: 0;
     position: relative;
   }
 
-  /* O vídeo fica como plano de fundo absoluto atrás do texto */
+  /* Oculta o vídeo completamente no mobile */
   .hero-video-side {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) !important;
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    order: 0;
-    z-index: 1;
-    pointer-events: none;
-    opacity: 1 !important;
+    display: none !important;
   }
 
-  .hero-video-inner {
-    width: 100%;
-    max-width: 380px; /* Um pouco maior para a animação ter destaque inicial */
-    margin: 0 auto;
-  }
-
-  #hero-scroll-video {
-    width: 100%;
-    height: auto;
-    max-height: 55vh;
-    object-fit: contain;
-    background-color: transparent;
-    display: block;
-    opacity: 1; /* Inicia 100% visível para ser a primeira coisa vista */
-    pointer-events: none;
-    /* Aumentado brilho e contraste para estourar o fundo do vídeo para branco puro */
-    filter: brightness(1.35) contrast(1.6) saturate(1.15);
-    mix-blend-mode: multiply;
-    
-    /* Máscara radial para fazer as bordas do vídeo desaparecerem suavemente no fundo da página */
-    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 95%);
-    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 95%);
-    
-    clip-path: inset(0% 4% 12% 0%);
-    transform: translateY(4.5%);
-    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  /* Quando a intro termina, o vídeo fica mais sutil para dar protagonismo ao texto */
-  .hero-section.intro-complete #hero-scroll-video {
-    opacity: 0.15;
-  }
-
-  /* O texto inicia oculto, a animação é a protagonista */
+  /* O texto fica padrão e centralizado */
   .hero-text-side {
     position: relative;
     z-index: 5;
@@ -874,42 +830,27 @@ section {
     width: 100%;
     align-items: center;
     text-align: center;
-    order: 1;
     padding: 0 16px;
     display: flex;
     flex-direction: column;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(25px);
-    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1),
-                transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  /* O texto surge suavemente por cima do vídeo */
-  .hero-section.intro-complete .hero-text-side {
     opacity: 1;
     pointer-events: auto;
-    transform: translateY(0);
+    transform: none;
   }
 
-  /* Legibilidade do texto sobre o vídeo animado */
   .hero-title {
-    font-size: 2rem;
-    margin-bottom: 12px;
+    font-size: 2.1rem;
+    margin-bottom: 16px;
     max-width: 380px;
     line-height: 1.18;
-    text-shadow: 0 1px 8px rgba(255, 255, 255, 0.7);
+    text-shadow: none;
   }
 
   .hero-description {
-    font-size: 0.9rem;
-    margin-bottom: 20px;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
     max-width: 380px;
     line-height: 1.5;
-    text-shadow: 0 1px 6px rgba(255, 255, 255, 0.5);
-  }
-
-  .hero-pill {
     text-shadow: none;
   }
 
@@ -923,41 +864,8 @@ section {
     padding: 14px 28px;
   }
 
-  /* Seta indicadora de scroll */
   .mobile-scroll-indicator {
-    position: absolute;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 90px);
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    color: var(--primary);
-    font-weight: 800;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 1; /* Inicia visível para orientar o usuário a rolar a página */
-    animation: scroll-indicator-bounce 2s infinite ease-in-out;
-    pointer-events: none;
-    transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-    z-index: 10;
-  }
-
-  .hero-section.intro-complete .mobile-scroll-indicator {
-    opacity: 0; /* Oculta quando o texto principal surge */
-  }
-
-  .indicator-arrow {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-  }
-
-  @keyframes scroll-indicator-bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
+    display: none !important;
   }
 }
 
