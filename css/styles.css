@@ -781,27 +781,29 @@ section {
 /* RESPONSIVIDADE ADICIONAL DO HERO */
 @media (max-width: 1023px) {
   .hero-section {
-    height: auto;
-    padding: 100px 0 40px;
+    height: 220vh; /* Scrollable track for LERP seek animation */
+    background-color: var(--bg-primary);
+    padding: 0;
   }
 
   .hero-sticky-container {
-    position: relative;
-    top: auto;
-    height: auto;
+    position: sticky;
+    top: 0;
+    height: 100vh;
     width: 100%;
-    display: block;
-    overflow: visible;
-    will-change: auto;
-    transform: none;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
   }
 
   .hero-split-wrapper {
     flex-direction: column;
-    justify-content: flex-start;
-    gap: 32px;
-    height: auto;
-    margin-top: 0;
+    justify-content: center;
+    gap: 20px;
+    height: 100%;
+    margin-top: 50px;
   }
 
   .hero-text-side {
@@ -819,37 +821,46 @@ section {
     width: 100%;
     height: auto;
     order: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .hero-video-inner {
     width: 100%;
-    max-width: 320px;
+    max-width: 280px;
     margin: 0 auto;
   }
 
   #hero-scroll-video {
     width: 100%;
     height: auto;
-    max-height: 360px;
+    max-height: 34vh;
     object-fit: contain;
-    transform: none;
-    clip-path: none;
-    filter: none;
-    mix-blend-mode: normal;
-    pointer-events: auto;
+    background-color: transparent;
+    display: block;
     opacity: 1;
+    pointer-events: none;
+    
+    /* Exact same premium editing and filters as PC/Desktop */
+    filter: brightness(1.25) contrast(1.45) saturate(1.15); 
+    mix-blend-mode: multiply; 
+    clip-path: inset(0% 4% 12% 0%);
+    transform: translateY(4.5%);
   }
 
   .hero-title {
-    font-size: 2.25rem;
-    margin-bottom: 16px;
+    font-size: 2.1rem;
+    margin-bottom: 12px;
     max-width: 480px;
+    line-height: 1.2;
   }
 
   .hero-description {
-    font-size: 1rem;
-    margin-bottom: 24px;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
     max-width: 480px;
+    line-height: 1.5;
   }
 
   .hero-btn-container {
@@ -864,20 +875,24 @@ section {
 }
 
 @media (max-width: 480px) {
-  .hero-section {
-    padding: 80px 0 20px;
-  }
-
   .hero-split-wrapper {
-    gap: 24px;
+    gap: 16px;
+    margin-top: 40px;
   }
 
   .hero-title {
-    font-size: 1.85rem;
+    font-size: 1.75rem;
+    max-width: 320px;
+  }
+  
+  .hero-description {
+    font-size: 0.875rem;
+    margin-bottom: 16px;
+    max-width: 320px;
   }
 
   #hero-scroll-video {
-    max-height: 280px;
+    max-height: 28vh;
   }
 }
 

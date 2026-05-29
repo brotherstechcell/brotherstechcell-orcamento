@@ -482,33 +482,6 @@ function setupHeroScrollVideo() {
   const video = document.getElementById("hero-scroll-video");
   if (!video) return;
 
-  // Se for mobile/tablet, desativa o controle por scroll e coloca em autoplay normal
-  if (window.innerWidth < 1024) {
-    video.autoplay = true;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "");
-    video.setAttribute("autoplay", "");
-    video.setAttribute("loop", "");
-    
-    // Tenta reproduzir e lida com bloqueios de política de autoplay do navegador
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(e => {
-        console.log("Autoplay do vídeo do hero bloqueado. Tentando novamente na primeira interação do usuário.", e);
-        const playOnGesture = () => {
-          video.play();
-          document.removeEventListener("touchstart", playOnGesture);
-          document.removeEventListener("click", playOnGesture);
-        };
-        document.addEventListener("touchstart", playOnGesture, { passive: true });
-        document.addEventListener("click", playOnGesture, { passive: true });
-      });
-    }
-    return; // Encerra a função aqui para não rodar a escuta de scroll e LERP!
-  }
-
   let targetTime = 0;
   let currentTime = 0;
   const ease = 0.08; // Fator de interpolação linear (quanto menor, mais suave)
