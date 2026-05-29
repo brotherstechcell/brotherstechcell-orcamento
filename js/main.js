@@ -505,6 +505,17 @@ function setupHeroScrollVideo() {
       // rect.top vai de 0 (seção no topo) até -totalScrollable (seção terminou)
       const progress = Math.min(Math.max(-rect.top / totalScrollable, 0), 1);
       
+      // Controla a revelação dos textos e indicadores baseado no progresso da desmontagem
+      if (window.innerWidth < 1024) {
+        if (progress >= 0.75) {
+          heroSection.classList.add("intro-complete");
+        } else if (progress < 0.10) {
+          heroSection.classList.remove("intro-complete");
+        }
+      } else {
+        heroSection.classList.add("intro-complete");
+      }
+      
       if (video.duration) {
         targetTime = progress * video.duration;
         
