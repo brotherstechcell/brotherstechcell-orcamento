@@ -301,18 +301,19 @@ img, svg {
 
 .scroll-reveal {
   opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
 
-.scroll-reveal.scroll-top { transform: translateY(40px); }
-.scroll-reveal.scroll-bottom { transform: translateY(-40px); }
-.scroll-reveal.scroll-left { transform: translateX(-40px); }
-.scroll-reveal.scroll-right { transform: translateX(40px); }
+.scroll-reveal.scroll-top { transform: translateY(24px) scale(0.98); }
+.scroll-reveal.scroll-bottom { transform: translateY(-24px) scale(0.98); }
+.scroll-reveal.scroll-left { transform: translateX(-24px) scale(0.98); }
+.scroll-reveal.scroll-right { transform: translateX(24px) scale(0.98); }
 
 .scroll-reveal.visible {
   opacity: 1;
-  transform: translate(0, 0);
+  transform: translateY(0) translateX(0) scale(1);
 }
 
 .scroll-reveal.delay-1 { transition-delay: 0.1s; }
@@ -1089,9 +1090,9 @@ section {
 }
 
 .bento-card:hover {
-  transform: translateY(-6px) rotateX(1deg) rotateY(-0.5deg);
+  transform: translateY(-8px) scale(1.015);
   border-color: var(--border-hover);
-  box-shadow: 0 20px 40px rgba(20, 51, 79, 0.08);
+  box-shadow: 0 24px 48px -12px rgba(20, 51, 79, 0.12);
 }
 
 .bento-card:hover::after {
@@ -1182,9 +1183,9 @@ section {
 }
 
 .bento-card.premium-destaque:hover {
-  transform: translateY(-8px) scale(1.02) rotateX(1.5deg) rotateY(-0.5deg);
+  transform: translateY(-10px) scale(1.025);
   border-color: var(--primary-glow);
-  box-shadow: 0 25px 50px rgba(41, 162, 81, 0.3), var(--shadow-green-lg);
+  box-shadow: 0 32px 64px -16px rgba(41, 162, 81, 0.35), var(--shadow-green-lg);
 }
 
 .premium-glow-effect {

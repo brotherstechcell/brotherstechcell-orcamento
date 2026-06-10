@@ -6,7 +6,96 @@
 import iconeTelaSrc from '../assets/icone-tela.jpg';
 import iconeBateriaSrc from '../assets/icone-bateria.jpg';
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  // Sincroniza preços em tempo real com o banco de dados se houver pricingEndpoint definido
+  const configObj = window.CONFIG || (typeof CONFIG !== "undefined" ? CONFIG : null);
+  if (configObj && configObj.pricingEndpoint) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000); // 6 segundos de timeout limite
+      
+      const response = await fetch(configObj.pricingEndpoint, {
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.success) {
+          // Converte o formato do Supabase catalog para o formato aninhado CONFIG.devices
+          const convertedDevices = parseCatalogToDevices(data);
+          if (Object.keys(convertedDevices).length > 0) {
+            console.log("Brothersystem: Preços em tempo real carregados e convertidos com sucesso. Total de modelos:", Object.keys(convertedDevices).length);
+            configObj.devices = { ...configObj.devices, ...convertedDevices };
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Brothersystem: Erro ao obter preços em tempo real (usando fallback local):", err);
+    }
+  }
+
+  // Função helper para converter formato plano (relacional) do catálogo Supabase em árvore aninhada (devices)
+  function parseCatalogToDevices(catalog) {
+    const devices = {};
+    if (!catalog || !catalog.prices) return devices;
+
+    const modelMap = {};
+    if (catalog.models) {
+      catalog.models.forEach(m => {
+        modelMap[m.id] = m.name;
+      });
+    }
+
+    const qualityMap = {};
+    if (catalog.qualities) {
+      catalog.qualities.forEach(q => {
+        qualityMap[q.id] = q.name;
+      });
+    }
+
+    catalog.prices.forEach(p => {
+      if (!p.active) return;
+      const modelName = modelMap[p.model_id];
+      const serviceName = p.service_id;
+      const qualityName = qualityMap[p.quality_id];
+
+      if (!modelName || !serviceName || !qualityName) return;
+
+      if (!devices[modelName]) {
+        devices[modelName] = {};
+      }
+      if (!devices[modelName][serviceName]) {
+        devices[modelName][serviceName] = {};
+      }
+
+      let formattedPrice = "";
+      if (typeof p.cash_price === "number") {
+        formattedPrice = p.cash_price.toFixed(2).replace(".", ",");
+      } else {
+        formattedPrice = String(p.cash_price || "Sob Consulta");
+      }
+
+      let formattedInstallment = "";
+      if (p.installment_text) {
+        formattedInstallment = p.installment_text;
+      } else if (typeof p.cash_price === "number") {
+        let instVal = p.installment_12x;
+        if (!instVal) {
+          instVal = (p.cash_price * 1.1416) / 12;
+        }
+        formattedInstallment = `12x de R$ ${instVal.toFixed(2).replace(".", ",")}`;
+      }
+
+      devices[modelName][serviceName][qualityName] = {
+        price: formattedPrice,
+        installment: formattedInstallment
+      };
+    });
+
+    return devices;
+  }
+
   initPricingSelector();
   updateWhatsAppLinks();
   setupScrollEffects();
@@ -501,11 +590,35 @@ function setupHeroScrollVideo() {
   const ease = 0.08; // Fator de interpolação linear (quanto menor, mais suave)
   let animFrameId = null; // ID da animação ativa (null se estiver dormindo/ocioso)
 
+  let isSeeking = false;
+  let pendingTime = null;
+
   // Garante que o vídeo está pausado para controle manual
   video.pause();
   
   // Força carregamento do vídeo
   video.load();
+
+  // Escuta a conclusão do seek do navegador antes de enviar outra requisição
+  video.addEventListener("seeked", () => {
+    isSeeking = false;
+    if (pendingTime !== null) {
+      const nextTime = pendingTime;
+      pendingTime = null;
+      performSeek(nextTime);
+    }
+  });
+
+  function performSeek(time) {
+    if (isSeeking) {
+      pendingTime = time;
+      return;
+    }
+    if (video.duration) {
+      isSeeking = true;
+      video.currentTime = Math.min(Math.max(time, 0), video.duration - 0.02);
+    }
+  }
 
   function updateVideoTarget() {
     const heroSection = document.getElementById("inicio");
@@ -562,19 +675,14 @@ function setupHeroScrollVideo() {
     // Se a diferença for insignificante (estabilizado), para o render loop por completo
     if (Math.abs(diff) < 0.005) {
       currentTime = targetTime;
-      if (video.duration && !video.seeking) {
-        video.currentTime = Math.min(Math.max(currentTime, 0), video.duration - 0.02);
-      }
+      performSeek(currentTime);
       animFrameId = null; // Sinaliza que o loop está inativo/dormindo
       return; // Interrompe o requestAnimationFrame, liberando 100% da GPU/CPU
     }
     
-    // Apenas atualiza a seek do vídeo se a diferença for maior que 1 frame (0.03s) e não estiver buscando
-    if (Math.abs(diff) > 0.03 && !video.seeking) {
-      if (video.duration) {
-        // Clampa o valor dentro da duração do vídeo menos uma pequena margem (evita crash)
-        video.currentTime = Math.min(Math.max(currentTime, 0), video.duration - 0.02);
-      }
+    // Apenas atualiza a seek do vídeo se a diferença for maior que meio frame (0.015s)
+    if (Math.abs(diff) > 0.015) {
+      performSeek(currentTime);
     }
     
     // Continua o loop enquanto a interpolação não finalizar

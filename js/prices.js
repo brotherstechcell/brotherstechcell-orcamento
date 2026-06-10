@@ -6,6 +6,8 @@
  */
 
 const CONFIG = {
+  // Endpoint para sincronização de preços em tempo real com o banco de dados do Brothersystem-V3
+  pricingEndpoint: "https://mdeplkhiweirjqprtued.supabase.co/functions/v1/get-public-pricing-catalog?format=tree",
   // Informações de Contato da Brothers Techcell
   contact: {
     phone: "(92) 99395-1193",
