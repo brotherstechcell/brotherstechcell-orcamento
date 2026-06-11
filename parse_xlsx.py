@@ -111,7 +111,7 @@ const CONFIG = {
     address: "Manaus - AM (Atendimento Delivery)",
   },
 
-  warranty: "3 meses de garantia real",
+  warranty: "até 90 dias de garantia real",
   paymentTerms: "Em até 12x no cartão",
 
   // Dados de preços agrupados por modelo para o seletor único

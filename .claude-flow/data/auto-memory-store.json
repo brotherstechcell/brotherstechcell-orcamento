@@ -34,5 +34,41 @@
       "quality": 0.85
     },
     "createdAt": 1781105388617
+  },
+  {
+    "id": "task-mcp-setup-1",
+    "key": "mcp-setup-1",
+    "content": "Task completed: mcp-setup-1",
+    "namespace": "tasks",
+    "type": "task-outcome",
+    "metadata": {
+      "success": true,
+      "quality": 0.85
+    },
+    "createdAt": 1781142784383
+  },
+  {
+    "id": "task-warranty-update-1",
+    "key": "warranty-update-1",
+    "content": "Task completed: warranty-update-1",
+    "namespace": "tasks",
+    "type": "task-outcome",
+    "metadata": {
+      "success": true,
+      "quality": 0.85
+    },
+    "createdAt": 1781146705616
+  },
+  {
+    "id": "task-130a550a-fb5c-485a-97be-350deec72e89",
+    "key": "130a550a-fb5c-485a-97be-350deec72e89",
+    "content": "Task completed: 130a550a-fb5c-485a-97be-350deec72e89",
+    "namespace": "tasks",
+    "type": "task-outcome",
+    "metadata": {
+      "success": true,
+      "quality": 0.85
+    },
+    "createdAt": 1781190878044
   }
 ]

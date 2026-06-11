@@ -283,12 +283,9 @@ function renderSelectorResults(modelName) {
         const isPremium = quality.trim().toLowerCase() === 'premium';
         const rowClass = isPremium ? 'service-quality-row premium-featured' : 'service-quality-row';
         const btnClass = isPremium ? 'btn-quality-order btn-premium-cta' : 'btn-quality-order';
-        const buttonText = isPremium ? 'ESCOLHER PREMIUM' : 'AGENDAR';
+        const buttonText = isPremium ? 'AGENDAR PREMIUM' : 'AGENDAR';
         
-        const whatsappMsg = isPremium 
-          ? `Olá! Gostaria de agendar a troca de tela PREMIUM (que inclui 1 Ano de Garantia + Película e Capinha de Brinde) para o iPhone ${modelName}.`
-          : `Olá! Gostaria de agendar a troca de tela (${quality}) para o iPhone ${modelName}.`;
-        const whatsappUrl = `https://wa.me/${CONFIG.contact.phoneRaw}?text=${encodeURIComponent(whatsappMsg)}`;
+        const redirectUrl = `https://brothersystem.vercel.app/agendar?link=tela&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(quality)}`;
         
         screenItemsHtml += `
           <div class="${rowClass}">
@@ -304,7 +301,7 @@ function renderSelectorResults(modelName) {
               <span class="quality-price-install">${installmentText}</span>
             </div>
             <div class="quality-action">
-              <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="${btnClass}" aria-label="Pedir troca de tela ${quality} para iPhone ${modelName}">
+              <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="${btnClass}" aria-label="Agendar troca de tela ${quality} para iPhone ${modelName}">
                 ${buttonText}
               </a>
             </div>
@@ -349,8 +346,7 @@ function renderSelectorResults(modelName) {
         const priceText = isSobConsulta ? qData.price : `R$ ${qData.price}`;
         const installmentText = isSobConsulta ? "" : `ou ${qData.installment}`;
         
-        const whatsappMsg = `Olá! Gostaria de agendar a troca de bateria (${quality}) para o iPhone ${modelName}.`;
-        const whatsappUrl = `https://wa.me/${CONFIG.contact.phoneRaw}?text=${encodeURIComponent(whatsappMsg)}`;
+        const redirectUrl = `https://brothersystem.vercel.app/agendar?link=bateria&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(quality)}`;
         
         batteryItemsHtml += `
           <div class="service-quality-row">
@@ -363,7 +359,7 @@ function renderSelectorResults(modelName) {
               <span class="quality-price-install">${installmentText}</span>
             </div>
             <div class="quality-action">
-              <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-quality-order" aria-label="Pedir troca de bateria ${quality} para iPhone ${modelName}">
+              <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="btn-quality-order" aria-label="Agendar troca de bateria ${quality} para iPhone ${modelName}">
                 AGENDAR
               </a>
             </div>
@@ -536,7 +532,7 @@ function getQualityBenefitsHtml(quality) {
           <svg viewBox="0 0 24 24" class="benefit-icon">
             <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
           </svg>
-          1 Ano de Garantia
+          90 Dias de Garantia
         </span>
         <span class="benefit-item gift">
           <svg viewBox="0 0 24 24" class="benefit-icon">
@@ -553,7 +549,7 @@ function getQualityBenefitsHtml(quality) {
           <svg viewBox="0 0 24 24" class="benefit-icon">
             <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
           </svg>
-          3 Meses de Garantia
+          30 Dias de Garantia
         </span>
         <span class="benefit-item gift">
           <svg viewBox="0 0 24 24" class="benefit-icon">
