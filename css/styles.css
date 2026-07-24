@@ -1677,7 +1677,9 @@ section {
   border: 1px solid rgba(41, 162, 81, 0.2);
 }
 
-.quality-badge.intermediária {
+.quality-badge.intermediária,
+.quality-badge.econômica,
+.quality-badge.economica {
   background: rgba(255, 159, 67, 0.08);
   color: #ff9f43;
   border: 1px solid rgba(255, 159, 67, 0.2);

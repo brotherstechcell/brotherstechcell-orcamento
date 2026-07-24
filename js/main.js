@@ -22,11 +22,32 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (response.ok) {
         const data = await response.json();
         if (data && data.success) {
-          // Converte o formato do Supabase catalog para o formato aninhado CONFIG.devices
-          const convertedDevices = parseCatalogToDevices(data);
-          if (Object.keys(convertedDevices).length > 0) {
-            console.log("Brothersystem: Preços em tempo real carregados e convertidos com sucesso. Total de modelos:", Object.keys(convertedDevices).length);
-            configObj.devices = { ...configObj.devices, ...convertedDevices };
+          let merged = false;
+          if (data.devices && Object.keys(data.devices).length > 0) {
+            console.log("Brothersystem: Preços em tempo real recebidos em formato tree. Total de modelos:", Object.keys(data.devices).length);
+            configObj.devices = { ...configObj.devices, ...data.devices };
+            merged = true;
+          } else {
+            // Converte o formato do Supabase catalog para o formato aninhado CONFIG.devices
+            const convertedDevices = parseCatalogToDevices(data);
+            if (Object.keys(convertedDevices).length > 0) {
+              console.log("Brothersystem: Preços em tempo real carregados e convertidos com sucesso. Total de modelos:", Object.keys(convertedDevices).length);
+              configObj.devices = { ...configObj.devices, ...convertedDevices };
+              merged = true;
+            }
+          }
+
+          if (merged) {
+            // Re-inicializa o dropdown e re-renderiza o modelo atual se aplicável
+            const dropdown = document.getElementById("device-search-select");
+            if (dropdown) {
+              const currentValue = dropdown.value;
+              initPricingSelector();
+              if (currentValue && configObj.devices[currentValue]) {
+                dropdown.value = currentValue;
+                renderSelectorResults(currentValue);
+              }
+            }
           }
         }
       }
@@ -268,11 +289,16 @@ function renderSelectorResults(modelName) {
     
     let screenItemsHtml = "";
     if (deviceData.tela && Object.keys(deviceData.tela).length > 0) {
-      // Ordenar qualidades (Premium primeiro, depois Intermediária, depois Básica)
-      const qualitiesOrder = ["Premium", "Intermediária", "Básica"];
-      const sortedQualities = Object.keys(deviceData.tela).sort((a, b) => {
-        return qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b);
-      });
+      // Ordenar qualidades (Premium primeiro, depois Econômica, depois Intermediária, depois Básica)
+      const qualitiesOrder = ["Premium", "Econômica", "Intermediária", "Básica"];
+      const sortedQualities = Object.keys(deviceData.tela)
+        .filter(q => {
+          const qClean = q.trim().toLowerCase();
+          return qClean !== "básica" && qClean !== "basica";
+        })
+        .sort((a, b) => {
+          return qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b);
+        });
       
       sortedQualities.forEach(quality => {
         const qData = deviceData.tela[quality];
@@ -280,28 +306,33 @@ function renderSelectorResults(modelName) {
         const priceText = isSobConsulta ? qData.price : `R$ ${qData.price}`;
         const installmentText = isSobConsulta ? "" : `ou ${qData.installment}`;
         
+        let displayQuality = quality;
+        if (quality.trim().toLowerCase() === "intermediária" || quality.trim().toLowerCase() === "intermediaria") {
+          displayQuality = "Econômica";
+        }
+        
         const isPremium = quality.trim().toLowerCase() === 'premium';
         const rowClass = isPremium ? 'service-quality-row premium-featured' : 'service-quality-row';
         const btnClass = isPremium ? 'btn-quality-order btn-premium-cta' : 'btn-quality-order';
         const buttonText = isPremium ? 'AGENDAR PREMIUM' : 'AGENDAR';
         
-        const redirectUrl = `https://brothersystem.vercel.app/agendar?link=tela&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(quality)}`;
+        const redirectUrl = `https://brothersystem.vercel.app/agendar?link=tela&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(displayQuality)}`;
         
         screenItemsHtml += `
           <div class="${rowClass}">
             <div class="quality-label">
               <div class="quality-badge-wrapper" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <span class="quality-badge ${quality.toLowerCase()}">${quality}</span>
+                <span class="quality-badge ${displayQuality.toLowerCase()}">${displayQuality}</span>
                 ${isPremium ? '<span class="premium-recommend-badge" style="font-size: 0.6rem; background: var(--primary); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800; letter-spacing: 0.03em;">★ RECOMENDADA</span>' : ''}
               </div>
-              ${getQualityBenefitsHtml(quality)}
+              ${getQualityBenefitsHtml(displayQuality)}
             </div>
             <div class="quality-pricing">
               <span class="quality-price-cash">${priceText}</span>
               <span class="quality-price-install">${installmentText}</span>
             </div>
             <div class="quality-action">
-              <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="${btnClass}" aria-label="Agendar troca de tela ${quality} para iPhone ${modelName}">
+              <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="${btnClass}" aria-label="Agendar troca de tela ${displayQuality} para iPhone ${modelName}">
                 ${buttonText}
               </a>
             </div>
@@ -335,10 +366,15 @@ function renderSelectorResults(modelName) {
     
     let batteryItemsHtml = "";
     if (deviceData.bateria && Object.keys(deviceData.bateria).length > 0) {
-      const qualitiesOrder = ["Premium", "Intermediária", "Básica"];
-      const sortedQualities = Object.keys(deviceData.bateria).sort((a, b) => {
-        return qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b);
-      });
+      const qualitiesOrder = ["Premium", "Econômica", "Intermediária", "Básica"];
+      const sortedQualities = Object.keys(deviceData.bateria)
+        .filter(q => {
+          const qClean = q.trim().toLowerCase();
+          return qClean !== "básica" && qClean !== "basica";
+        })
+        .sort((a, b) => {
+          return qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b);
+        });
       
       sortedQualities.forEach(quality => {
         const qData = deviceData.bateria[quality];
@@ -346,20 +382,25 @@ function renderSelectorResults(modelName) {
         const priceText = isSobConsulta ? qData.price : `R$ ${qData.price}`;
         const installmentText = isSobConsulta ? "" : `ou ${qData.installment}`;
         
-        const redirectUrl = `https://brothersystem.vercel.app/agendar?link=bateria&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(quality)}`;
+        let displayQuality = quality;
+        if (quality.trim().toLowerCase() === "intermediária" || quality.trim().toLowerCase() === "intermediaria") {
+          displayQuality = "Econômica";
+        }
+        
+        const redirectUrl = `https://brothersystem.vercel.app/agendar?link=bateria&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(displayQuality)}`;
         
         batteryItemsHtml += `
           <div class="service-quality-row">
             <div class="quality-label">
-              <span class="quality-badge ${quality.toLowerCase()}">${quality}</span>
-              ${getQualityBenefitsHtml(quality)}
+              <span class="quality-badge ${displayQuality.toLowerCase()}">${displayQuality}</span>
+              ${getQualityBenefitsHtml(displayQuality)}
             </div>
             <div class="quality-pricing">
               <span class="quality-price-cash">${priceText}</span>
               <span class="quality-price-install">${installmentText}</span>
             </div>
             <div class="quality-action">
-              <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="btn-quality-order" aria-label="Agendar troca de bateria ${quality} para iPhone ${modelName}">
+              <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="btn-quality-order" aria-label="Agendar troca de bateria ${displayQuality} para iPhone ${modelName}">
                 AGENDAR
               </a>
             </div>
@@ -542,7 +583,7 @@ function getQualityBenefitsHtml(quality) {
         </span>
       </div>
     `;
-  } else if (qClean === 'intermediária' || qClean === 'intermediaria') {
+  } else if (qClean === 'intermediária' || qClean === 'intermediaria' || qClean === 'econômica' || qClean === 'economica') {
     return `
       <div class="quality-benefits-wrapper">
         <span class="benefit-item warranty">
