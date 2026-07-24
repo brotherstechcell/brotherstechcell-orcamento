@@ -34,3 +34,6 @@ dist-ssr/
 # Agent/IDE local folders
 .gemini/
 antigravity-ide/
+
+# Astro generated cache directory
+.astro/
