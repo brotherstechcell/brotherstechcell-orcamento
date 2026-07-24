@@ -223,7 +223,7 @@ git commit -m "feat: add BaseLayout with SEO head"
 - Modify (move): `js/prices.js` → `src/scripts/prices.js`
 
 **Interfaces:**
-- Consumes: nada de novo — os `import` internos (`import iconeTelaSrc from '../assets/icone-tela.jpg'` em `main.js:6-7`) continuam válidos porque `assets/` permanece na raiz do projeto (Task 1, Step 2) e o caminho relativo `../assets/` a partir de `src/scripts/` ainda resolve corretamente.
+- Consumes: nada de novo — os `import` internos em `main.js:6-7` precisam apontar para `assets/` na raiz do projeto (Task 1, Step 2). **Correção pós-implementação:** o caminho original `../assets/icone-tela.jpg` resolvia para `src/assets/` (inexistente) a partir de `src/scripts/`; o caminho correto é `../../assets/icone-tela.jpg` (dois níveis acima: scripts → src → raiz). Esse bug só foi detectado na Task 15 (quando o build foi de fato executado com os componentes montados) e corrigido no commit `dbbbc08`.
 - Produces: `src/scripts/prices.js` expõe `window.CONFIG` (linha final, sem alteração). `src/scripts/main.js` continua dependendo de `window.CONFIG` e de elementos DOM por `id`/`class` que serão recriados nas próximas tasks.
 
 - [ ] **Step 1: Mover os arquivos**
@@ -237,13 +237,13 @@ git mv js/main.js src/scripts/main.js
 
 - [ ] **Step 2: Verificar que os imports internos continuam válidos**
 
-Run: `grep -n "from '../assets" src/scripts/main.js`
+Run: `grep -n "from '../../assets" src/scripts/main.js`
 Expected:
 ```
-6:import iconeTelaSrc from '../assets/icone-tela.jpg';
-7:import iconeBateriaSrc from '../assets/icone-bateria.jpg';
+6:import iconeTelaSrc from '../../assets/icone-tela.jpg';
+7:import iconeBateriaSrc from '../../assets/icone-bateria.jpg';
 ```
-(Caminho relativo correto: `src/scripts/main.js` → `../assets/` → `assets/` na raiz do projeto.)
+(Caminho relativo correto: `src/scripts/main.js` → `../../assets/` → `assets/` na raiz do projeto — dois níveis acima, não um. Ver correção pós-implementação acima.)
 
 - [ ] **Step 3: Commit**
 
