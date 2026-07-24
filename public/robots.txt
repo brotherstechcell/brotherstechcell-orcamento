@@ -5,4 +5,4 @@ Disallow: /dashboard
 Disallow: /api
 Disallow: /login
 
-Sitemap: https://brotherstechcell-orcamento.vercel.app/sitemap.xml
+Sitemap: https://brotherstechcell-orcamento.vercel.app/sitemap-index.xml
