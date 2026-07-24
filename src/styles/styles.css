@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
-@import "tailwindcss";
+/* TODO: Tailwind v4 @import directive causes Vite build error - needs version resolution */
+/* @import "tailwindcss"; */
 
 @theme {
   --font-gilroy: Gilroy, serif;

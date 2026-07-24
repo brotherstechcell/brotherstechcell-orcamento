@@ -1,0 +1,57 @@
+---
+import '../styles/styles.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  extraJsonLd?: string[];
+}
+
+const { title, description, canonicalPath, extraJsonLd = [] } = Astro.props;
+const siteUrl = 'https://brotherstechcell-orcamento.vercel.app';
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
+const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta name="google-site-verification" content="WndbJR-QXJNCwGbGdOiNh35Sm1i2d1Ah6Oml1o_nd8o" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index">
+  <link rel="canonical" href={canonicalUrl}>
+
+  <link rel="icon" type="image/jpeg" href="/Logo Brotherstechcell.jpeg">
+  <link rel="apple-touch-icon" href="/Logo Brotherstechcell.jpeg">
+
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content={canonicalUrl}>
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:site_name" content="Brothers Techcell">
+  <meta property="og:image" content={ogImageUrl}>
+  <meta property="og:image:alt" content="iPhone reparado pela Brothers Techcell em Manaus">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={ogImageUrl}>
+
+  {extraJsonLd.map((json) => (
+    <script type="application/ld+json" set:html={json} />
+  ))}
+</head>
+
+<body>
+  <div class="mesh-glow-left"></div>
+  <div class="mesh-glow-right"></div>
+  <slot />
+</body>
+
+</html>
