@@ -3,8 +3,8 @@
  */
 
 // Importa explicitamente as imagens para que o Vite processe e envie para o build final
-import iconeTelaSrc from '../assets/icone-tela.jpg';
-import iconeBateriaSrc from '../assets/icone-bateria.jpg';
+import iconeTelaSrc from '../../assets/icone-tela.jpg';
+import iconeBateriaSrc from '../../assets/icone-bateria.jpg';
 
 document.addEventListener("DOMContentLoaded", async () => {
   // Sincroniza preços em tempo real com o banco de dados se houver pricingEndpoint definido
