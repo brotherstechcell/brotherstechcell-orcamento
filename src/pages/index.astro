@@ -1,11 +1,99 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import ReelsShowcase from '../components/ReelsShowcase.astro';
+import Diferenciais from '../components/Diferenciais.astro';
+import ComoFunciona from '../components/ComoFunciona.astro';
+import PricingSelector from '../components/PricingSelector.astro';
+import ComparativoTelas from '../components/ComparativoTelas.astro';
+import DiagnosticForm from '../components/DiagnosticForm.astro';
+import Sobre from '../components/Sobre.astro';
+import Faq, { faqItems } from '../components/Faq.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsapp from '../components/FloatingWhatsapp.astro';
+import BottomNav from '../components/BottomNav.astro';
+
+const electronicsStoreJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ElectronicsStore",
+  "name": "Brothers Techcell",
+  "image": "https://brotherstechcell-orcamento.vercel.app/og-image.png",
+  "url": "https://brotherstechcell-orcamento.vercel.app/",
+  "telephone": "+5592993951193",
+  "email": "contato@brotherstechcell.com.br",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Manaus",
+    "addressRegion": "AM",
+    "addressCountry": "BR"
+  },
+  "areaServed": { "@type": "City", "name": "Manaus" },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    "opens": "08:00",
+    "closes": "20:00"
+  },
+  "sameAs": ["https://www.instagram.com/brothers_techcell/"],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Serviços de Assistência Técnica iPhone",
+    "itemListElement": [
+      "Troca de Tela de iPhone",
+      "Troca de Bateria de iPhone",
+      "Troca de Tampa Traseira de iPhone",
+      "Troca de Câmera de iPhone",
+      "Troca de Dock (Conector de Carga) de iPhone",
+      "Reparo de Face ID de iPhone",
+      "Reparo em Placa de iPhone"
+    ].map((name) => ({
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        name,
+        "areaServed": "Manaus",
+        "provider": { "@type": "ElectronicsStore", "name": "Brothers Techcell" }
+      }
+    }))
+  }
+});
+
+const faqJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(({ question, answer }) => ({
+    "@type": "Question",
+    "name": question,
+    "acceptedAnswer": { "@type": "Answer", "text": answer }
+  }))
+});
 ---
 <BaseLayout
   title="Assistência Técnica iPhone Delivery Manaus | Brothers Techcell"
   description="Assistência Técnica Delivery de iPhone em Manaus. Troca de tela e bateria em poucos minutos na sua frente onde você estiver. Peças premium com garantia real."
   ogDescription="Troca de tela e bateria de iPhone na sua frente, onde você estiver em Manaus. Agende pelo WhatsApp."
   canonicalPath="/"
+  extraJsonLd={[electronicsStoreJsonLd, faqJsonLd]}
 >
-  <h1>Migração em andamento</h1>
+  <Header />
+  <main>
+    <Hero />
+    <ReelsShowcase />
+    <Diferenciais />
+    <ComoFunciona />
+    <PricingSelector />
+    <ComparativoTelas />
+    <DiagnosticForm />
+    <Sobre />
+    <Faq />
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../scripts/prices.js"></script>
+  <script src="../scripts/main.js"></script>
 </BaseLayout>
