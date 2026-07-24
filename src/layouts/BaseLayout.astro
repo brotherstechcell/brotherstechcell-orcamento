@@ -5,13 +5,15 @@ interface Props {
   title: string;
   description: string;
   canonicalPath: string;
+  ogDescription?: string;
   extraJsonLd?: string[];
 }
 
-const { title, description, canonicalPath, extraJsonLd = [] } = Astro.props;
+const { title, description, canonicalPath, ogDescription, extraJsonLd = [] } = Astro.props;
 const siteUrl = 'https://brotherstechcell-orcamento.vercel.app';
 const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
 const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
+const socialDescription = ogDescription ?? description;
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -33,14 +35,14 @@ const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
   <meta property="og:type" content="website">
   <meta property="og:url" content={canonicalUrl}>
   <meta property="og:title" content={title}>
-  <meta property="og:description" content={description}>
+  <meta property="og:description" content={socialDescription}>
   <meta property="og:site_name" content="Brothers Techcell">
   <meta property="og:image" content={ogImageUrl}>
   <meta property="og:image:alt" content="iPhone reparado pela Brothers Techcell em Manaus">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={title}>
-  <meta name="twitter:description" content={description}>
+  <meta name="twitter:description" content={socialDescription}>
   <meta name="twitter:image" content={ogImageUrl}>
 
   {extraJsonLd.map((json) => (
