@@ -132,10 +132,12 @@ interface Props {
   title: string;
   description: string;
   canonicalPath: string;
+  ogDescription?: string;
   extraJsonLd?: string[];
 }
 
-const { title, description, canonicalPath, extraJsonLd = [] } = Astro.props;
+const { title, description, canonicalPath, ogDescription, extraJsonLd = [] } = Astro.props;
+const socialDescription = ogDescription ?? description;
 const siteUrl = 'https://brotherstechcell-orcamento.vercel.app';
 const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
 const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
@@ -160,14 +162,14 @@ const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
   <meta property="og:type" content="website">
   <meta property="og:url" content={canonicalUrl}>
   <meta property="og:title" content={title}>
-  <meta property="og:description" content={description}>
+  <meta property="og:description" content={socialDescription}>
   <meta property="og:site_name" content="Brothers Techcell">
   <meta property="og:image" content={ogImageUrl}>
   <meta property="og:image:alt" content="iPhone reparado pela Brothers Techcell em Manaus">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={title}>
-  <meta name="twitter:description" content={description}>
+  <meta name="twitter:description" content={socialDescription}>
   <meta name="twitter:image" content={ogImageUrl}>
 
   {extraJsonLd.map((json) => (
@@ -659,6 +661,7 @@ const faqJsonLd = JSON.stringify({
 <BaseLayout
   title="Assistência Técnica iPhone Delivery Manaus | Brothers Techcell"
   description="Assistência Técnica Delivery de iPhone em Manaus. Troca de tela e bateria em poucos minutos na sua frente onde você estiver. Peças premium com garantia real."
+  ogDescription="Troca de tela e bateria de iPhone na sua frente, onde você estiver em Manaus. Agende pelo WhatsApp."
   canonicalPath="/"
   extraJsonLd={[electronicsStoreJsonLd, faqJsonLd]}
 >
