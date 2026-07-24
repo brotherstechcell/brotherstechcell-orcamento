@@ -347,7 +347,7 @@ function renderSelectorResults(modelName) {
       <div class="card-inner">
         <div class="service-header-row">
           <span class="icon-service-type" style="padding: 0; background: none; border: none; overflow: hidden;">
-            <img src="${iconeTelaSrc}" alt="Ícone de Tela" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block;">
+            <img src="${iconeTelaSrc}" alt="Troca de tela do iPhone ${modelName} em Manaus" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block;">
           </span>
           <div>
             <h4 class="service-title-text">Tela de iPhone ${modelName}</h4>
@@ -415,7 +415,7 @@ function renderSelectorResults(modelName) {
       <div class="card-inner">
         <div class="service-header-row">
           <span class="icon-service-type battery" style="padding: 0; background: none; border: none; overflow: hidden;">
-            <img src="${iconeBateriaSrc}" alt="Ícone de Bateria" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block;">
+            <img src="${iconeBateriaSrc}" alt="Troca de bateria do iPhone ${modelName} em Manaus" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block;">
           </span>
           <div>
             <h4 class="service-title-text">Bateria de iPhone ${modelName}</h4>
