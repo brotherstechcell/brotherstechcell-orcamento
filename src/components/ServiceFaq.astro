@@ -1,0 +1,32 @@
+---
+import type { ServiceFaqItem } from '../data/services';
+
+interface Props {
+  faq: ServiceFaqItem[];
+}
+
+const { faq } = Astro.props;
+---
+<section class="service-faq-section">
+  <div class="container">
+    <div class="section-header scroll-reveal scroll-top">
+      <span class="section-label">Perguntas Frequentes</span>
+      <h2 class="section-title type-h2-44">Dúvidas Sobre Esse Serviço</h2>
+    </div>
+    <div class="faq-list" style="max-width: 760px; margin: 0 auto;">
+      {faq.map((item) => (
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>{item.question}</span>
+            <span class="faq-question-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>{item.answer}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
