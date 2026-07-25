@@ -410,9 +410,11 @@ git commit -m "feat: add services data for /servicos pages"
 
 - [ ] **Step 1: Criar o componente**
 
+**Correção pós-implementação:** a classe do `<section>` abaixo era originalmente `service-trust-section` (nome inventado durante a escrita deste plano, sem regra CSS correspondente). O revisor da Task 2 encontrou que isso causaria uma regressão visual (perderia o padding compacto de 48px + fundo + borda do padrão "trust bar"), e a correção trocou pela classe já existente `trust-shield-section` (`src/styles/styles.css:465-471`, mesma usada por `Diferenciais.astro`). O código abaixo já reflete a versão corrigida (commit `16a5910`).
+
 Create `src/components/TrustFacts.astro`:
 ```astro
-<section class="service-trust-section">
+<section class="trust-shield-section">
   <div class="container">
     <div class="trust-shield-wrapper">
       <div class="trust-shield-card">
