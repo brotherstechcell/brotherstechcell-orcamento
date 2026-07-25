@@ -881,5 +881,7 @@ const CONFIG = {
   }
 };
 
-window.CONFIG = CONFIG;
+if (typeof window !== 'undefined') {
+  window.CONFIG = CONFIG;
+}
 export { CONFIG };
