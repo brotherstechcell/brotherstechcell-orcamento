@@ -25,7 +25,7 @@ export const services: ServiceData[] = [
     metaDescription:
       "Troca de tela de iPhone com delivery gratuito em Manaus. Peças Econômica ou Premium, a partir de R$249,90, com até 90 dias de garantia.",
     intro:
-      "A tela é a parte mais exposta a quedas e impactos do iPhone. Na Brothers Techcell, a troca é feita na sua frente, em Manaus, com peças Econômica, Intermediária ou Premium — sempre com garantia real.",
+      "A tela é a parte mais exposta a quedas e impactos do iPhone. Na Brothers Techcell, a troca é feita na sua frente, em Manaus, com peças Econômica ou Premium — sempre com garantia real.",
     hasFixedPricing: true,
     symptoms: [
       "Tela trincada ou estilhaçada",
@@ -39,7 +39,7 @@ export const services: ServiceData[] = [
       {
         question: "Quanto custa a troca de tela?",
         answer:
-          "O valor varia conforme o modelo do iPhone e a qualidade da peça (Econômica, Intermediária ou Premium), a partir de R$249,90. Consulte o preço exato do seu modelo na tabela da nossa página inicial ou pelo WhatsApp.",
+          "O valor varia conforme o modelo do iPhone e a qualidade da peça (Econômica ou Premium), a partir de R$249,90. Consulte o preço exato do seu modelo na tabela da nossa página inicial ou pelo WhatsApp.",
       },
       {
         question: "Quanto tempo demora?",
@@ -49,7 +49,7 @@ export const services: ServiceData[] = [
       {
         question: "Qual a garantia?",
         answer:
-          "Tela Premium tem 90 dias de garantia real, Intermediária 30 dias e Básica 7 dias.",
+          "A garantia varia de 7 a 90 dias, dependendo da qualidade da peça escolhida (Econômica ou Premium) — os detalhes exatos são informados no orçamento.",
       },
       {
         question: "Posso escolher a qualidade da tela?",
