@@ -882,3 +882,4 @@ const CONFIG = {
 };
 
 window.CONFIG = CONFIG;
+export { CONFIG };
