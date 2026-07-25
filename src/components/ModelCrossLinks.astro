@@ -1,0 +1,25 @@
+---
+interface Props {
+  modelSlug: string;
+  currentServiceSlug: "troca-de-tela" | "troca-de-bateria";
+}
+
+const { modelSlug, currentServiceSlug } = Astro.props;
+const otherServiceSlug = currentServiceSlug === "troca-de-tela" ? "troca-de-bateria" : "troca-de-tela";
+const otherServiceLabel = otherServiceSlug === "troca-de-tela" ? "Troca de Tela" : "Troca de Bateria";
+---
+<section class="model-crosslinks-section">
+  <div class="container">
+    <div class="section-header scroll-reveal scroll-top">
+      <span class="section-label">Outros Serviços</span>
+      <h2 class="section-title type-h2-44">Veja Também</h2>
+    </div>
+    <ul
+      class="footer-links type-link"
+      style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; list-style: none; padding: 0;"
+    >
+      <li class="footer-link-item"><a href={`/iphone-${modelSlug}/${otherServiceSlug}`}>{otherServiceLabel} deste modelo</a></li>
+      <li class="footer-link-item"><a href={`/servicos/${currentServiceSlug}`}>Ver todos os modelos</a></li>
+    </ul>
+  </div>
+</section>
