@@ -1,0 +1,20 @@
+---
+interface Props {
+  symptoms: string[];
+}
+
+const { symptoms } = Astro.props;
+---
+<section class="service-symptoms-section">
+  <div class="container">
+    <div class="section-header scroll-reveal scroll-top">
+      <span class="section-label">Sinais de Alerta</span>
+      <h2 class="section-title type-h2-44">Sinais de que Você Precisa desse Reparo</h2>
+    </div>
+    <ul class="other-services-bullets type-body-16">
+      {symptoms.map((symptom) => (
+        <li>{symptom}</li>
+      ))}
+    </ul>
+  </div>
+</section>
