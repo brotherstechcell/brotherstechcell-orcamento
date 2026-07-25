@@ -1,0 +1,26 @@
+---
+import { services } from '../data/services';
+
+interface Props {
+  currentSlug: string;
+}
+
+const { currentSlug } = Astro.props;
+const others = services.filter((s) => s.slug !== currentSlug);
+---
+<section class="service-other-section">
+  <div class="container">
+    <div class="section-header scroll-reveal scroll-top">
+      <span class="section-label">Mais Serviços</span>
+      <h2 class="section-title type-h2-44">Outros Reparos que Fazemos</h2>
+    </div>
+    <ul
+      class="footer-links type-link"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; list-style: none; padding: 0; max-width: 900px; margin: 0 auto;"
+    >
+      {others.map((s) => (
+        <li class="footer-link-item"><a href={`/servicos/${s.slug}`}>{s.name}</a></li>
+      ))}
+    </ul>
+  </div>
+</section>
