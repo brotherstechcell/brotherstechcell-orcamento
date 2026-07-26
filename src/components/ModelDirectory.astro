@@ -1,12 +1,12 @@
 ---
-import { getModelNames, slugifyModel } from '../data/modelPages';
+import { getAllModelPages } from '../data/modelPages';
 
 interface Props {
   serviceSlug: "troca-de-tela" | "troca-de-bateria";
 }
 
 const { serviceSlug } = Astro.props;
-const modelNames = getModelNames();
+const modelPages = getAllModelPages().filter((p) => p.serviceSlug === serviceSlug);
 ---
 <section class="model-directory-section">
   <div class="container">
@@ -18,8 +18,8 @@ const modelNames = getModelNames();
       class="footer-links type-link"
       style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; list-style: none; padding: 0; max-width: 900px; margin: 0 auto;"
     >
-      {modelNames.map((name) => (
-        <li class="footer-link-item"><a href={`/iphone-${slugifyModel(name)}/${serviceSlug}`}>iPhone {name}</a></li>
+      {modelPages.map((p) => (
+        <li class="footer-link-item"><a href={`/iphone-${p.modelSlug}/${serviceSlug}`}>iPhone {p.modelName}</a></li>
       ))}
     </ul>
   </div>
