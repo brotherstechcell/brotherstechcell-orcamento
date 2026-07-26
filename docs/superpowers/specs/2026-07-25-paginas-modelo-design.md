@@ -55,9 +55,11 @@ Sintomas, processo, garantia, bairros atendidos: **idênticos** aos já escritos
 
 Mesmo padrão da Etapa 2 por consistência: `Service` + `FAQPage` + `BreadcrumbList` (Home → Serviço → iPhone {modelo}). `Product`/`Offer` schema (que aproveitaria melhor o preço real disponível aqui) fica registrado como possível melhoria futura, fora de escopo desta etapa.
 
-### Consistência de dados (nota, não um problema novo)
+### Consistência de dados
 
-O preço exibido é o snapshot estático de `CONFIG.devices` no momento do build — o mesmo dado que a home já usa hoje pro "a partir de R$249,90". Não se atualiza sozinho se a tabela de preços mudar na Supabase; precisa de novo build e deploy. Esse comportamento já existe desde a Etapa 2, não é uma limitação nova.
+**Correção pós-implementação (revisão final da branch):** esta seção originalmente afirmava que o comportamento de snapshot estático "já existe desde a Etapa 2, não é uma limitação nova" — isso estava **errado**. A Etapa 2 (`ServicePricing.astro`) só publica um piso ("A partir de R$249,90"), que continua correto mesmo com o catálogo real tendo mudado. Esta etapa passou a publicar o **preço exato por modelo**, inclusive dentro do JSON-LD (`FAQPage`), o que é uma afirmação de fato muito mais sensível a ficar desatualizada — e de fato estava: a revisão final encontrou o snapshot em `CONFIG.devices` desatualizado em até R$550 por modelo em relação ao catálogo ao vivo da Supabase, além de faltar 1 modelo inteiro ("iPhone 17 Air", 40 modelos reais vs. 39 no snapshot). Os dados foram atualizados a partir do catálogo ao vivo antes do lançamento desta etapa (commits `a0c45ff`/`7163a3b`).
+
+O preço exibido continua sendo o snapshot estático de `CONFIG.devices` no momento do build — não se atualiza sozinho se a tabela de preços mudar na Supabase; precisa de novo build e deploy. **Isso é uma limitação real e conhecida**, não coberta por esta etapa: recomenda-se uma etapa futura dedicada a sincronizar `prices.js` automaticamente (ex: build-time fetch direto da API ao invés de snapshot, ou um webhook da Supabase disparando rebuild no Vercel quando o preço mudar).
 
 ## Critério de sucesso
 
