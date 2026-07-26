@@ -1,3 +1,56 @@
+---
+import { CONFIG } from '../scripts/prices.js';
+
+const LOGICAL_MODEL_ORDER = [
+  "17 Pro Max", "17 Pro", "17 Plus", "17",
+  "16 Pro Max", "16 Pro", "16 Plus", "16",
+  "15 Pro Max", "15 Pro", "15 Plus", "15",
+  "14 Pro Max", "14 Pro", "14 Plus", "14",
+  "13 Pro Max", "13 Pro", "13 Mini", "13",
+  "12 Pro Max", "12 Pro", "12 Mini", "12",
+  "11 Pro Max", "11 Pro", "11",
+  "XS Max", "XS", "XR", "X",
+  "SE 2/3",
+  "8 Plus", "8",
+  "7 Plus", "7",
+  "6S Plus", "6S", "6"
+];
+
+const LOGICAL_MODEL_GROUPS = [
+  { label: "Linha iPhone 17", models: ["17 Pro Max", "17 Pro", "17 Plus", "17"] },
+  { label: "Linha iPhone 16", models: ["16 Pro Max", "16 Pro", "16 Plus", "16"] },
+  { label: "Linha iPhone 15", models: ["15 Pro Max", "15 Pro", "15 Plus", "15"] },
+  { label: "Linha iPhone 14", models: ["14 Pro Max", "14 Pro", "14 Plus", "14"] },
+  { label: "Linha iPhone 13", models: ["13 Pro Max", "13 Pro", "13 Mini", "13"] },
+  { label: "Linha iPhone 12 & 11", models: ["12 Pro Max", "12 Pro", "12 Mini", "12", "11 Pro Max", "11 Pro", "11"] },
+  { label: "Modelos Anteriores", models: ["XS Max", "XS", "XR", "X", "SE 2/3", "8 Plus", "8", "7 Plus", "7", "6S Plus", "6S", "6"] }
+];
+
+const sortedModels = Object.keys(CONFIG.devices || {}).sort((a, b) => {
+  const indexA = LOGICAL_MODEL_ORDER.indexOf(a);
+  const indexB = LOGICAL_MODEL_ORDER.indexOf(b);
+  if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+  if (indexA !== -1) return -1;
+  if (indexB !== -1) return 1;
+  return a.localeCompare(b);
+});
+
+const defaultModel = sortedModels[0] || "16 Pro Max";
+const defaultData = CONFIG.devices?.[defaultModel] || {};
+
+const qualitiesOrder = ["Premium", "Econômica"];
+const screenQualities = defaultData.tela 
+  ? Object.keys(defaultData.tela)
+      .filter(q => q.toLowerCase() !== "básica" && q.toLowerCase() !== "basica")
+      .sort((a,b) => qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b))
+  : [];
+const batteryQualities = defaultData.bateria 
+  ? Object.keys(defaultData.bateria)
+      .filter(q => q.toLowerCase() !== "básica" && q.toLowerCase() !== "basica")
+      .sort((a,b) => qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b))
+  : [];
+---
+
     <!-- Seção de Telas e Baterias (Seletor Único) -->
     <section id="telas-precos">
       <div class="container">
@@ -24,7 +77,18 @@
               <label for="device-search-select" class="search-label">Selecione o modelo do seu iPhone:</label>
               <div class="search-select-wrapper">
                 <select id="device-search-select" class="search-select-dropdown">
-                  <!-- Carregado via JavaScript dinamicamente -->
+                  <option value="" disabled>Clique aqui e escolha o modelo...</option>
+                  {LOGICAL_MODEL_GROUPS.map(group => {
+                    const groupModels = group.models.filter(m => (CONFIG.devices || {})[m]);
+                    if (groupModels.length === 0) return null;
+                    return (
+                      <optgroup label={group.label}>
+                        {groupModels.map(model => (
+                          <option value={model} selected={model === defaultModel}>iPhone {model}</option>
+                        ))}
+                      </optgroup>
+                    );
+                  })}
                 </select>
                 <div class="select-arrow">
                   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
@@ -34,9 +98,126 @@
               </div>
             </div>
 
-            <!-- Grid de Resultados de Tela e Bateria do Modelo Selecionado -->
+            <!-- Grid de Resultados de Tela e Bateria do Modelo Selecionado (Pre-renderizado no servidor) -->
             <div class="results-grid" id="selector-results-grid">
-              <!-- Gerado via JavaScript baseado no modelo selecionado -->
+              <!-- Card Tela -->
+              <div class="price-selector-card fancy-card">
+                <div class="card-inner">
+                  <div class="service-header-row">
+                    <span class="icon-service-type">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+                        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                      </svg>
+                    </span>
+                    <div>
+                      <h4 class="service-title-text">Tela de iPhone {defaultModel}</h4>
+                      <span class="service-subtitle-text">Substituição rápida e garantida</span>
+                    </div>
+                  </div>
+                  <div class="service-pricing-list">
+                    {screenQualities.map(quality => {
+                      const qData = defaultData.tela[quality];
+                      const isPremium = quality.toLowerCase() === 'premium';
+                      const displayQuality = quality.toLowerCase().includes('intermediár') ? 'Econômica' : quality;
+                      const priceText = qData.price.toLowerCase().includes('consulta') ? qData.price : `R$ ${qData.price}`;
+                      const installmentText = qData.price.toLowerCase().includes('consulta') ? '' : `ou ${qData.installment}`;
+                      return (
+                        <div class={isPremium ? "service-quality-row premium-featured" : "service-quality-row"}>
+                          <div class="quality-row-main">
+                            <div class="quality-label">
+                              <div class="quality-badge-wrapper" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                <span class={`quality-badge ${displayQuality.toLowerCase()}`}>{displayQuality}</span>
+                                {isPremium && <span class="premium-recommend-badge" style="font-size: 0.65rem; background: linear-gradient(135deg, #ff9f43 0%, #ff5252 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: 800; letter-spacing: 0.03em; box-shadow: 0 2px 8px rgba(255, 82, 82, 0.3);">🔥 MAIS VENDIDA</span>}
+                              </div>
+                              <div class="quality-benefits-wrapper">
+                                <span class="benefit-item warranty">
+                                  <svg viewBox="0 0 24 24" class="benefit-icon"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                                  {isPremium ? '6 Meses de Garantia' : '3 Meses de Garantia'}
+                                </span>
+                                {isPremium && (
+                                  <span class="benefit-item gift">
+                                    <svg viewBox="0 0 24 24" class="benefit-icon"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.65-.5-.65C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4V8h16v11z"/></svg>
+                                    Película + Capinha Grátis
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <div class="quality-pricing">
+                              <span class="quality-price-cash">{priceText}</span>
+                              <span class="quality-price-install">{installmentText}</span>
+                            </div>
+                          </div>
+                          <div class="quality-action">
+                            <a href={`https://brothersystem.vercel.app/agendar?link=tela&device=${encodeURIComponent(defaultModel)}&quality=${encodeURIComponent(displayQuality)}`} target="_blank" rel="noopener noreferrer" class={isPremium ? "btn-quality-order btn-premium-cta" : "btn-quality-order"}>
+                              {isPremium ? 'AGENDAR PREMIUM' : 'AGENDAR'}
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Bateria -->
+              <div class="price-selector-card fancy-card">
+                <div class="card-inner">
+                  <div class="service-header-row">
+                    <span class="icon-service-type battery">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect>
+                        <line x1="22" y1="11" x2="22" y2="13"></line>
+                        <line x1="6" y1="11" x2="6" y2="13"></line>
+                        <line x1="10" y1="11" x2="10" y2="13"></line>
+                      </svg>
+                    </span>
+                    <div>
+                      <h4 class="service-title-text">Bateria de iPhone {defaultModel}</h4>
+                      <span class="service-subtitle-text">Saúde 100% com selo Anatel</span>
+                    </div>
+                  </div>
+                  <div class="service-pricing-list">
+                    {batteryQualities.map(quality => {
+                      const qData = defaultData.bateria[quality];
+                      const isPremium = quality.toLowerCase() === 'premium';
+                      const displayQuality = quality.toLowerCase().includes('intermediár') ? 'Econômica' : quality;
+                      const priceText = qData.price.toLowerCase().includes('consulta') ? qData.price : `R$ ${qData.price}`;
+                      const installmentText = qData.price.toLowerCase().includes('consulta') ? '' : `ou ${qData.installment}`;
+                      return (
+                        <div class="service-quality-row">
+                          <div class="quality-row-main">
+                            <div class="quality-label">
+                              <span class={`quality-badge ${displayQuality.toLowerCase()}`}>{displayQuality}</span>
+                              <div class="quality-benefits-wrapper">
+                                <span class="benefit-item warranty">
+                                  <svg viewBox="0 0 24 24" class="benefit-icon"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                                  {isPremium ? '6 Meses de Garantia' : '3 Meses de Garantia'}
+                                </span>
+                                {isPremium && (
+                                  <span class="benefit-item gift">
+                                    <svg viewBox="0 0 24 24" class="benefit-icon"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.65-.5-.65C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4V8h16v11z"/></svg>
+                                    Película + Capinha Grátis
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <div class="quality-pricing">
+                              <span class="quality-price-cash">{priceText}</span>
+                              <span class="quality-price-install">{installmentText}</span>
+                            </div>
+                          </div>
+                          <div class="quality-action">
+                            <a href={`https://brothersystem.vercel.app/agendar?link=bateria&device=${encodeURIComponent(defaultModel)}&quality=${encodeURIComponent(displayQuality)}`} target="_blank" rel="noopener noreferrer" class="btn-quality-order">
+                              AGENDAR
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

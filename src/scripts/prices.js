@@ -17,7 +17,7 @@ const CONFIG = {
     "city": "Manaus",
     "address": "Manaus - AM (Atendimento Delivery)"
   },
-  "warranty": "até 90 dias de garantia real",
+  "warranty": "até 6 meses de garantia real",
   "paymentTerms": "Em até 12x no cartão",
   "devices": {
     "6": {

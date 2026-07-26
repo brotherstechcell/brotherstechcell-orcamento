@@ -79,9 +79,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!p.active) return;
       const modelName = modelMap[p.model_id];
       const serviceName = p.service_id;
-      const qualityName = qualityMap[p.quality_id];
+      let qualityName = qualityMap[p.quality_id];
 
       if (!modelName || !serviceName || !qualityName) return;
+
+      // Normalização de qualidades legadas
+      if (qualityName.trim().toLowerCase() === "intermediária" || qualityName.trim().toLowerCase() === "intermediaria") {
+        qualityName = "Econômica";
+      }
+      if (qualityName.trim().toLowerCase() === "básica" || qualityName.trim().toLowerCase() === "basica") {
+        return; // Ignorar qualidade básica
+      }
 
       if (!devices[modelName]) {
         devices[modelName] = {};
@@ -90,22 +98,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         devices[modelName][serviceName] = {};
       }
 
-      let formattedPrice = "";
-      if (typeof p.cash_price === "number") {
-        formattedPrice = p.cash_price.toFixed(2).replace(".", ",");
-      } else {
-        formattedPrice = String(p.cash_price || "Sob Consulta");
-      }
-
+      let formattedPrice = "Sob Consulta";
       let formattedInstallment = "";
-      if (p.installment_text) {
-        formattedInstallment = p.installment_text;
-      } else if (typeof p.cash_price === "number") {
-        let instVal = p.installment_12x;
-        if (!instVal) {
-          instVal = (p.cash_price * 1.1416) / 12;
+
+      if (typeof p.cash_price === "number" && p.cash_price > 0) {
+        formattedPrice = p.cash_price.toFixed(2).replace(".", ",");
+        if (p.installment_text) {
+          formattedInstallment = p.installment_text;
+        } else {
+          let instVal = p.installment_12x;
+          if (!instVal) {
+            instVal = (p.cash_price * 1.1416) / 12;
+          }
+          formattedInstallment = `12x de R$ ${instVal.toFixed(2).replace(".", ",")}`;
         }
-        formattedInstallment = `12x de R$ ${instVal.toFixed(2).replace(".", ",")}`;
+      } else if (typeof p.cash_price === "string" && p.cash_price.trim() !== "" && !p.cash_price.toLowerCase().includes("sob consulta")) {
+        formattedPrice = p.cash_price;
+        formattedInstallment = p.installment_text || "";
       }
 
       devices[modelName][serviceName][qualityName] = {
@@ -147,6 +156,107 @@ const LOGICAL_MODEL_ORDER = [
 ];
 
 /**
+ * Detecta o modelo do iPhone do visitante via User Agent / Tela para pré-seleção inteligente
+ */
+function detectUserIphoneModel(availableModels) {
+  if (typeof navigator === "undefined" || !navigator.userAgent) return null;
+  const ua = navigator.userAgent;
+  if (!/iPhone/i.test(ua)) return null;
+
+  for (const model of availableModels) {
+    const rawNum = model.replace(/[^0-9]/g, '');
+    if (rawNum && ua.includes(`iPhone${rawNum}`)) {
+      return model;
+    }
+  }
+
+  // Mapeamento por tamanho lógico de tela (viewport width x height)
+  if (typeof window !== "undefined" && window.screen) {
+    const w = window.screen.width;
+    const h = window.screen.height;
+    const maxDim = Math.max(w, h);
+
+    if (maxDim === 932 || maxDim === 956) {
+      if (availableModels.includes("16 Pro Max")) return "16 Pro Max";
+      if (availableModels.includes("15 Pro Max")) return "15 Pro Max";
+    } else if (maxDim === 852 || maxDim === 874) {
+      if (availableModels.includes("16 Pro")) return "16 Pro";
+      if (availableModels.includes("15 Pro")) return "15 Pro";
+    } else if (maxDim === 844) {
+      if (availableModels.includes("14")) return "14";
+      if (availableModels.includes("13")) return "13";
+      if (availableModels.includes("12")) return "12";
+    } else if (maxDim === 896) {
+      if (availableModels.includes("11")) return "11";
+      if (availableModels.includes("XR")) return "XR";
+    }
+  }
+
+  return null;
+}
+
+const LOGICAL_MODEL_GROUPS = [
+  { label: "Linha iPhone 17", models: ["17 Pro Max", "17 Pro", "17 Plus", "17"] },
+  { label: "Linha iPhone 16", models: ["16 Pro Max", "16 Pro", "16 Plus", "16"] },
+  { label: "Linha iPhone 15", models: ["15 Pro Max", "15 Pro", "15 Plus", "15"] },
+  { label: "Linha iPhone 14", models: ["14 Pro Max", "14 Pro", "14 Plus", "14"] },
+  { label: "Linha iPhone 13", models: ["13 Pro Max", "13 Pro", "13 Mini", "13"] },
+  { label: "Linha iPhone 12 & 11", models: ["12 Pro Max", "12 Pro", "12 Mini", "12", "11 Pro Max", "11 Pro", "11"] },
+  { label: "Modelos Anteriores", models: ["XS Max", "XS", "XR", "X", "SE 2/3", "8 Plus", "8", "7 Plus", "7", "6S Plus", "6S", "6"] }
+];
+
+function populateSelectWithOptgroups(selectEl, sortedModels, defaultText) {
+  if (!selectEl) return;
+  selectEl.innerHTML = "";
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = defaultText;
+  defaultOption.disabled = true;
+  selectEl.appendChild(defaultOption);
+
+  LOGICAL_MODEL_GROUPS.forEach(group => {
+    const groupModels = group.models.filter(m => sortedModels.includes(m));
+    if (groupModels.length > 0) {
+      const optGroup = document.createElement("optgroup");
+      optGroup.label = group.label;
+      groupModels.forEach(model => {
+        const option = document.createElement("option");
+        option.value = model;
+        option.textContent = `iPhone ${model}`;
+        optGroup.appendChild(option);
+      });
+      selectEl.appendChild(optGroup);
+    }
+  });
+}
+
+function setupMobileMenuToggle() {
+  const toggleBtn = document.getElementById("mobile-menu-toggle");
+  const navList = document.getElementById("nav-menu-list");
+  if (!toggleBtn || !navList) return;
+
+  toggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    navList.classList.toggle("mobile-open");
+    toggleBtn.classList.toggle("active");
+  });
+
+  document.querySelectorAll("#nav-menu-list a").forEach(link => {
+    link.addEventListener("click", () => {
+      navList.classList.remove("mobile-open");
+      toggleBtn.classList.remove("active");
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!navList.contains(e.target) && !toggleBtn.contains(e.target)) {
+      navList.classList.remove("mobile-open");
+      toggleBtn.classList.remove("active");
+    }
+  });
+}
+
+/**
  * Inicializa o componente de Seletor Único de iPhone e abas de serviços
  */
 function initPricingSelector() {
@@ -159,7 +269,9 @@ function initPricingSelector() {
   const diagDropdown = document.getElementById("diagnostic-device-select");
   if (!dropdown || !CONFIG.devices) return;
   
-  // 1. Popular o Dropdown ordenado de forma lógica
+  setupMobileMenuToggle();
+
+  // 1. Popular o Dropdown ordenado de forma lógica com optgroups
   const sortedModels = Object.keys(CONFIG.devices).sort((a, b) => {
     const indexA = LOGICAL_MODEL_ORDER.indexOf(a);
     const indexB = LOGICAL_MODEL_ORDER.indexOf(b);
@@ -170,41 +282,21 @@ function initPricingSelector() {
   });
   
   // Popular Dropdown Principal
-  dropdown.innerHTML = "";
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = "Clique aqui e escolha o modelo...";
-  defaultOption.disabled = true;
-  dropdown.appendChild(defaultOption);
+  populateSelectWithOptgroups(dropdown, sortedModels, "Clique aqui e escolha o modelo...");
   
-  sortedModels.forEach(model => {
-    const option = document.createElement("option");
-    option.value = model;
-    option.textContent = `iPhone ${model}`;
-    dropdown.appendChild(option);
-  });
-  
+  // Detecção Inteligente do iPhone do Usuário
+  const detectedModel = detectUserIphoneModel(sortedModels);
+  const initialModel = (detectedModel && sortedModels.includes(detectedModel)) ? detectedModel : sortedModels[0];
+
   // Popular Dropdown do Assistente de Diagnóstico
   if (diagDropdown) {
-    diagDropdown.innerHTML = "";
-    const defaultOptionDiag = document.createElement("option");
-    defaultOptionDiag.value = "";
-    defaultOptionDiag.textContent = "Selecione o modelo...";
-    defaultOptionDiag.disabled = true;
-    diagDropdown.appendChild(defaultOptionDiag);
-    
-    sortedModels.forEach(model => {
-      const option = document.createElement("option");
-      option.value = model;
-      option.textContent = `iPhone ${model}`;
-      diagDropdown.appendChild(option);
-    });
-    diagDropdown.value = sortedModels[0];
+    populateSelectWithOptgroups(diagDropdown, sortedModels, "Selecione o modelo...");
+    diagDropdown.value = initialModel;
   }
   
-  // Define o valor padrão para o primeiro modelo (ex: 17 Pro Max ou 11 dependendo da carga)
-  dropdown.value = sortedModels[0];
-  renderSelectorResults(sortedModels[0]);
+  // Define o valor selecionado
+  dropdown.value = initialModel;
+  renderSelectorResults(initialModel);
   
   // 2. Escutar mudanças no Dropdown
   dropdown.addEventListener("change", (e) => {
@@ -240,90 +332,52 @@ function initPricingSelector() {
  */
 function renderSelectorResults(modelName) {
   const resultsGrid = document.getElementById("selector-results-grid");
-  if (!resultsGrid || !CONFIG.devices[modelName]) return;
+  if (!resultsGrid || !CONFIG.devices || !CONFIG.devices[modelName]) return;
+
+  const deviceData = CONFIG.devices[modelName];
+  resultsGrid.innerHTML = "";
   
-  // Renderiza Skeleton Skeletons primeiro para feedback visual premium
-  resultsGrid.innerHTML = `
-    <div class="price-selector-card skeleton-card">
-      <div class="skeleton-header">
-        <div class="skeleton-circle skeleton-shimmer"></div>
-        <div class="skeleton-text-group">
-          <div class="skeleton-line title skeleton-shimmer"></div>
-          <div class="skeleton-line subtitle skeleton-shimmer"></div>
-        </div>
-      </div>
-      <div class="skeleton-body">
-        <div class="skeleton-row skeleton-shimmer"></div>
-        <div class="skeleton-row skeleton-shimmer"></div>
-        <div class="skeleton-row skeleton-shimmer"></div>
-      </div>
-    </div>
-    <div class="price-selector-card skeleton-card">
-      <div class="skeleton-header">
-        <div class="skeleton-circle skeleton-shimmer"></div>
-        <div class="skeleton-text-group">
-          <div class="skeleton-line title skeleton-shimmer"></div>
-          <div class="skeleton-line subtitle skeleton-shimmer"></div>
-        </div>
-      </div>
-      <div class="skeleton-body">
-        <div class="skeleton-row skeleton-shimmer"></div>
-        <div class="skeleton-row skeleton-shimmer"></div>
-        <div class="skeleton-row skeleton-shimmer"></div>
-      </div>
-    </div>
-  `;
+  // 1. Criar Card de TELA
+  const screenCard = document.createElement("div");
+  screenCard.className = "price-selector-card fancy-card";
   
-  // Cancela timeout anterior se o usuário mudar de ideia rápido (anti-bounce)
-  if (window.priceSelectorTimeout) {
-    clearTimeout(window.priceSelectorTimeout);
-  }
-  
-  window.priceSelectorTimeout = setTimeout(() => {
-    const deviceData = CONFIG.devices[modelName];
-    resultsGrid.innerHTML = "";
+  let screenItemsHtml = "";
+  if (deviceData.tela && Object.keys(deviceData.tela).length > 0) {
+    const qualitiesOrder = ["Premium", "Econômica"];
+    const sortedQualities = Object.keys(deviceData.tela)
+      .filter(q => {
+        const qClean = q.trim().toLowerCase();
+        return qClean !== "básica" && qClean !== "basica";
+      })
+      .sort((a, b) => {
+        return qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b);
+      });
     
-    // 1. Criar Card de TELA
-    const screenCard = document.createElement("div");
-    screenCard.className = "price-selector-card fancy-card";
-    
-    let screenItemsHtml = "";
-    if (deviceData.tela && Object.keys(deviceData.tela).length > 0) {
-      // Ordenar qualidades (Premium primeiro, depois Econômica, depois Intermediária, depois Básica)
-      const qualitiesOrder = ["Premium", "Econômica", "Intermediária", "Básica"];
-      const sortedQualities = Object.keys(deviceData.tela)
-        .filter(q => {
-          const qClean = q.trim().toLowerCase();
-          return qClean !== "básica" && qClean !== "basica";
-        })
-        .sort((a, b) => {
-          return qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b);
-        });
+    sortedQualities.forEach(quality => {
+      const qData = deviceData.tela[quality];
+      const isSobConsulta = qData.price.toLowerCase().includes("consulta");
+      const priceText = isSobConsulta ? qData.price : `R$ ${qData.price}`;
+      const installmentText = isSobConsulta ? "" : `ou ${qData.installment}`;
       
-      sortedQualities.forEach(quality => {
-        const qData = deviceData.tela[quality];
-        const isSobConsulta = qData.price.toLowerCase().includes("consulta");
-        const priceText = isSobConsulta ? qData.price : `R$ ${qData.price}`;
-        const installmentText = isSobConsulta ? "" : `ou ${qData.installment}`;
-        
-        let displayQuality = quality;
-        if (quality.trim().toLowerCase() === "intermediária" || quality.trim().toLowerCase() === "intermediaria") {
-          displayQuality = "Econômica";
-        }
-        
-        const isPremium = quality.trim().toLowerCase() === 'premium';
-        const rowClass = isPremium ? 'service-quality-row premium-featured' : 'service-quality-row';
-        const btnClass = isPremium ? 'btn-quality-order btn-premium-cta' : 'btn-quality-order';
-        const buttonText = isPremium ? 'AGENDAR PREMIUM' : 'AGENDAR';
-        
-        const redirectUrl = `https://brothersystem.vercel.app/agendar?link=tela&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(displayQuality)}`;
-        
-        screenItemsHtml += `
-          <div class="${rowClass}">
+      let displayQuality = quality;
+      if (quality.trim().toLowerCase() === "intermediária" || quality.trim().toLowerCase() === "intermediaria") {
+        displayQuality = "Econômica";
+      }
+      
+      const isPremium = quality.trim().toLowerCase() === 'premium';
+      const rowClass = isPremium ? 'service-quality-row premium-featured' : 'service-quality-row';
+      const btnClass = isPremium ? 'btn-quality-order btn-premium-cta' : 'btn-quality-order';
+      const buttonText = isPremium ? 'AGENDAR PREMIUM' : 'AGENDAR';
+      
+      const redirectUrl = `https://brothersystem.vercel.app/agendar?link=tela&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(displayQuality)}`;
+      
+      screenItemsHtml += `
+        <div class="${rowClass}">
+          <div class="quality-row-main">
             <div class="quality-label">
               <div class="quality-badge-wrapper" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                 <span class="quality-badge ${displayQuality.toLowerCase()}">${displayQuality}</span>
-                ${isPremium ? '<span class="premium-recommend-badge" style="font-size: 0.6rem; background: var(--primary); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 800; letter-spacing: 0.03em;">★ RECOMENDADA</span>' : ''}
+                ${isPremium ? '<span class="premium-recommend-badge" style="font-size: 0.65rem; background: linear-gradient(135deg, #ff9f43 0%, #ff5252 100%); color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: 800; letter-spacing: 0.03em; box-shadow: 0 2px 8px rgba(255, 82, 82, 0.3);">🔥 MAIS VENDIDA</span>' : ''}
               </div>
               ${getQualityBenefitsHtml(displayQuality)}
             </div>
@@ -331,66 +385,71 @@ function renderSelectorResults(modelName) {
               <span class="quality-price-cash">${priceText}</span>
               <span class="quality-price-install">${installmentText}</span>
             </div>
-            <div class="quality-action">
-              <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="${btnClass}" aria-label="Agendar troca de tela ${displayQuality} para iPhone ${modelName}">
-                ${buttonText}
-              </a>
-            </div>
           </div>
-        `;
-      });
-    } else {
-      screenItemsHtml = `<p class="no-prices-msg">Serviço indisponível ou sob consulta para este modelo.</p>`;
-    }
-    
-    screenCard.innerHTML = `
-      <div class="card-inner">
-        <div class="service-header-row">
-          <span class="icon-service-type" style="padding: 0; background: none; border: none; overflow: hidden;">
-            <img src="${iconeTelaSrc}" alt="Troca de tela do iPhone ${modelName} em Manaus" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block;">
-          </span>
-          <div>
-            <h4 class="service-title-text">Tela de iPhone ${modelName}</h4>
-            <span class="service-subtitle-text">Substituição rápida e garantida</span>
+          <div class="quality-action">
+            <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="${btnClass}" aria-label="Agendar troca de tela ${displayQuality} para iPhone ${modelName}">
+              ${buttonText}
+            </a>
           </div>
         </div>
-        <div class="service-pricing-list">
-          ${screenItemsHtml}
+      `;
+    });
+  } else {
+    screenItemsHtml = `<p class="no-prices-msg">Serviço indisponível ou sob consulta para este modelo.</p>`;
+  }
+  
+  screenCard.innerHTML = `
+    <div class="card-inner">
+      <div class="service-header-row">
+        <span class="icon-service-type">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          </svg>
+        </span>
+        <div>
+          <h4 class="service-title-text">Tela de iPhone ${modelName}</h4>
+          <span class="service-subtitle-text">Substituição rápida e garantida</span>
         </div>
       </div>
-    `;
+      <div class="service-pricing-list">
+        ${screenItemsHtml}
+      </div>
+    </div>
+  `;
+  
+  // 2. Criar Card de BATERIA
+  const batteryCard = document.createElement("div");
+  batteryCard.className = "price-selector-card fancy-card";
+  
+  let batteryItemsHtml = "";
+  if (deviceData.bateria && Object.keys(deviceData.bateria).length > 0) {
+    const qualitiesOrder = ["Premium", "Econômica"];
+    const sortedQualities = Object.keys(deviceData.bateria)
+      .filter(q => {
+        const qClean = q.trim().toLowerCase();
+        return qClean !== "básica" && qClean !== "basica";
+      })
+      .sort((a, b) => {
+        return qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b);
+      });
     
-    // 2. Criar Card de BATERIA
-    const batteryCard = document.createElement("div");
-    batteryCard.className = "price-selector-card fancy-card";
-    
-    let batteryItemsHtml = "";
-    if (deviceData.bateria && Object.keys(deviceData.bateria).length > 0) {
-      const qualitiesOrder = ["Premium", "Econômica", "Intermediária", "Básica"];
-      const sortedQualities = Object.keys(deviceData.bateria)
-        .filter(q => {
-          const qClean = q.trim().toLowerCase();
-          return qClean !== "básica" && qClean !== "basica";
-        })
-        .sort((a, b) => {
-          return qualitiesOrder.indexOf(a) - qualitiesOrder.indexOf(b);
-        });
+    sortedQualities.forEach(quality => {
+      const qData = deviceData.bateria[quality];
+      const isSobConsulta = qData.price.toLowerCase().includes("consulta");
+      const priceText = isSobConsulta ? qData.price : `R$ ${qData.price}`;
+      const installmentText = isSobConsulta ? "" : `ou ${qData.installment}`;
       
-      sortedQualities.forEach(quality => {
-        const qData = deviceData.bateria[quality];
-        const isSobConsulta = qData.price.toLowerCase().includes("consulta");
-        const priceText = isSobConsulta ? qData.price : `R$ ${qData.price}`;
-        const installmentText = isSobConsulta ? "" : `ou ${qData.installment}`;
-        
-        let displayQuality = quality;
-        if (quality.trim().toLowerCase() === "intermediária" || quality.trim().toLowerCase() === "intermediaria") {
-          displayQuality = "Econômica";
-        }
-        
-        const redirectUrl = `https://brothersystem.vercel.app/agendar?link=bateria&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(displayQuality)}`;
-        
-        batteryItemsHtml += `
-          <div class="service-quality-row">
+      let displayQuality = quality;
+      if (quality.trim().toLowerCase() === "intermediária" || quality.trim().toLowerCase() === "intermediaria") {
+        displayQuality = "Econômica";
+      }
+      
+      const redirectUrl = `https://brothersystem.vercel.app/agendar?link=bateria&device=${encodeURIComponent(modelName)}&quality=${encodeURIComponent(displayQuality)}`;
+      
+      batteryItemsHtml += `
+        <div class="service-quality-row">
+          <div class="quality-row-main">
             <div class="quality-label">
               <span class="quality-badge ${displayQuality.toLowerCase()}">${displayQuality}</span>
               ${getQualityBenefitsHtml(displayQuality)}
@@ -399,38 +458,43 @@ function renderSelectorResults(modelName) {
               <span class="quality-price-cash">${priceText}</span>
               <span class="quality-price-install">${installmentText}</span>
             </div>
-            <div class="quality-action">
-              <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="btn-quality-order" aria-label="Agendar troca de bateria ${displayQuality} para iPhone ${modelName}">
-                AGENDAR
-              </a>
-            </div>
           </div>
-        `;
-      });
-    } else {
-      batteryItemsHtml = `<p class="no-prices-msg">Serviço indisponível ou sob consulta para este modelo.</p>`;
-    }
-    
-    batteryCard.innerHTML = `
-      <div class="card-inner">
-        <div class="service-header-row">
-          <span class="icon-service-type battery" style="padding: 0; background: none; border: none; overflow: hidden;">
-            <img src="${iconeBateriaSrc}" alt="Troca de bateria do iPhone ${modelName} em Manaus" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block;">
-          </span>
-          <div>
-            <h4 class="service-title-text">Bateria de iPhone ${modelName}</h4>
-            <span class="service-subtitle-text">Saúde 100% com selo Anatel</span>
+          <div class="quality-action">
+            <a href="${redirectUrl}" target="_blank" rel="noopener noreferrer" class="btn-quality-order" aria-label="Agendar troca de bateria ${displayQuality} para iPhone ${modelName}">
+              AGENDAR
+            </a>
           </div>
         </div>
-        <div class="service-pricing-list">
-          ${batteryItemsHtml}
+      `;
+    });
+  } else {
+    batteryItemsHtml = `<p class="no-prices-msg">Serviço indisponível ou sob consulta para este modelo.</p>`;
+  }
+  
+  batteryCard.innerHTML = `
+    <div class="card-inner">
+      <div class="service-header-row">
+        <span class="icon-service-type battery">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect>
+            <line x1="22" y1="11" x2="22" y2="13"></line>
+            <line x1="6" y1="11" x2="6" y2="13"></line>
+            <line x1="10" y1="11" x2="10" y2="13"></line>
+          </svg>
+        </span>
+        <div>
+          <h4 class="service-title-text">Bateria de iPhone ${modelName}</h4>
+          <span class="service-subtitle-text">Saúde 100% com selo Anatel</span>
         </div>
       </div>
-    `;
-    
-    resultsGrid.appendChild(screenCard);
-    resultsGrid.appendChild(batteryCard);
-  }, 250);
+      <div class="service-pricing-list">
+        ${batteryItemsHtml}
+      </div>
+    </div>
+  `;
+  
+  resultsGrid.appendChild(screenCard);
+  resultsGrid.appendChild(batteryCard);
 }
 
 
@@ -573,7 +637,7 @@ function getQualityBenefitsHtml(quality) {
           <svg viewBox="0 0 24 24" class="benefit-icon">
             <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
           </svg>
-          90 Dias de Garantia
+          6 Meses de Garantia
         </span>
         <span class="benefit-item gift">
           <svg viewBox="0 0 24 24" class="benefit-icon">
@@ -583,148 +647,52 @@ function getQualityBenefitsHtml(quality) {
         </span>
       </div>
     `;
-  } else if (qClean === 'intermediária' || qClean === 'intermediaria' || qClean === 'econômica' || qClean === 'economica') {
+  } else {
     return `
       <div class="quality-benefits-wrapper">
         <span class="benefit-item warranty">
           <svg viewBox="0 0 24 24" class="benefit-icon">
             <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
           </svg>
-          30 Dias de Garantia
+          3 Meses de Garantia
         </span>
-        <span class="benefit-item gift">
-          <svg viewBox="0 0 24 24" class="benefit-icon">
-            <path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.65-.5-.65C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4V8h16v11z"/>
-          </svg>
-          Película Grátis
-        </span>
-      </div>
-    `;
-  } else {
-    return `
-      <div class="quality-benefits-wrapper">
-        <span class="benefit-item warranty basic">
-          <svg viewBox="0 0 24 24" class="benefit-icon">
-            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-          </svg>
-          7 Dias de Garantia
-        </span>
-        <span class="benefit-item gift muted">Sem brindes</span>
       </div>
     `;
   }
 }
 
 /**
- * Configura e sincroniza o vídeo de fundo do Hero com o scroll da página de forma suave (LERP)
+ * Configura o vídeo do Hero com reprodução contínua e 0 atraso no scroll
  */
 function setupHeroScrollVideo() {
   const video = document.getElementById("hero-scroll-video");
-  if (!video) return;
+  const heroSection = document.getElementById("inicio");
+  if (!video || !heroSection) return;
 
-  let targetTime = 0;
-  let currentTime = 0;
-  const ease = 0.08; // Fator de interpolação linear (quanto menor, mais suave)
-  let animFrameId = null; // ID da animação ativa (null se estiver dormindo/ocioso)
-
-  let isSeeking = false;
-  let pendingTime = null;
-
-  // Garante que o vídeo está pausado para controle manual
-  video.pause();
-  
-  // Força carregamento do vídeo
-  video.load();
-
-  // Escuta a conclusão do seek do navegador antes de enviar outra requisição
-  video.addEventListener("seeked", () => {
-    isSeeking = false;
-    if (pendingTime !== null) {
-      const nextTime = pendingTime;
-      pendingTime = null;
-      performSeek(nextTime);
-    }
-  });
-
-  function performSeek(time) {
-    if (isSeeking) {
-      pendingTime = time;
-      return;
-    }
-    if (video.duration) {
-      isSeeking = true;
-      video.currentTime = Math.min(Math.max(time, 0), video.duration - 0.02);
-    }
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      const startPlay = () => {
+        video.play();
+        window.removeEventListener("touchstart", startPlay);
+        window.removeEventListener("scroll", startPlay);
+      };
+      window.addEventListener("touchstart", startPlay, { passive: true, once: true });
+      window.addEventListener("scroll", startPlay, { passive: true, once: true });
+    });
   }
 
-  function updateVideoTarget() {
-    const heroSection = document.getElementById("inicio");
-    if (!heroSection) return;
-
-    const rect = heroSection.getBoundingClientRect();
-    // O trilho rolável total é a altura da seção Hero menos a altura da viewport
-    const totalScrollable = heroSection.offsetHeight - window.innerHeight;
-    
-    if (totalScrollable > 0) {
-      // rect.top vai de 0 (seção no topo) até -totalScrollable (seção terminou)
-      const progress = Math.min(Math.max(-rect.top / totalScrollable, 0), 1);
-      
-      // Controla a revelação dos textos e indicadores baseado no progresso da desmontagem
-      if (window.innerWidth < 1024) {
-        if (progress >= 0.75) {
-          heroSection.classList.add("intro-complete");
-        } else if (progress < 0.10) {
-          heroSection.classList.remove("intro-complete");
-        }
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        video.play().catch(() => {});
       } else {
-        heroSection.classList.add("intro-complete");
+        video.pause();
       }
-      
-      if (video.duration) {
-        targetTime = progress * video.duration;
-        
-        // Se o render loop estiver dormindo (inativo), acorda ele instantaneamente
-        if (!animFrameId) {
-          animFrameId = requestAnimationFrame(renderLoop);
-        }
-      }
-    }
-  }
+    });
+  }, { threshold: 0.05 });
 
-  // Atualiza o progresso-alvo no scroll e resize (passive para desempenho de scroll)
-  window.addEventListener("scroll", updateVideoTarget, { passive: true });
-  window.addEventListener("resize", updateVideoTarget, { passive: true });
-
-  // Inicializa valores ao carregar metadados
-  video.addEventListener("loadedmetadata", updateVideoTarget);
-  
-  if (video.readyState >= 1) {
-    updateVideoTarget();
-  }
-
-  // Loop de renderização (suavização) sob demanda (para e poupa 100% de GPU quando parado)
-  function renderLoop() {
-    const diff = targetTime - currentTime;
-    
-    // Interpolação linear (LERP)
-    currentTime += diff * ease;
-    
-    // Se a diferença for insignificante (estabilizado), para o render loop por completo
-    if (Math.abs(diff) < 0.005) {
-      currentTime = targetTime;
-      performSeek(currentTime);
-      animFrameId = null; // Sinaliza que o loop está inativo/dormindo
-      return; // Interrompe o requestAnimationFrame, liberando 100% da GPU/CPU
-    }
-    
-    // Apenas atualiza a seek do vídeo se a diferença for maior que meio frame (0.015s)
-    if (Math.abs(diff) > 0.015) {
-      performSeek(currentTime);
-    }
-    
-    // Continua o loop enquanto a interpolação não finalizar
-    animFrameId = requestAnimationFrame(renderLoop);
-  }
+  videoObserver.observe(heroSection);
 }
 
 function setupScrollReveal() {

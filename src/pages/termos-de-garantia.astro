@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsapp from '../components/FloatingWhatsapp.astro';
+import BottomNav from '../components/BottomNav.astro';
+---
+
+<BaseLayout
+  title="Termos de Garantia (3 a 6 Meses) | Brothers Techcell Manaus"
+  description="Termos de Garantia Real de 3 a 6 meses para troca de tela e bateria de iPhone em Manaus."
+  canonicalPath="/termos-de-garantia"
+>
+  <Header />
+  <main class="legal-page-container container" style="padding-top: 140px; padding-bottom: 80px; max-width: 800px;">
+    <span class="section-label">Aspectos Legais</span>
+    <h1 class="type-h2-44" style="margin-bottom: 24px;">Termos de Garantia Real</h1>
+    <p class="type-small-body" style="color: var(--text-muted); margin-bottom: 40px;">Garantia de 3 Meses (Econômica) e 6 Meses (Premium)</p>
+
+    <div class="legal-content type-body-16" style="display: flex; flex-direction: column; gap: 24px; color: var(--text-secondary); line-height: 1.8;">
+      <section>
+        <h2 class="type-h3" style="color: var(--text-primary); margin-bottom: 12px;">1. Prazos de Garantia</h2>
+        <p><strong>Qualidade Premium:</strong> Garantia real de 6 Meses (180 dias) contra defeitos de fabricação ou funcionamento do componente trocado.</p>
+        <p><strong>Qualidade Econômica:</strong> Garantia real de 3 Meses (90 dias) contra defeitos de fabricação ou funcionamento do componente trocado.</p>
+      </section>
+
+      <section>
+        <h2 class="type-h3" style="color: var(--text-primary); margin-bottom: 12px;">2. Cobertura da Garantia</h2>
+        <p>A garantia cobre qualquer falha de touch, linhas na imagem sem dano físico externo, falha no carregamento ou retenção de carga da bateria dentro do período contratado.</p>
+      </section>
+
+      <section>
+        <h2 class="type-h3" style="color: var(--text-primary); margin-bottom: 12px;">3. Exclusões de Garantia</h2>
+        <p>A garantia não cobre danos decorrentes de quedas, vidro trincado, pressão mecânica, oxidação por líquido ou intervenções realizadas por terceiros.</p>
+      </section>
+    </div>
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+</BaseLayout>

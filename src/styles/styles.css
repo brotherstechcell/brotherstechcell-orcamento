@@ -635,20 +635,18 @@ section {
 
 .hero-section {
   position: relative;
-  height: 300vh;
+  min-height: 100vh;
+  padding: 130px 0 60px 0;
+  display: flex;
+  align-items: center;
   background-color: var(--bg-primary);
 }
 
 .hero-sticky-container {
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  position: relative;
   width: 100%;
   display: flex;
   align-items: center;
-  overflow: hidden;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
 }
 
 .hero-split-wrapper {
@@ -685,6 +683,10 @@ section {
   align-items: center;
   background: transparent;
   overflow: hidden; /* Oculta qualquer transbordo */
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  transition: transform 0.1s ease-out;
 }
 
 #hero-scroll-video {
@@ -707,8 +709,10 @@ section {
   /* Oculta 12% da base e 4% da lateral direita (corte cirúrgico da estrela de IA do Google) */
   clip-path: inset(0% 4% 12% 0%);
   
-  /* Ajusta o posicionamento do vídeo para compensar o corte e re-centralizar o iPhone */
-  transform: translateY(4.5%);
+  /* Ajusta o posicionamento do vídeo para compensar o corte e re-centralizar o iPhone com GPU layer */
+  will-change: transform;
+  transform: translate3d(0, 4.5%, 0);
+  backface-visibility: hidden;
 }
 
 .hero-pill {
@@ -1055,8 +1059,10 @@ section {
 
 .comparison-bento-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .bento-card {
@@ -1613,11 +1619,13 @@ section {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 18px 20px;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 0.8fr;
-  align-items: center;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
   transition: var(--transition-fast);
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
 }
 
 .service-quality-row:hover {
@@ -1625,11 +1633,32 @@ section {
   background: rgba(41, 162, 81, 0.02);
 }
 
+.quality-row-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
 .quality-label {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
+  gap: 6px;
+  flex: 1;
+}
+
+.quality-pricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.quality-action {
+  width: 100%;
 }
 
 .quality-benefits-wrapper {
@@ -1691,17 +1720,12 @@ section {
   border: 1px solid var(--border);
 }
 
-.quality-pricing {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
 .quality-price-cash {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .quality-price-cash.consulta {
@@ -1713,13 +1737,14 @@ section {
   font-size: 0.725rem;
   color: var(--text-muted);
   margin-top: 2px;
+  white-space: nowrap;
 }
 
 .btn-quality-order {
   background: rgba(41, 162, 81, 0.04);
   border: 1.5px solid rgba(41, 162, 81, 0.18);
   color: var(--primary-dark);
-  padding: 12px 24px;
+  padding: 12px 20px;
   width: 100%;
   border-radius: var(--radius-pill);
   font-size: 0.825rem;
@@ -1729,6 +1754,7 @@ section {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  box-sizing: border-box;
   transition: var(--transition-smooth);
   box-shadow: 0 2px 6px rgba(20, 51, 79, 0.02);
   cursor: pointer;
@@ -1747,7 +1773,7 @@ section {
   border: 2px solid var(--primary);
   background: rgba(41, 162, 81, 0.03);
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   box-shadow: 0 4px 15px rgba(41, 162, 81, 0.08);
 }
 
@@ -2440,10 +2466,82 @@ section {
   color: rgba(255, 255, 255, 0.7);
 }
 
+.header-cta-btn {
+  background: var(--primary);
+  border: none;
+  color: #FFFFFF;
+  font-size: 0.825rem;
+  font-weight: 800;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-green);
+  transition: var(--transition-smooth);
+}
+
+.header-cta-btn:hover {
+  background: var(--primary-dark);
+  color: #FFFFFF;
+  box-shadow: var(--shadow-green-lg);
+  transform: translateY(-2px);
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: var(--transition-fast);
+}
+
+.symptom-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.symptom-btn {
+  background: var(--bg-primary);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(20, 51, 79, 0.03);
+}
+
+.symptom-btn:hover {
+  border-color: var(--primary);
+  color: var(--text-primary);
+  background: rgba(41, 162, 81, 0.05);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(41, 162, 81, 0.15);
+}
+
+.symptom-btn.active {
+  border-color: var(--primary);
+  background: rgba(41, 162, 81, 0.1);
+  color: var(--primary-dark);
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(41, 162, 81, 0.12);
+}
+
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr 1fr;
-  gap: 60px;
+  grid-template-columns: 1.2fr 0.8fr 0.9fr 1fr;
+  gap: 40px;
   margin-bottom: 60px;
 }
 
@@ -2742,26 +2840,32 @@ section {
 
   /* Assistente de Diagnóstico Mobile */
   .diagnostic-card-inner {
-    padding: 36px 16px;
+    padding: 32px 16px;
   }
 
   .symptom-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
 
   .symptom-btn {
-    padding: 14px 16px;
-    font-size: 0.85rem;
+    padding: 12px 10px;
+    font-size: 0.8rem;
+    min-height: 52px;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
   }
 
   .btn-whatsapp-diagnostic {
-    width: 100%;
-    min-width: 0;
-    padding: 14px 20px;
+    width: 100% !important;
+    min-width: 100% !important;
+    padding: 16px 20px;
+    box-sizing: border-box;
+    justify-content: center;
   }
 
-  /* Cabeçalho Otimizado com Safe Area */
+  /* Cabeçalho Otimizado com Safe Area & Hamburguer Mobile */
   .header-main {
     padding-top: calc(10px + env(safe-area-inset-top));
     padding-bottom: 10px;
@@ -2773,8 +2877,36 @@ section {
     padding: 0 16px;
   }
 
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .nav-links {
-    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: 24px;
+    gap: 16px;
+    box-shadow: 0 12px 32px rgba(20, 51, 79, 0.12);
+    transform: translateY(-150%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+  }
+
+  .nav-links.mobile-open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .logo-img {
@@ -2790,8 +2922,8 @@ section {
   }
 
   .header-cta-btn {
-    padding: 8px 16px;
-    font-size: 0.75rem;
+    padding: 8px 14px;
+    font-size: 0.725rem;
   }
 
   /* Esconde WhatsApp Flutuante redundante no mobile */

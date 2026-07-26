@@ -23,7 +23,7 @@ export const services: ServiceData[] = [
     shortName: "troca de tela",
     metaTitle: "Troca de Tela de iPhone em Manaus | Brothers Techcell",
     metaDescription:
-      "Troca de tela de iPhone com delivery gratuito em Manaus. Peças Econômica ou Premium, a partir de R$249,90, com até 90 dias de garantia.",
+      "Troca de tela de iPhone com delivery gratuito em Manaus. Peças Econômica ou Premium, a partir de R$249,90, com até 6 meses de garantia.",
     intro:
       "A tela é a parte mais exposta a quedas e impactos do iPhone. Na Brothers Techcell, a troca é feita na sua frente, em Manaus, com peças Econômica ou Premium — sempre com garantia real.",
     hasFixedPricing: true,
@@ -49,7 +49,7 @@ export const services: ServiceData[] = [
       {
         question: "Qual a garantia?",
         answer:
-          "A garantia varia de 7 a 90 dias, dependendo da qualidade da peça escolhida (Econômica ou Premium) — os detalhes exatos são informados no orçamento.",
+          "A garantia varia de 3 a 6 meses, dependendo da qualidade da peça escolhida (Econômica ou Premium) — os detalhes exatos são informados no orçamento.",
       },
       {
         question: "Posso escolher a qualidade da tela?",
@@ -73,7 +73,7 @@ export const services: ServiceData[] = [
     shortName: "troca de bateria",
     metaTitle: "Troca de Bateria de iPhone em Manaus | Brothers Techcell",
     metaDescription:
-      "Troca de bateria de iPhone com delivery gratuito em Manaus. Bateria homologada Anatel, a partir de R$249,90, com até 90 dias de garantia.",
+      "Troca de bateria de iPhone com delivery gratuito em Manaus. Bateria homologada Anatel, a partir de R$249,90, com até 6 meses de garantia.",
     intro:
       "Bateria com saúde baixa faz o iPhone desligar sozinho, perder carga rápido ou desligar antes de chegar a 0%. Trocamos com peças homologadas Anatel, na sua frente, em Manaus.",
     hasFixedPricing: true,
@@ -107,7 +107,7 @@ export const services: ServiceData[] = [
       },
       {
         question: "Qual a garantia da bateria?",
-        answer: "Até 90 dias de garantia real, dependendo da qualidade escolhida.",
+        answer: "De 3 a 6 meses de garantia real, dependendo da qualidade escolhida (Econômica ou Premium).",
       },
       {
         question: "A troca de bateria apaga meus dados?",
