@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Estender as páginas `/iphone-{modelo}/{servico}` (hoje só tela/bateria, 78 páginas) para os outros 5 serviços do site (tampa-traseira, camera, dock, face-id, reparo-em-placa), gerando 189 páginas novas com preço real por modelo, sem regredir nenhuma das 78 páginas já publicadas.
+**Goal:** Estender as páginas `/iphone-{modelo}/{servico}` (hoje só tela/bateria, 80 páginas — 40 modelos × 2 serviços) para os outros 5 serviços do site (tampa-traseira, camera, dock, face-id, reparo-em-placa), gerando 189 páginas novas com preço real por modelo, sem regredir o conteúdo (título/descrição/preço/FAQ) das 80 páginas já publicadas.
 
 **Architecture:** `src/scripts/prices.js` ganha 6 novas chaves de serviço no snapshot `CONFIG.devices`. `src/data/modelPages.ts` deixa de ter uma lista fixa de 2 serviços e passa a ter uma tabela de configuração por serviço com 4 modos de exibição de preço (`dual-tier`, `single`, `starting-from`, `dual-single`). `ModelHero.astro` e `ModelCrossLinks.astro` generalizam pra consumir a nova estrutura. `ServicePricing.astro` para de ter o preço mínimo hardcoded e passa a receber o valor real calculado.
 
@@ -14,7 +14,7 @@
 - **Modo de exibição por serviço:** `troca-de-tela`/`troca-de-bateria` = `dual-tier` (sem mudança visual). `tampa-traseira`/`dock` = `single`. `camera` = `dual-single`. `face-id`/`reparo-em-placa` = `starting-from`.
 - **Artigo gramatical por serviço** (usado nos textos "a troca de..."/"o reparo de..."): `troca-de-tela`="A", `troca-de-bateria`="A", `tampa-traseira`="A", `dock`="A", `camera`="A", `face-id`="O", `reparo-em-placa`="O".
 - **Econômica = Premium em todos os modelos** para os 6 serviços que não são tela/bateria (verificado sem exceção nos 40 modelos × 6 serviços) — as páginas `single`/`starting-from`/`dual-single` leem sempre a chave `"Premium"` do catálogo (não existe diferenciação real de qualidade nesses serviços).
-- **Zero regressão:** o HTML visível das 78 páginas de tela/bateria já publicadas (título, meta description, preço no Hero, resposta do FAQ "Quanto custa", texto "Veja Também") deve ficar byte-idêntico ao que já está em produção depois do refactor.
+- **Zero regressão:** o HTML das 80 páginas de tela/bateria já publicadas (título, meta description, canonical, JSON-LD, preço no Hero, resposta do FAQ "Quanto custa", subtítulo, rótulo dos links já existentes em "Veja Também") deve ficar byte-idêntico ao que já está em produção depois do refactor. **Exceção deliberada:** a seção "Veja Também" (`ModelCrossLinks`) passa a listar automaticamente todos os serviços que aquele modelo tem página — não mais só o par tela↔bateria — então links novos aparecerão nela pra qualquer modelo que ganhe páginas em mais de 2 serviços. Isso é o comportamento pretendido (mais link interno, de graça), não uma regressão; só o texto/ordem dos links que já existiam antes precisa continuar idêntico.
 - **Nenhuma URL nova além de `/iphone-{modelo}/{servico}`** — reaproveita a rota dinâmica já existente (`src/pages/iphone-[model]/[service].astro`), sem mudança nela além do que este plano especifica.
 - **Templates de título** (verificados programaticamente contra os 40 nomes reais de modelo, pior caso sempre "11 Pro Max"): `"Troca de Tela iPhone {m} | Brothers Techcell"` (tela, já existente), `"Troca de Bateria iPhone {m} | Brothers Techcell"` (bateria, já existente), `"Troca Tampa Traseira iPhone {m} | Brothers Techcell"` (58 chars), `"Troca de Dock iPhone {m} | Brothers Techcell"` (51 chars), `"Troca de Câmera iPhone {m} | Brothers Techcell"` (53 chars), `"Reparo de Face ID iPhone {m} | Brothers Techcell"` (55 chars), `"Reparo em Placa iPhone {m} | Brothers Techcell"` (53 chars). Todos ≤ 60.
 - **Sufixo de descrição fixo:** `"Delivery gratuito, garantia real, atendimento todos os dias."` — usado em toda meta description, igual às etapas anteriores.
@@ -722,7 +722,7 @@ Run também:
 find dist/iphone-* -maxdepth 1 -type d | wc -l
 ls dist/iphone-13/
 ```
-Expected: `267` pastas no total (78 de tela/bateria + 189 novas — `getStaticPaths()` já itera `getAllModelPages()` sem depender de `hasFixedPricing`, então as 189 páginas novas já são geradas nesta task, antes mesmo da Task 3 mexer em `services.ts`). `ls dist/iphone-13/` deve listar as 7 pastas de serviço: `troca-de-tela`, `troca-de-bateria`, `tampa-traseira`, `dock`, `camera`, `face-id`, `reparo-em-placa`.
+Expected: `269` pastas de serviço no total (80 de tela/bateria + 189 novas — `getStaticPaths()` já itera `getAllModelPages()` sem depender de `hasFixedPricing`, então as 189 páginas novas já são geradas nesta task, antes mesmo da Task 3 mexer em `services.ts`). `ls dist/iphone-13/` deve listar as 7 pastas de serviço: `troca-de-tela`, `troca-de-bateria`, `tampa-traseira`, `dock`, `camera`, `face-id`, `reparo-em-placa`.
 
 - [ ] **Step 7: Limpar baseline e commitar**
 
@@ -883,7 +883,7 @@ Run:
 npx astro build
 find dist/iphone-* -maxdepth 1 -type d | wc -l
 ```
-Expected: `267` (78 de tela/bateria + 189 novas).
+Expected: `269` (80 de tela/bateria + 189 novas).
 
 - [ ] **Step 2: Validar JSON-LD em uma amostra de cada novo modo de exibição**
 
@@ -957,7 +957,7 @@ Run:
 ```bash
 cat dist/sitemap-0.xml | grep -o 'iphone-[a-z0-9-]*/[a-z0-9-]*' | sort -u | wc -l
 ```
-Expected: `267`.
+Expected: `269`.
 
 - [ ] **Step 7: Confirmar que páginas fora de escopo não mudaram**
 
