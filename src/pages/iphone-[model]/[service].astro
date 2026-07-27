@@ -34,6 +34,10 @@ const serviceJsonLd = JSON.stringify({
   "provider": { "@type": "ElectronicsStore", "name": "Brothers Techcell" },
 });
 
+const priceValues = page.prices.map((p) => parseFloat(p.price.replace(",", ".")));
+const lowPrice = Math.min(...priceValues).toFixed(2);
+const highPrice = Math.max(...priceValues).toFixed(2);
+
 const productJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Product",
@@ -43,6 +47,8 @@ const productJsonLd = JSON.stringify({
   "offers": {
     "@type": "AggregateOffer",
     "priceCurrency": "BRL",
+    "lowPrice": lowPrice,
+    "highPrice": highPrice,
     "itemCondition": "https://schema.org/NewCondition",
     "availability": "https://schema.org/InStock",
     "seller": { "@type": "ElectronicsStore", "name": "Brothers Techcell" }
