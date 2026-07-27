@@ -1,8 +1,8 @@
 ---
-import { getAllModelPages } from '../data/modelPages';
+import { getAllModelPages, type ServiceSlug } from '../data/modelPages';
 
 interface Props {
-  serviceSlug: "troca-de-tela" | "troca-de-bateria";
+  serviceSlug: ServiceSlug;
 }
 
 const { serviceSlug } = Astro.props;

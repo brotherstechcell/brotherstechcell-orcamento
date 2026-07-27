@@ -13,6 +13,7 @@ import Footer from '../../components/Footer.astro';
 import FloatingWhatsapp from '../../components/FloatingWhatsapp.astro';
 import BottomNav from '../../components/BottomNav.astro';
 import { services, type ServiceData } from '../../data/services';
+import { getServiceStartingPrice, type ServiceSlug } from '../../data/modelPages';
 
 export function getStaticPaths() {
   return services.map((service) => ({
@@ -66,8 +67,13 @@ const breadcrumbJsonLd = JSON.stringify({
   <main>
     <ServiceHero service={service} />
     <ServiceSymptoms symptoms={service.symptoms} />
-    <ServicePricing hasFixedPricing={service.hasFixedPricing} whatsappMessage={service.whatsappMessage} />
-    {service.hasFixedPricing && <ModelDirectory serviceSlug={service.slug as "troca-de-tela" | "troca-de-bateria"} />}
+    <ServicePricing
+      hasFixedPricing={service.hasFixedPricing}
+      startingPrice={service.hasFixedPricing ? getServiceStartingPrice(service.slug as ServiceSlug) : undefined}
+      homeTableAvailable={service.slug === "troca-de-tela" || service.slug === "troca-de-bateria"}
+      whatsappMessage={service.whatsappMessage}
+    />
+    {service.hasFixedPricing && <ModelDirectory serviceSlug={service.slug as ServiceSlug} />}
     <TrustFacts />
     <ServiceFaq faq={service.faq} />
     <OtherServicesList currentSlug={service.slug} />

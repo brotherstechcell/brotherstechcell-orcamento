@@ -1,10 +1,12 @@
 ---
 interface Props {
   hasFixedPricing: boolean;
+  startingPrice?: string;
+  homeTableAvailable?: boolean;
   whatsappMessage: string;
 }
 
-const { hasFixedPricing, whatsappMessage } = Astro.props;
+const { hasFixedPricing, startingPrice, homeTableAvailable, whatsappMessage } = Astro.props;
 ---
 <section class="service-pricing-section">
   <div class="container">
@@ -13,10 +15,13 @@ const { hasFixedPricing, whatsappMessage } = Astro.props;
       <div class="cta-card-inner">
         {hasFixedPricing ? (
           <>
-            <h4 class="type-heading-16">A partir de R$249,90</h4>
+            <h4 class="type-heading-16">A partir de R${startingPrice}</h4>
             <p class="type-small-body">
-              O valor exato varia por modelo e qualidade da peça (Econômica ou Premium), em até 12x no cartão.
-              Consulte o preço do seu iPhone na <a href="/#telas-precos">tabela completa da nossa página inicial</a> ou pelo WhatsApp.
+              {homeTableAvailable ? (
+                <>O valor exato varia por modelo e qualidade da peça (Econômica ou Premium), em até 12x no cartão. Consulte o preço do seu iPhone na <a href="/#telas-precos">tabela completa da nossa página inicial</a> ou pelo WhatsApp.</>
+              ) : (
+                <>O valor exato varia por modelo, em até 12x no cartão. Escolha seu modelo logo abaixo ou fale pelo WhatsApp para confirmar o preço exato.</>
+              )}
             </p>
           </>
         ) : (

@@ -124,7 +124,7 @@ export const services: ServiceData[] = [
       "Troca de tampa traseira de iPhone trincada ou quebrada, com atendimento delivery em Manaus. Orçamento gratuito pelo WhatsApp.",
     intro:
       "A tampa traseira de vidro do iPhone trinca ou quebra com quedas, mesmo quando a tela continua inteira. Fazemos a substituição por remoção a laser com acabamento de fábrica, direto na sua casa ou trabalho em Manaus.",
-    hasFixedPricing: false,
+    hasFixedPricing: true,
     symptoms: [
       "Vidro traseiro trincado ou estilhaçado",
       "Lascas ou pontas que podem cortar",
@@ -173,7 +173,7 @@ export const services: ServiceData[] = [
       "Troca de câmera frontal ou traseira de iPhone com foco quebrado, lente trincada ou borrões. Delivery em Manaus, orçamento pelo WhatsApp.",
     intro:
       "Foco que não trava, lente trincada ou fotos borradas são os sinais mais comuns de problema na câmera do iPhone. Diagnosticamos e trocamos a câmera frontal ou traseira na sua frente, em Manaus.",
-    hasFixedPricing: false,
+    hasFixedPricing: true,
     symptoms: [
       "Foco automático não funciona",
       "Lente da câmera trincada ou arranhada",
@@ -217,7 +217,7 @@ export const services: ServiceData[] = [
       "Troca do dock (conector de carga) de iPhone que não carrega ou tem mau contato. Delivery em Manaus, orçamento gratuito pelo WhatsApp.",
     intro:
       "iPhone que não carrega, só carrega em um ângulo específico ou tem mau contato geralmente indica problema no dock (conector de carga). Fazemos a limpeza ou troca do conector direto na sua frente, em Manaus.",
-    hasFixedPricing: false,
+    hasFixedPricing: true,
     symptoms: [
       "iPhone não carrega ou carrega de forma intermitente",
       "Precisa mexer no cabo pra carregar",
@@ -261,7 +261,7 @@ export const services: ServiceData[] = [
       "Reparo de Face ID de iPhone que parou de reconhecer o rosto. Diagnóstico e delivery em Manaus, orçamento gratuito pelo WhatsApp.",
     intro:
       "Face ID que parou de reconhecer o rosto ou pede senha o tempo todo costuma ser um problema no módulo de reconhecimento facial (TrueDepth). Fazemos o diagnóstico e o reparo na sua frente, em Manaus.",
-    hasFixedPricing: false,
+    hasFixedPricing: true,
     symptoms: [
       "Mensagem \"Face ID não disponível\" ou \"Mova o iPhone mais para baixo\" que não some",
       "iPhone sempre pede senha, nunca reconhece o rosto",
@@ -304,7 +304,7 @@ export const services: ServiceData[] = [
       "Reparo em placa de iPhone que não liga, reinicia sozinho ou molhou. Diagnóstico técnico com delivery em Manaus pelo WhatsApp.",
     intro:
       "iPhone que não liga, reinicia sozinho ou molhou e não responde mais geralmente exige reparo avançado de placa. Trabalhamos com ferramentas de laboratório para diagnosticar e resolver esses casos em Manaus.",
-    hasFixedPricing: false,
+    hasFixedPricing: true,
     symptoms: [
       "iPhone não liga de jeito nenhum",
       "Tela preta permanente mesmo carregando",
