@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import NeighborhoodHero from '../../components/NeighborhoodHero.astro';
+import NeighborhoodMap from '../../components/NeighborhoodMap.astro';
+import NeighborhoodServicesList from '../../components/NeighborhoodServicesList.astro';
+import TrustFacts from '../../components/TrustFacts.astro';
+import ServiceFaq from '../../components/ServiceFaq.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import Footer from '../../components/Footer.astro';
+import FloatingWhatsapp from '../../components/FloatingWhatsapp.astro';
+import BottomNav from '../../components/BottomNav.astro';
+import { getAllNeighborhoods, type NeighborhoodData } from '../../data/neighborhoods';
+
+export function getStaticPaths() {
+  return getAllNeighborhoods().map((neighborhood) => ({
+    params: { bairro: neighborhood.slug },
+    props: { neighborhood },
+  }));
+}
+
+interface Props {
+  neighborhood: NeighborhoodData;
+}
+
+const { neighborhood } = Astro.props;
+const siteUrl = 'https://brotherstechcell-orcamento.vercel.app';
+
+const serviceJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": `Assistência Técnica iPhone em ${neighborhood.name}`,
+  "areaServed": neighborhood.name,
+  "provider": { "@type": "ElectronicsStore", "name": "Brothers Techcell" },
+});
+
+const faqJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": neighborhood.faq.map(({ question, answer }) => ({
+    "@type": "Question",
+    "name": question,
+    "acceptedAnswer": { "@type": "Answer", "text": answer },
+  })),
+});
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": `iPhone em ${neighborhood.name}`, "item": `${siteUrl}/atendimento/${neighborhood.slug}` },
+  ],
+});
+---
+<BaseLayout
+  title={neighborhood.title}
+  description={neighborhood.description}
+  canonicalPath={`/atendimento/${neighborhood.slug}`}
+  extraJsonLd={[serviceJsonLd, faqJsonLd, breadcrumbJsonLd]}
+>
+  <Header />
+  <main>
+    <NeighborhoodHero neighborhood={neighborhood} />
+    <NeighborhoodMap mapQuery={neighborhood.mapQuery} />
+    <NeighborhoodServicesList neighborhoodName={neighborhood.name} />
+    <TrustFacts />
+    <ServiceFaq faq={neighborhood.faq} />
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../../scripts/prices.js"></script>
+  <script src="../../scripts/main.js"></script>
+</BaseLayout>
