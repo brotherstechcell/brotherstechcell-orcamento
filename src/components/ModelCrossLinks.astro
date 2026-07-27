@@ -1,13 +1,15 @@
 ---
+import { getAllModelPages, type ServiceSlug } from '../data/modelPages';
+
 interface Props {
   modelSlug: string;
-  currentServiceSlug: "troca-de-tela" | "troca-de-bateria";
-  otherServiceExists: boolean;
+  currentServiceSlug: ServiceSlug;
 }
 
-const { modelSlug, currentServiceSlug, otherServiceExists } = Astro.props;
-const otherServiceSlug = currentServiceSlug === "troca-de-tela" ? "troca-de-bateria" : "troca-de-tela";
-const otherServiceLabel = otherServiceSlug === "troca-de-tela" ? "Troca de Tela" : "Troca de Bateria";
+const { modelSlug, currentServiceSlug } = Astro.props;
+const otherPages = getAllModelPages().filter(
+  (p) => p.modelSlug === modelSlug && p.serviceSlug !== currentServiceSlug
+);
 ---
 <section class="model-crosslinks-section">
   <div class="container">
@@ -19,9 +21,11 @@ const otherServiceLabel = otherServiceSlug === "troca-de-tela" ? "Troca de Tela"
       class="footer-links type-link"
       style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; list-style: none; padding: 0;"
     >
-      {otherServiceExists && (
-        <li class="footer-link-item"><a href={`/iphone-${modelSlug}/${otherServiceSlug}`}>{otherServiceLabel} deste modelo</a></li>
-      )}
+      {otherPages.map((p) => (
+        <li class="footer-link-item">
+          <a href={`/iphone-${modelSlug}/${p.serviceSlug}`}>{p.serviceName.replace(" de iPhone", "")} deste modelo</a>
+        </li>
+      ))}
       <li class="footer-link-item"><a href={`/servicos/${currentServiceSlug}`}>Ver todos os modelos</a></li>
     </ul>
   </div>

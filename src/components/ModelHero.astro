@@ -6,7 +6,6 @@ interface Props {
 }
 
 const { page } = Astro.props;
-const serviceLabel = page.serviceSlug === 'troca-de-tela' ? 'troca de tela' : 'troca de bateria';
 ---
 <section class="model-hero-section">
   <div class="container">
@@ -14,17 +13,42 @@ const serviceLabel = page.serviceSlug === 'troca-de-tela' ? 'troca de tela' : 't
       <span class="section-label">Preço Real</span>
       <h1 class="section-title type-h2-44">{page.serviceName} - iPhone {page.modelName} em Manaus</h1>
       <p class="section-subtitle type-subheading-20">
-        Consulte o preço exato da {serviceLabel} do seu iPhone {page.modelName}, com delivery gratuito e garantia
+        Consulte o preço exato {page.subtitlePhrase} do seu iPhone {page.modelName}, com delivery gratuito e garantia
         real em Manaus.
       </p>
     </div>
     <div class="other-services-cta-card" style="max-width: 600px; margin: 0 auto;">
       <div class="cta-glow"></div>
       <div class="cta-card-inner">
-        <h4 class="type-heading-16">Econômica: R${page.economica.price}</h4>
-        <p class="type-small-body">{page.economica.installment}</p>
-        <h4 class="type-heading-16" style="margin-top: 16px;">Premium: R${page.premium.price}</h4>
-        <p class="type-small-body">{page.premium.installment}</p>
+        {page.priceDisplay === "dual-tier" && (
+          <>
+            <h4 class="type-heading-16">Econômica: R${page.prices[0].price}</h4>
+            <p class="type-small-body">{page.prices[0].installment}</p>
+            <h4 class="type-heading-16" style="margin-top: 16px;">Premium: R${page.prices[1].price}</h4>
+            <p class="type-small-body">{page.prices[1].installment}</p>
+          </>
+        )}
+        {page.priceDisplay === "single" && (
+          <>
+            <h4 class="type-heading-16">R${page.prices[0].price}</h4>
+            <p class="type-small-body">{page.prices[0].installment}</p>
+          </>
+        )}
+        {page.priceDisplay === "starting-from" && (
+          <>
+            <h4 class="type-heading-16">A partir de R${page.prices[0].price}</h4>
+            <p class="type-small-body">{page.prices[0].installment}</p>
+            <p class="type-small-body" style="margin-top: 8px;">*O valor final é confirmado após o diagnóstico.</p>
+          </>
+        )}
+        {page.priceDisplay === "dual-single" && (
+          <>
+            <h4 class="type-heading-16">{page.prices[0].label}: R${page.prices[0].price}</h4>
+            <p class="type-small-body">{page.prices[0].installment}</p>
+            <h4 class="type-heading-16" style="margin-top: 16px;">{page.prices[1].label}: R${page.prices[1].price}</h4>
+            <p class="type-small-body">{page.prices[1].installment}</p>
+          </>
+        )}
         <a href="#" class="btn-glow btn-whatsapp-global" data-message={page.whatsappMessage} style="margin-top: 16px;">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path

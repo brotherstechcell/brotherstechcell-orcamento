@@ -26,11 +26,6 @@ interface Props {
 const { page } = Astro.props;
 const siteUrl = 'https://brotherstechcell-orcamento.vercel.app';
 
-const otherServiceSlug = page.serviceSlug === "troca-de-tela" ? "troca-de-bateria" : "troca-de-tela";
-const otherServiceExists = getAllModelPages().some(
-  (p) => p.modelSlug === page.modelSlug && p.serviceSlug === otherServiceSlug
-);
-
 const serviceJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Service",
@@ -86,7 +81,7 @@ const breadcrumbJsonLd = JSON.stringify({
     <ServiceSymptoms symptoms={page.symptoms} />
     <TrustFacts />
     <ServiceFaq faq={page.faq} />
-    <ModelCrossLinks modelSlug={page.modelSlug} currentServiceSlug={page.serviceSlug} otherServiceExists={otherServiceExists} />
+    <ModelCrossLinks modelSlug={page.modelSlug} currentServiceSlug={page.serviceSlug} />
     <CtaFinal />
   </main>
   <Footer />
