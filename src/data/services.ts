@@ -23,7 +23,7 @@ export const services: ServiceData[] = [
     shortName: "troca de tela",
     metaTitle: "Troca de Tela de iPhone em Manaus | Brothers Techcell",
     metaDescription:
-      "Troca de tela de iPhone com delivery gratuito em Manaus. Peças Econômica ou Premium, a partir de R$249,90, com até 6 meses de garantia.",
+      "Troca de tela de iPhone com delivery gratuito em Manaus. Peças Econômica ou Premium, a partir de R${price}, com até 6 meses de garantia.",
     intro:
       "A tela é a parte mais exposta a quedas e impactos do iPhone. Na Brothers Techcell, a troca é feita na sua frente, em Manaus, com peças Econômica ou Premium — sempre com garantia real.",
     hasFixedPricing: true,
@@ -39,7 +39,7 @@ export const services: ServiceData[] = [
       {
         question: "Quanto custa a troca de tela?",
         answer:
-          "O valor varia conforme o modelo do iPhone e a qualidade da peça (Econômica ou Premium), a partir de R$249,90. Consulte o preço exato do seu modelo na tabela da nossa página inicial ou pelo WhatsApp.",
+          "O valor varia conforme o modelo do iPhone e a qualidade da peça (Econômica ou Premium), a partir de R${price}. Consulte o preço exato do seu modelo na tabela da nossa página inicial ou pelo WhatsApp.",
       },
       {
         question: "Quanto tempo demora?",
@@ -73,7 +73,7 @@ export const services: ServiceData[] = [
     shortName: "troca de bateria",
     metaTitle: "Troca de Bateria de iPhone em Manaus | Brothers Techcell",
     metaDescription:
-      "Troca de bateria de iPhone com delivery gratuito em Manaus. Bateria homologada Anatel, a partir de R$249,90, com até 6 meses de garantia.",
+      "Troca de bateria de iPhone com delivery gratuito em Manaus. Bateria homologada Anatel, a partir de R${price}, com até 6 meses de garantia.",
     intro:
       "Bateria com saúde baixa faz o iPhone desligar sozinho, perder carga rápido ou desligar antes de chegar a 0%. Trocamos com peças homologadas Anatel, na sua frente, em Manaus.",
     hasFixedPricing: true,
@@ -94,7 +94,7 @@ export const services: ServiceData[] = [
       {
         question: "Quanto custa a troca de bateria?",
         answer:
-          "O valor varia por modelo, a partir de R$249,90. Consulte o preço do seu modelo na tabela da nossa página inicial ou pelo WhatsApp.",
+          "O valor varia por modelo, a partir de R${price}. Consulte o preço do seu modelo na tabela da nossa página inicial ou pelo WhatsApp.",
       },
       {
         question: "As baterias têm selo Anatel?",
@@ -121,7 +121,7 @@ export const services: ServiceData[] = [
     shortName: "troca de tampa traseira",
     metaTitle: "Troca de Tampa Traseira de iPhone | Brothers Techcell",
     metaDescription:
-      "Troca de tampa traseira de iPhone trincada ou quebrada, com atendimento delivery em Manaus. Orçamento gratuito pelo WhatsApp.",
+      "Troca de tampa traseira de iPhone trincada ou quebrada, a partir de R${price}, com atendimento delivery em Manaus.",
     intro:
       "A tampa traseira de vidro do iPhone trinca ou quebra com quedas, mesmo quando a tela continua inteira. Fazemos a substituição por remoção a laser com acabamento de fábrica, direto na sua casa ou trabalho em Manaus.",
     hasFixedPricing: true,
@@ -141,7 +141,7 @@ export const services: ServiceData[] = [
       {
         question: "Quanto custa a troca da tampa traseira?",
         answer:
-          "O valor depende do modelo e disponibilidade da peça. Consulte pelo WhatsApp e receba o orçamento em poucos minutos.",
+          "O valor é a partir de R${price}, podendo variar conforme a disponibilidade da peça pro seu modelo. Consulte pelo WhatsApp e receba o orçamento exato em poucos minutos.",
       },
       {
         question: "Como é feita a troca?",
@@ -170,7 +170,7 @@ export const services: ServiceData[] = [
     shortName: "troca de câmera",
     metaTitle: "Troca de Câmera de iPhone em Manaus | Brothers Techcell",
     metaDescription:
-      "Troca de câmera frontal ou traseira de iPhone com foco quebrado, lente trincada ou borrões. Delivery em Manaus, orçamento pelo WhatsApp.",
+      "Troca de câmera frontal ou traseira de iPhone com foco quebrado ou lente trincada, a partir de R${price}. Delivery em Manaus, orçamento pelo WhatsApp.",
     intro:
       "Foco que não trava, lente trincada ou fotos borradas são os sinais mais comuns de problema na câmera do iPhone. Diagnosticamos e trocamos a câmera frontal ou traseira na sua frente, em Manaus.",
     hasFixedPricing: true,
@@ -191,7 +191,7 @@ export const services: ServiceData[] = [
       {
         question: "Quanto custa a troca de câmera?",
         answer:
-          "O valor depende do modelo do iPhone e de qual câmera precisa ser trocada (frontal ou traseira). Consulte pelo WhatsApp.",
+          "A troca de câmera é a partir de R${price}, variando conforme o modelo e qual câmera precisa ser trocada (frontal ou traseira). Consulte pelo WhatsApp pro valor exato do seu modelo.",
       },
       {
         question: "Dá pra trocar só uma das lentes em modelos com câmera tripla?",
@@ -214,7 +214,7 @@ export const services: ServiceData[] = [
     shortName: "troca do dock",
     metaTitle: "Troca de Dock (Conector) de iPhone | Brothers Techcell",
     metaDescription:
-      "Troca do dock (conector de carga) de iPhone que não carrega ou tem mau contato. Delivery em Manaus, orçamento gratuito pelo WhatsApp.",
+      "Troca do dock (conector de carga) de iPhone que não carrega, a partir de R${price}. Delivery em Manaus, orçamento pelo WhatsApp.",
     intro:
       "iPhone que não carrega, só carrega em um ângulo específico ou tem mau contato geralmente indica problema no dock (conector de carga). Fazemos a limpeza ou troca do conector direto na sua frente, em Manaus.",
     hasFixedPricing: true,
@@ -239,7 +239,7 @@ export const services: ServiceData[] = [
       },
       {
         question: "Quanto custa a troca do dock?",
-        answer: "O valor varia por modelo. Consulte pelo WhatsApp e receba o orçamento rapidamente.",
+        answer: "O valor é a partir de R${price}, variando conforme o modelo. Consulte pelo WhatsApp e receba o orçamento exato rapidamente.",
       },
       {
         question: "Isso afeta o microfone ou alto-falante?",
@@ -258,7 +258,7 @@ export const services: ServiceData[] = [
     shortName: "reparo de Face ID",
     metaTitle: "Reparo de Face ID de iPhone em Manaus | Brothers Techcell",
     metaDescription:
-      "Reparo de Face ID de iPhone que parou de reconhecer o rosto. Diagnóstico e delivery em Manaus, orçamento gratuito pelo WhatsApp.",
+      "Reparo de Face ID de iPhone que parou de reconhecer o rosto, a partir de R${price}. Diagnóstico e delivery em Manaus, orçamento pelo WhatsApp.",
     intro:
       "Face ID que parou de reconhecer o rosto ou pede senha o tempo todo costuma ser um problema no módulo de reconhecimento facial (TrueDepth). Fazemos o diagnóstico e o reparo na sua frente, em Manaus.",
     hasFixedPricing: true,
@@ -282,7 +282,7 @@ export const services: ServiceData[] = [
       },
       {
         question: "Quanto custa o reparo de Face ID?",
-        answer: "O valor depende do que causou o problema, identificado no diagnóstico. Consulte pelo WhatsApp.",
+        answer: "O reparo de Face ID é a partir de R${price} — o valor final depende do que causou o problema, identificado no diagnóstico. Consulte pelo WhatsApp.",
       },
       {
         question: "Sem Face ID, dá pra usar o iPhone normalmente?",
@@ -301,7 +301,7 @@ export const services: ServiceData[] = [
     shortName: "reparo em placa",
     metaTitle: "Reparo em Placa de iPhone em Manaus | Brothers Techcell",
     metaDescription:
-      "Reparo em placa de iPhone que não liga, reinicia sozinho ou molhou. Diagnóstico técnico com delivery em Manaus pelo WhatsApp.",
+      "Reparo em placa de iPhone que não liga, reinicia sozinho ou molhou, a partir de R${price}. Diagnóstico técnico com delivery em Manaus.",
     intro:
       "iPhone que não liga, reinicia sozinho ou molhou e não responde mais geralmente exige reparo avançado de placa. Trabalhamos com ferramentas de laboratório para diagnosticar e resolver esses casos em Manaus.",
     hasFixedPricing: true,
@@ -327,7 +327,7 @@ export const services: ServiceData[] = [
       {
         question: "Quanto custa o reparo em placa?",
         answer:
-          "O valor depende do problema identificado no diagnóstico — pode variar bastante caso a caso. Fazemos o orçamento após avaliar o aparelho.",
+          "O reparo em placa é a partir de R${price} — o valor final depende do problema identificado no diagnóstico, podendo variar bastante caso a caso. Fazemos o orçamento após avaliar o aparelho.",
       },
       {
         question: "O diagnóstico tem custo?",

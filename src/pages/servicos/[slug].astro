@@ -27,6 +27,20 @@ interface Props {
 }
 
 const { service } = Astro.props;
+const startingPrice = service.hasFixedPricing
+  ? getServiceStartingPrice(service.slug as ServiceSlug)
+  : undefined;
+const description = startingPrice
+  ? service.metaDescription.replace("{price}", startingPrice)
+  : service.metaDescription;
+const faq = startingPrice
+  ? service.faq.map((item) =>
+      item.question.startsWith("Quanto custa")
+        ? { question: item.question, answer: item.answer.replace("{price}", startingPrice) }
+        : item
+    )
+  : service.faq;
+
 const siteUrl = 'https://brotherstechcell-orcamento.vercel.app';
 
 const serviceJsonLd = JSON.stringify({
@@ -40,7 +54,7 @@ const serviceJsonLd = JSON.stringify({
 const faqJsonLd = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": service.faq.map(({ question, answer }) => ({
+  "mainEntity": faq.map(({ question, answer }) => ({
     "@type": "Question",
     "name": question,
     "acceptedAnswer": { "@type": "Answer", "text": answer },
@@ -59,7 +73,7 @@ const breadcrumbJsonLd = JSON.stringify({
 ---
 <BaseLayout
   title={service.metaTitle}
-  description={service.metaDescription}
+  description={description}
   canonicalPath={`/servicos/${service.slug}`}
   extraJsonLd={[serviceJsonLd, faqJsonLd, breadcrumbJsonLd]}
 >
@@ -69,13 +83,13 @@ const breadcrumbJsonLd = JSON.stringify({
     <ServiceSymptoms symptoms={service.symptoms} />
     <ServicePricing
       hasFixedPricing={service.hasFixedPricing}
-      startingPrice={service.hasFixedPricing ? getServiceStartingPrice(service.slug as ServiceSlug) : undefined}
+      startingPrice={startingPrice}
       homeTableAvailable={service.slug === "troca-de-tela" || service.slug === "troca-de-bateria"}
       whatsappMessage={service.whatsappMessage}
     />
     {service.hasFixedPricing && <ModelDirectory serviceSlug={service.slug as ServiceSlug} />}
     <TrustFacts />
-    <ServiceFaq faq={service.faq} />
+    <ServiceFaq faq={faq} />
     <OtherServicesList currentSlug={service.slug} />
     <CtaFinal />
   </main>
