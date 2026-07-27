@@ -1,4 +1,4 @@
-export interface NeighborhoodFaqItem {
+﻿export interface NeighborhoodFaqItem {
   question: string;
   answer: string;
 }
@@ -36,7 +36,7 @@ const NEIGHBORHOOD_NAMES: string[] = [
 export function slugifyNeighborhood(name: string): string {
   return name
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/\s+/g, "-");
 }
