@@ -1,0 +1,25 @@
+---
+import { services } from '../data/services';
+
+interface Props {
+  neighborhoodName: string;
+}
+
+const { neighborhoodName } = Astro.props;
+---
+<section class="neighborhood-services-section">
+  <div class="container">
+    <div class="section-header scroll-reveal scroll-top">
+      <span class="section-label">Serviços Disponíveis</span>
+      <h2 class="section-title type-h2-44">Atendemos os Seguintes Serviços em {neighborhoodName}</h2>
+    </div>
+    <ul
+      class="footer-links type-link"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; list-style: none; padding: 0; max-width: 900px; margin: 0 auto;"
+    >
+      {services.map((s) => (
+        <li class="footer-link-item"><a href={`/servicos/${s.slug}`}>{s.name}</a></li>
+      ))}
+    </ul>
+  </div>
+</section>
