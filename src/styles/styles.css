@@ -2573,6 +2573,20 @@ section {
 .footer-link-item a { font-size: 0.925rem; color: rgba(255, 255, 255, 0.6); }
 .footer-link-item a:hover { color: var(--primary-glow); padding-left: 4px; }
 
+.service-other-section .footer-link-item a,
+.model-directory-section .footer-link-item a,
+.model-crosslinks-section .footer-link-item a,
+.neighborhood-services-section .footer-link-item a {
+  color: var(--text-secondary);
+}
+
+.service-other-section .footer-link-item a:hover,
+.model-directory-section .footer-link-item a:hover,
+.model-crosslinks-section .footer-link-item a:hover,
+.neighborhood-services-section .footer-link-item a:hover {
+  color: var(--text-primary);
+}
+
 .footer-contact-list {
   list-style: none;
   display: flex;
