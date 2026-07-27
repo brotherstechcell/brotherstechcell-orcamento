@@ -219,7 +219,7 @@ export function getAllModelPages(): ModelPageData[] {
       const title = config.titleTemplate(modelName);
       const description = buildDescription(config, service, modelName, prices);
       const faq = buildFaq(config, service, modelName, prices);
-      const whatsappMessage = `Olá! Quero saber o preço da ${service.shortName} do meu iPhone ${modelName}.`;
+      const whatsappMessage = `Olá! Quero saber o preço ${subtitlePhrase} do meu iPhone ${modelName}.`;
 
       pages.push({
         modelName,
@@ -245,6 +245,9 @@ export function getServiceStartingPrice(serviceSlug: ServiceSlug): string {
   const allPrices = getAllModelPages()
     .filter((p) => p.serviceSlug === serviceSlug)
     .flatMap((p) => p.prices.map((entry) => parseFloat(entry.price.replace(",", "."))));
+  if (allPrices.length === 0) {
+    throw new Error(`getServiceStartingPrice: no pricing data found for service "${serviceSlug}"`);
+  }
   const min = Math.min(...allPrices);
   return min.toFixed(2).replace(".", ",");
 }
