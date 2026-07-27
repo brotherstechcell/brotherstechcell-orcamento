@@ -1,0 +1,27 @@
+---
+interface Props {
+  mapQuery: string;
+}
+
+const { mapQuery } = Astro.props;
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`;
+---
+<section class="neighborhood-map-section">
+  <div class="container">
+    <div class="section-header scroll-reveal scroll-top">
+      <span class="section-label">Localização</span>
+      <h2 class="section-title type-h2-44">Onde Atendemos</h2>
+    </div>
+    <div style="border-radius: var(--radius-md); overflow: hidden; max-width: 900px; margin: 0 auto;">
+      <iframe
+        src={mapSrc}
+        width="100%"
+        height="400"
+        style="border: 0; display: block;"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title={`Mapa da região de ${mapQuery}`}
+      ></iframe>
+    </div>
+  </div>
+</section>
