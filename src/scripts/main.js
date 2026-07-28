@@ -857,18 +857,33 @@ function setupHeroScrollVideo() {
   const heroSection = document.getElementById("inicio");
   if (!video || !heroSection) return;
 
-  const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      const startPlay = () => {
-        video.play();
-        window.removeEventListener("touchstart", startPlay);
-        window.removeEventListener("scroll", startPlay);
-      };
-      window.addEventListener("touchstart", startPlay, { passive: true, once: true });
-      window.addEventListener("scroll", startPlay, { passive: true, once: true });
-    });
-  }
+  const tryPlay = () => {
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        const startPlay = () => {
+          video.play();
+          window.removeEventListener("touchstart", startPlay);
+          window.removeEventListener("scroll", startPlay);
+        };
+        window.addEventListener("touchstart", startPlay, { passive: true, once: true });
+        window.addEventListener("scroll", startPlay, { passive: true, once: true });
+      });
+    }
+  };
+
+  // Astro's ClientRouter adopts this element into the live document from a page fetched as a
+  // separate Document (see astro/dist/transitions/swap-functions.js swapBodyElement). The
+  // browser's own native `autoplay` attempt fires the instant the node lands in the live DOM —
+  // well before this handler runs (it's gated behind this file's awaited pricing-sync fetch) —
+  // and on a client-side transition back to this page that attempt can be rejected by Chromium
+  // with MEDIA_ERR_SRC_NOT_SUPPORTED ("Media load rejected by URL safety check"), leaving the
+  // element stuck in NETWORK_NO_SOURCE. There's no event to listen for after the fact (it already
+  // fired before we could attach a handler), so unconditionally re-running the resource-selection
+  // algorithm via load() before every play attempt clears that stale state; it's a no-op on a
+  // normal first load where nothing has failed.
+  video.load();
+  tryPlay();
 
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -951,7 +966,13 @@ function setupReelsAutoplay() {
       // Toca o vídeo atual
       const activeVideo = localVideos[index];
       cards[index].classList.add("video-playing");
-      
+
+      // Same cross-document adoption issue as the Hero video (see setupHeroScrollVideo): after
+      // a client-side page transition lands back on this page, these elements can be stuck in
+      // NETWORK_NO_SOURCE from the browser's own invalidated resource selection. load() forces
+      // a fresh selection cycle before play(); harmless no-op on a normal first load.
+      activeVideo.load();
+
       activeVideo.play()
         .then(() => {
           // Quando terminar de tocar, inicia o próximo sequencialmente
@@ -963,7 +984,7 @@ function setupReelsAutoplay() {
           console.log("Autoplay bloqueado pelo navegador. Aguardando interação.", err);
           // Em caso de bloqueio, adiciona evento de clique para destravar
           document.addEventListener("click", () => {
-            activeVideo.play();
+            activeVideo.play().catch(() => {});
           }, { once: true });
         });
     }
