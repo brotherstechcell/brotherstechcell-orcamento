@@ -1298,38 +1298,36 @@ git commit -m "style: restyle Faq section and zero-click table for light backgro
 
 ---
 
-## Task 14: Remove CtaFinal
+## Task 14: Remove CtaFinal from the home only (do NOT delete the file)
+
+**Correction (found during Task 7's review):** `CtaFinal.astro` is NOT homepage-exclusive — it is also imported and rendered by `src/pages/iphone-[model]/[service].astro` (269+ pages), `src/pages/servicos/[slug].astro`, and `src/pages/atendimento/[bairro].astro` (18+ pages). None of those page types are in scope for this redesign. Deleting the file would break `npx astro build` for all of them (missing import). Only the home's usage is being removed — the component file and its usage on every other page type stay untouched.
 
 **Files:**
-- Delete: `src/components/CtaFinal.astro`
-- Modify: `src/pages/index.astro`
+- Modify: `src/pages/index.astro` only
 
 **Interfaces:**
-- Consumes: Task 3's `.footer-cta-banner` must already exist (do this task after Task 3).
+- Consumes: Task 3's `.footer-cta-banner` must already exist (do this task after Task 3) — it's what replaces CtaFinal's role on the home specifically.
 
-- [ ] **Step 1: Remove the import and usage**
+- [ ] **Step 1: Remove the import and usage from the home only**
 
-In `src/pages/index.astro`, delete the line `import CtaFinal from '../components/CtaFinal.astro';` and delete the `<CtaFinal />` line (currently right after `<Faq />`).
+In `src/pages/index.astro`, delete the line `import CtaFinal from '../components/CtaFinal.astro';` and delete the `<CtaFinal />` line (currently right after `<Faq />`). Do **not** touch `src/components/CtaFinal.astro` itself, and do **not** touch its usage in `src/pages/iphone-[model]/[service].astro`, `src/pages/servicos/[slug].astro`, or `src/pages/atendimento/[bairro].astro` — those are out of scope and must keep working exactly as before.
 
-- [ ] **Step 2: Delete the file**
-
-```bash
-git rm src/components/CtaFinal.astro
-```
-
-- [ ] **Step 3: Verify**
+- [ ] **Step 2: Verify**
 
 Run: `npx astro build`
-Expected: succeeds, no missing-import error.
+Expected: succeeds — same 298 total pages as before this task (not fewer), confirming CtaFinal still renders correctly on model/service/bairro pages and only disappeared from the home.
 
-Run: `grep -rn "CtaFinal" src/`
+Run: `grep -n "CtaFinal" src/pages/index.astro`
 Expected: no matches.
 
-- [ ] **Step 4: Commit**
+Run: `grep -rln "CtaFinal" src/pages/`
+Expected: exactly 3 files — `src/pages/iphone-[model]/[service].astro`, `src/pages/servicos/[slug].astro`, `src/pages/atendimento/[bairro].astro` — confirming the component still exists and is still wired up everywhere except the home.
+
+- [ ] **Step 3: Commit**
 
 ```bash
-git add -A
-git commit -m "refactor: remove CtaFinal (redundant with 6 existing WhatsApp CTAs + new footer banner)"
+git add src/pages/index.astro
+git commit -m "refactor: remove CtaFinal from home only (redundant with 6 WhatsApp CTAs + new footer banner); still used on model/service/bairro pages"
 ```
 
 ---
@@ -1360,8 +1358,14 @@ Manually diff `faqItems` text in `Faq.astro` against the rendered `<script type=
 
 - [ ] **Step 4: No dead-code leftovers**
 
-Run: `grep -rn "primary-glow\|accent-blue\|shadow-green\|trust-shield\|about-highlight\|timeline-wrapper\|step-number-glow\|ReelsShowcase\|GoogleReviews\|CtaFinal" src/`
+Run: `grep -rn "primary-glow\|accent-blue\|shadow-green\|about-highlight\|timeline-wrapper\|step-number-glow\|ReelsShowcase\|GoogleReviews" src/`
 Expected: zero matches.
+
+Run: `grep -rn "trust-shield" src/`
+Expected: matches ONLY inside `src/components/TrustFacts.astro` and its CSS rules in `src/styles/styles.css` (both intentionally kept — Task 7's correction found that `TrustFacts.astro` is a separate component rendered on ~290+ model/service/bairro pages, unrelated to `Diferenciais.astro`). Zero matches inside `src/components/Diferenciais.astro` itself.
+
+Run: `grep -rn "CtaFinal" src/`
+Expected: matches ONLY in `src/components/CtaFinal.astro` (the file itself) and its 3 legitimate usages in `src/pages/iphone-[model]/[service].astro`, `src/pages/servicos/[slug].astro`, `src/pages/atendimento/[bairro].astro` (Task 14's correction — CtaFinal is not homepage-exclusive). Zero matches in `src/pages/index.astro`.
 
 - [ ] **Step 5: Responsive + WhatsApp CTA smoke test**
 
