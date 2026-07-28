@@ -434,75 +434,6 @@ section {
   position: relative;
 }
 
-/* ============================================================
-   TRUST SHIELD
-   ============================================================ */
-
-.trust-shield-section {
-  padding: 48px 0;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  z-index: 10;
-}
-
-.trust-shield-wrapper {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-}
-
-.trust-shield-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  transition: var(--transition-smooth);
-}
-
-.trust-shield-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.trust-shield-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: var(--primary-transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary);
-  flex-shrink: 0;
-  transition: var(--transition-fast);
-}
-
-.trust-shield-card:hover .trust-shield-icon {
-  background: var(--primary);
-  color: #FFFFFF;
-}
-
-.trust-shield-icon svg {
-  width: 22px;
-  height: 22px;
-  fill: currentColor;
-}
-
-.trust-shield-info h4 {
-  margin-bottom: 6px;
-  color: var(--text-primary);
-}
-
-.trust-shield-info p {
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
 .section-header {
   text-align: center;
   margin-bottom: 70px;
@@ -893,44 +824,34 @@ section {
 
 .differentials-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 1024px) {
+  .differentials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .differentials-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .diff-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 40px;
-  position: relative;
-  perspective: 1000px;
-  will-change: transform, box-shadow, border-color;
-  transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
-              box-shadow 0.45s cubic-bezier(0.25, 1, 0.5, 1),
-              border-color 0.45s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.diff-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2.5px;
-  background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-light));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  padding: var(--space-4);
+  transition: var(--transition-smooth);
 }
 
 .diff-card:hover {
-  transform: translateY(-6px) rotateX(1deg) rotateY(-0.5deg);
   border-color: var(--border-hover);
-  box-shadow: 0 20px 40px rgba(20, 51, 79, 0.08);
-}
-
-.diff-card:hover::after {
-  transform: scaleX(1);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 
 .diff-icon-container {
