@@ -1,4 +1,4 @@
-import { animate, inView } from "motion";
+import { animate, inView, stagger } from "motion";
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -38,18 +38,48 @@ function initCounterAnimation() {
   });
 }
 
-// NOTE: Hero word-by-word text reveal (initHeroTextReveal) is deferred.
-// The brief's implementation depends on `splitText`, which is NOT part of
-// the installed "motion" package (v12.42.2) — it is a `motion-plus` feature
-// (a separate, paid add-on package that is not installed and not in
-// package.json). Importing it from "motion" fails `astro build` with:
-//   [MISSING_EXPORT] "splitText" is not exported by
-//   "node_modules/motion/dist/es/index.mjs"
-// Hero.astro and styles.css were intentionally left untouched so the
-// existing scroll-reveal entrance animation on the H1 keeps working
-// unchanged until this is resolved (install motion-plus, hand-roll a
-// word-split helper, or pick a different reveal approach).
+function initHeroTextReveal() {
+  const heroTitle = document.querySelector(".hero-title");
+  if (!heroTitle) return;
+
+  if (prefersReducedMotion()) {
+    heroTitle.style.opacity = "1";
+    return;
+  }
+
+  // motion-plus's text-splitting helper (a paid add-on) isn't available in
+  // the installed "motion" package, so words are split manually here. Text
+  // nodes are split into per-word spans; non-text child nodes (e.g. the
+  // `.text-gradient` span around "na Sua Frente") are moved as-is so their
+  // existing styling is preserved, and animate as a single stagger unit
+  // rather than being split further.
+  const words = [];
+  const childNodes = Array.from(heroTitle.childNodes);
+  heroTitle.textContent = "";
+
+  childNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const parts = node.textContent.split(" ").filter((part) => part.length > 0);
+      parts.forEach((part) => {
+        const span = document.createElement("span");
+        span.textContent = part;
+        span.style.display = "inline-block";
+        heroTitle.appendChild(span);
+        heroTitle.appendChild(document.createTextNode(" "));
+        words.push(span);
+      });
+    } else {
+      node.style.display = "inline-block";
+      heroTitle.appendChild(node);
+      heroTitle.appendChild(document.createTextNode(" "));
+      words.push(node);
+    }
+  });
+
+  animate(words, { opacity: [0, 1], y: [12, 0] }, { duration: 0.5, delay: stagger(0.04) });
+}
 
 document.addEventListener("astro:page-load", () => {
   initCounterAnimation();
+  initHeroTextReveal();
 });
