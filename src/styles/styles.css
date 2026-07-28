@@ -968,78 +968,48 @@ section {
    ============================================================ */
 
 .how-it-works-section {
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border);
+  padding: var(--space-6) 0;
+  background: var(--bg-secondary);
 }
 
-.timeline-wrapper {
+.how-it-works-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  position: relative;
+  gap: var(--space-4);
 }
 
-/* Linha conectora entre as etapas da timeline no desktop */
-.timeline-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 32px;
-  left: 15%;
-  right: 15%;
-  height: 2px;
-  background: var(--border);
-  z-index: 1;
-}
-
-.timeline-step {
+.how-it-works-step {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-  background: var(--bg-primary);
-  padding: 0 12px;
+  align-items: flex-start;
+  gap: var(--space-2);
 }
 
-.step-number-glow {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--card-bg);
-  border: 2px solid var(--primary);
-  color: var(--primary);
-  font-family: 'Outfit', sans-serif;
+.how-it-works-number {
   font-size: 1.5rem;
   font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 24px;
-  box-shadow: var(--shadow-green);
-  transition: var(--transition-smooth);
-  position: relative;
-  z-index: 3;
+  color: var(--primary);
+  flex-shrink: 0;
+  line-height: 1;
 }
 
-.timeline-step:hover .step-number-glow {
-  background: var(--primary);
-  color: #FFFFFF;
-  transform: scale(1.1);
-  box-shadow: var(--shadow-green-lg);
-}
-
-.timeline-step h3 {
-  font-size: 1.25rem;
-  margin-bottom: 12px;
+.how-it-works-title {
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: 4px;
 }
 
-.timeline-step p {
-  font-size: 0.95rem;
+.how-it-works-text {
+  font-size: 0.9rem;
   color: var(--text-secondary);
-  max-width: 320px;
-  line-height: 1.6;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .how-it-works-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
 }
 
 /* ============================================================
@@ -2802,35 +2772,22 @@ section {
     gap: 14px;
   }
 
-  /* Linha do Tempo Mobile */
-  .timeline-wrapper {
+  /* Como Funciona Mobile */
+  .how-it-works-grid {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: var(--space-3);
   }
 
-  .timeline-wrapper::before {
-    display: none;
-  }
-
-  .timeline-step {
-    padding: 0;
-  }
-
-  .step-number-glow {
-    width: 48px;
-    height: 48px;
+  .how-it-works-number {
     font-size: 1.25rem;
-    margin-bottom: 16px;
   }
 
-  .timeline-step h3 {
-    font-size: 1.15rem;
-    margin-bottom: 8px;
+  .how-it-works-title {
+    font-size: 0.95rem;
   }
 
-  .timeline-step p {
-    font-size: 0.9rem;
-    max-width: 280px;
+  .how-it-works-text {
+    font-size: 0.85rem;
   }
 
   /* Comparativo Bento Mobile */
