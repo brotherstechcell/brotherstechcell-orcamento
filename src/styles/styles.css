@@ -2317,6 +2317,50 @@ section {
   max-height: 300px;
 }
 
+.zero-click-summary-table {
+  margin-top: 24px;
+  overflow-x: auto;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.zero-click-table-title {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.zero-click-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.zero-click-table thead tr {
+  border-bottom: 1px solid var(--border);
+  color: var(--primary);
+}
+
+.zero-click-table th {
+  padding: 8px;
+}
+
+.zero-click-table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.zero-click-table td {
+  padding: 8px;
+}
+
+.zero-click-table td:first-child {
+  font-weight: 600;
+}
+
 /* ============================================================
    CTA SECTION
    ============================================================ */
