@@ -927,7 +927,7 @@ section {
   width: 60px;
   height: 60px;
   background: var(--primary-transparent);
-  border: 1px solid rgba(45, 122, 191, 0.15);
+  border: 1px solid rgba(41, 162, 81, 0.15);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -1530,7 +1530,7 @@ section {
   width: 50px;
   height: 50px;
   background: var(--primary-transparent);
-  border: 1px solid rgba(45, 122, 191, 0.15);
+  border: 1px solid rgba(41, 162, 81, 0.15);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -2314,7 +2314,7 @@ section {
 }
 
 .faq-item.active .faq-answer {
-  max-height: 300px;
+  max-height: 600px;
 }
 
 .zero-click-summary-table {
@@ -2368,7 +2368,7 @@ section {
 .cta-section { position: relative; }
 
 .cta-box {
-  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+  background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 80px 40px;
@@ -3384,10 +3384,10 @@ section {
 
   .zero-click-summary-table tr {
     margin-bottom: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid var(--border) !important;
     border-radius: 10px !important;
     padding: 10px 14px !important;
-    background: rgba(255, 255, 255, 0.03) !important;
+    background: var(--bg-primary) !important;
   }
 
   .zero-click-summary-table td {
