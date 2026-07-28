@@ -1171,7 +1171,7 @@ section {
   letter-spacing: 0.08em;
   padding: 4px 10px;
   border-radius: 4px;
-  box-shadow: var(--shadow-green);
+  box-shadow: var(--shadow-md);
   z-index: 2;
 }
 
