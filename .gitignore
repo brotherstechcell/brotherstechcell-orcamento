@@ -37,3 +37,6 @@ antigravity-ide/
 
 # Astro generated cache directory
 .astro/
+
+# Subagent-driven-development scratch workspace (ledgers, briefs, reports)
+.superpowers/
