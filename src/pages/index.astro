@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
-import ReelsShowcase from '../components/ReelsShowcase.astro';
-import GoogleReviews from '../components/GoogleReviews.astro';
+import TrustStatsBar from '../components/TrustStatsBar.astro';
+import ProvaSocial from '../components/ProvaSocial.astro';
 import Diferenciais from '../components/Diferenciais.astro';
 import ComoFunciona from '../components/ComoFunciona.astro';
 import PricingSelector from '../components/PricingSelector.astro';
@@ -84,9 +84,8 @@ const faqJsonLd = JSON.stringify({
     <!-- 1. Hero (Topo) -->
     <Hero />
 
-    <!-- 2. Transparência e Depoimentos -->
-    <ReelsShowcase />
-    <GoogleReviews />
+    <!-- 2. Faixa de Prova Social (Estatísticas) -->
+    <TrustStatsBar />
 
     <!-- 3. Seu iPhone Novo em 3 Passos Simples -->
     <ComoFunciona />
@@ -94,19 +93,22 @@ const faqJsonLd = JSON.stringify({
     <!-- 4. Por Que Escolher a Brothers Techcell -->
     <Diferenciais />
 
-    <!-- 5. Tabela de Preços (Escolha o seu iPhone) -->
+    <!-- 5. Prova Social: Vídeos Reais + Avaliações -->
+    <ProvaSocial />
+
+    <!-- 6. Tabela de Preços (Escolha o seu iPhone) -->
     <PricingSelector />
 
-    <!-- 6. Guia de Qualidade de Telas -->
+    <!-- 7. Guia de Qualidade de Telas -->
     <ComparativoTelas />
 
-    <!-- 7. Pré-Diagnóstico (Orçamento Rápido) -->
+    <!-- 8. Pré-Diagnóstico (Orçamento Rápido) -->
     <DiagnosticForm />
 
-    <!-- 8. Quem Somos & Autoridade Local -->
+    <!-- 9. Quem Somos & Autoridade Local -->
     <Sobre />
 
-    <!-- 9. Perguntas Frequentes (FAQ) -->
+    <!-- 10. Perguntas Frequentes (FAQ) -->
     <Faq />
     <CtaFinal />
   </main>
