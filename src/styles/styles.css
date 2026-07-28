@@ -2551,7 +2551,7 @@ section {
 }
 
 .footer-link-item a { font-size: 0.925rem; color: rgba(255, 255, 255, 0.6); }
-.footer-link-item a:hover { color: var(--primary-glow); padding-left: 4px; }
+.footer-link-item a:hover { color: var(--primary); padding-left: 4px; }
 
 .service-other-section .footer-link-item a,
 .model-directory-section .footer-link-item a,
