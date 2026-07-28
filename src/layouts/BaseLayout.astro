@@ -14,6 +14,56 @@ const siteUrl = 'https://brotherstechcell-orcamento.vercel.app';
 const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
 const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
 const socialDescription = ogDescription ?? description;
+
+const baseLocalBusinessSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${siteUrl}/#organization`,
+  "name": "Brothers Techcell - Assistência Técnica Apple Delivery Manaus",
+  "url": siteUrl,
+  "logo": new URL('/Logo Brotherstechcell.jpeg', siteUrl).toString(),
+  "image": ogImageUrl,
+  "telephone": "+55-92-99395-1193",
+  "email": "brotherstechcelloficial@gmail.com",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Manaus",
+    "addressRegion": "AM",
+    "addressCountry": "BR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -3.119027,
+    "longitude": -60.021731
+  },
+  "areaServed": [
+    "Manaus",
+    "Adrianópolis",
+    "Vieiralves",
+    "Ponta Negra",
+    "Parque 10",
+    "Dom Pedro",
+    "Aleixo",
+    "Flores"
+  ],
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    "opens": "08:00",
+    "closes": "20:00"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5.0",
+    "reviewCount": "148",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "sameAs": [
+    "https://www.instagram.com/brothers_techcell/"
+  ]
+});
 ---
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -28,6 +78,12 @@ const socialDescription = ogDescription ?? description;
   <meta name="robots" content="follow, index">
   <link rel="canonical" href={canonicalUrl}>
 
+  <!-- Geo Localização Meta Tags -->
+  <meta name="geo.region" content="BR-AM">
+  <meta name="geo.placename" content="Manaus">
+  <meta name="geo.position" content="-3.119027;-60.021731">
+  <meta name="ICBM" content="-3.119027, -60.021731">
+
   <link rel="icon" type="image/jpeg" href="/Logo Brotherstechcell.jpeg">
   <link rel="apple-touch-icon" href="/Logo Brotherstechcell.jpeg">
 
@@ -38,12 +94,14 @@ const socialDescription = ogDescription ?? description;
   <meta property="og:description" content={socialDescription}>
   <meta property="og:site_name" content="Brothers Techcell">
   <meta property="og:image" content={ogImageUrl}>
-  <meta property="og:image:alt" content="iPhone reparado pela Brothers Techcell em Manaus">
+  <meta property="og:image:alt" content="iPhone reparado pela Brothers Techcell em Manaus AM com selo de garantia e vedação IP68">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={socialDescription}>
   <meta name="twitter:image" content={ogImageUrl}>
+
+  <script type="application/ld+json" set:html={baseLocalBusinessSchema} />
 
   {extraJsonLd.map((json) => (
     <script type="application/ld+json" set:html={json} />

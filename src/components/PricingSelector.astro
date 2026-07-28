@@ -73,29 +73,40 @@ const batteryQualities = defaultData.bateria
 
           <!-- Painel 1: Telas e Baterias -->
           <div class="selector-panel active" id="panel-telas-baterias" role="tabpanel">
-            <div class="search-input-group">
-              <label for="device-search-select" class="search-label">Selecione o modelo do seu iPhone:</label>
-              <div class="search-select-wrapper">
-                <select id="device-search-select" class="search-select-dropdown">
-                  <option value="" disabled>Clique aqui e escolha o modelo...</option>
-                  {LOGICAL_MODEL_GROUPS.map(group => {
-                    const groupModels = group.models.filter(m => (CONFIG.devices || {})[m]);
-                    if (groupModels.length === 0) return null;
-                    return (
-                      <optgroup label={group.label}>
-                        {groupModels.map(model => (
-                          <option value={model} selected={model === defaultModel}>iPhone {model}</option>
-                        ))}
-                      </optgroup>
-                    );
-                  })}
-                </select>
-                <div class="select-arrow">
-                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                    <path d="M7 10l5 5 5-5H7z" />
-                  </svg>
-                </div>
+            
+            <!-- Barra de Pesquisa Única e Inteligente -->
+            <div class="device-single-search-wrapper" style="max-width: 600px; margin: 0 auto 28px; text-align: center;">
+              <label for="device-search-input" class="search-label" style="font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; display: block;">Digite o Modelo do seu iPhone:</label>
+              
+              <div class="single-search-box-container" style="position: relative;">
+                <input type="text" id="device-search-input" class="device-search-input-field" placeholder="🔍 Digite aqui (ex: 15 Pro Max, 13, XR, 12 Pro, 11...)" autocomplete="off" />
+                <span id="search-input-clear-btn" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; display: none; font-weight: 700; color: var(--text-muted); font-size: 1.1rem; padding: 4px;">✕</span>
               </div>
+
+              <!-- Badge de Modelo Ativo em Tempo Real -->
+              <div id="search-matched-badge" class="search-matched-badge" style="margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; background: rgba(41, 162, 81, 0.12); color: var(--primary-dark, #29a251); font-weight: 700; font-size: 0.9rem; padding: 8px 18px; border-radius: 50px; border: 1.5px solid rgba(41, 162, 81, 0.3);">
+                <span>✓ Exibindo preços para: <strong id="matched-model-name" style="color: var(--primary-dark, #29a251);">iPhone 16 Pro Max</strong></span>
+              </div>
+
+              <!-- Sugestões de Autocompletar Rápido (Exibidas ao digitar) -->
+              <div id="search-autocomplete-suggestions" class="search-autocomplete-suggestions" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px;">
+                <!-- Populado dinamicamente via JS com modelos relacionados -->
+              </div>
+
+              <!-- Hidden select for compatibility/fallback -->
+              <select id="device-search-select" class="search-select-dropdown" style="display: none;">
+                {LOGICAL_MODEL_GROUPS.map(group => {
+                  const groupModels = group.models.filter(m => (CONFIG.devices || {})[m]);
+                  if (groupModels.length === 0) return null;
+                  return (
+                    <optgroup label={group.label}>
+                      {groupModels.map(model => (
+                        <option value={model} selected={model === defaultModel}>iPhone {model}</option>
+                      ))}
+                    </optgroup>
+                  );
+                })}
+              </select>
             </div>
 
             <!-- Grid de Resultados de Tela e Bateria do Modelo Selecionado (Pre-renderizado no servidor) -->

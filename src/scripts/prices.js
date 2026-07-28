@@ -10,7 +10,7 @@ const CONFIG = {
   "contact": {
     "phone": "(92) 99395-1193",
     "phoneRaw": "5592993951193",
-    "email": "contato@brotherstechcell.com.br",
+    "email": "brotherstechcelloficial@gmail.com",
     "instagram": "brothers_techcell",
     "instagramUrl": "https://www.instagram.com/brothers_techcell/",
     "cnpj": "",

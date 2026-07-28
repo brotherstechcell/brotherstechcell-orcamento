@@ -298,9 +298,13 @@ function initPricingSelector() {
   dropdown.value = initialModel;
   renderSelectorResults(initialModel);
   
+  // Lógica da Barra de Busca & Grade por Gerações (Mobile Quick Select)
+  setupMobileDeviceSearchAndChips(sortedModels, dropdown);
+
   // 2. Escutar mudanças no Dropdown
   dropdown.addEventListener("change", (e) => {
     renderSelectorResults(e.target.value);
+    syncActiveModelChip(e.target.value);
   });
   
   // 3. Gerenciar Abas ("Telas e Baterias" vs "Outros Serviços")
@@ -324,6 +328,190 @@ function initPricingSelector() {
       panelOutrosServicos.classList.add("active");
       panelTelasBaterias.classList.remove("active");
     });
+  }
+}
+
+const MODEL_SYNONYMS = {
+  "17 Pro Max": ["17 pro max", "17promax", "17pm", "17 pro m", "17prom", "iphone 17 pro max", "ip 17 pm", "ip17pm"],
+  "17 Pro": ["17 pro", "17pro", "17p", "iphone 17 pro", "ip 17 pro", "ip17p"],
+  "17 Plus": ["17 plus", "17plus", "17+", "iphone 17 plus", "ip 17 plus", "ip17plus"],
+  "17": ["17", "iphone 17", "ip 17", "ip17"],
+  "17 Air": ["17 air", "17air", "iphone 17 air"],
+
+  "16 Pro Max": ["16 pro max", "16promax", "16pm", "16 pro m", "16prom", "iphone 16 pro max", "ip 16 pm", "ip16pm"],
+  "16 Pro": ["16 pro", "16pro", "16p", "iphone 16 pro", "ip 16 pro", "ip16p"],
+  "16 Plus": ["16 plus", "16plus", "16+", "iphone 16 plus", "ip 16 plus", "ip16plus"],
+  "16": ["16", "iphone 16", "ip 16", "ip16"],
+
+  "15 Pro Max": ["15 pro max", "15promax", "15pm", "15 pro m", "15prom", "iphone 15 pro max", "ip 15 pm", "ip15pm"],
+  "15 Pro": ["15 pro", "15pro", "15p", "iphone 15 pro", "ip 15 pro", "ip15p"],
+  "15 Plus": ["15 plus", "15plus", "15+", "iphone 15 plus", "ip 15 plus", "ip15plus"],
+  "15": ["15", "iphone 15", "ip 15", "ip15"],
+
+  "14 Pro Max": ["14 pro max", "14promax", "14pm", "14 pro m", "14prom", "iphone 14 pro max", "ip 14 pm", "ip14pm"],
+  "14 Pro": ["14 pro", "14pro", "14p", "iphone 14 pro", "ip 14 pro", "ip14p"],
+  "14 Plus": ["14 plus", "14plus", "14+", "iphone 14 plus", "ip 14 plus", "ip14plus"],
+  "14": ["14", "iphone 14", "ip 14", "ip14"],
+
+  "13 Pro Max": ["13 pro max", "13promax", "13pm", "13 pro m", "13prom", "iphone 13 pro max", "ip 13 pm", "ip13pm"],
+  "13 Pro": ["13 pro", "13pro", "13p", "iphone 13 pro", "ip 13 pro", "ip13p"],
+  "13 Mini": ["13 mini", "13mini", "13m", "iphone 13 mini", "ip 13 mini", "ip13m"],
+  "13": ["13", "iphone 13", "ip 13", "ip13"],
+
+  "12 Pro Max": ["12 pro max", "12promax", "12pm", "12 pro m", "12prom", "iphone 12 pro max", "ip 12 pm", "ip12pm"],
+  "12 Pro": ["12 pro", "12pro", "12p", "iphone 12 pro", "ip 12 pro", "ip12p"],
+  "12 Mini": ["12 mini", "12mini", "12m", "iphone 12 mini", "ip 12 mini", "ip12m"],
+  "12": ["12", "iphone 12", "ip 12", "ip12"],
+
+  "11 Pro Max": ["11 pro max", "11promax", "11pm", "11 pro m", "11prom", "iphone 11 pro max", "ip 11 pm", "ip11pm"],
+  "11 Pro": ["11 pro", "11pro", "11p", "iphone 11 pro", "ip 11 pro", "ip11p"],
+  "11": ["11", "iphone 11", "ip 11", "ip11"],
+
+  "XS Max": ["xs max", "xsmax", "xs m", "xsm", "iphone xs max", "ip xs max"],
+  "XS": ["xs", "iphone xs", "ip xs"],
+  "XR": ["xr", "iphone xr", "ip xr"],
+  "X": ["x", "iphone x", "ip x", "ten"],
+
+  "SE 2/3": ["se 2", "se 3", "se2", "se3", "se 2020", "se 2022", "se", "iphone se"],
+
+  "8 Plus": ["8 plus", "8plus", "8p", "8+", "iphone 8 plus", "ip 8 plus"],
+  "8": ["8", "iphone 8", "ip 8"],
+
+  "7 Plus": ["7 plus", "7plus", "7p", "7+", "iphone 7 plus", "ip 7 plus"],
+  "7": ["7", "iphone 7", "ip 7"],
+
+  "6S Plus": ["6s plus", "6splus", "6sp", "6s+", "iphone 6s plus"],
+  "6S": ["6s", "iphone 6s"],
+  "6": ["6", "iphone 6"]
+};
+
+function findMatchingModel(query, availableModels) {
+  if (!query) return null;
+  const rawQ = query.toLowerCase().trim();
+  const cleanQ = rawQ.replace(/^(iphone|ip|apple)\s*/i, '').trim();
+  const compactQ = cleanQ.replace(/[\s\-\_\.]/g, '');
+
+  if (!compactQ) return null;
+
+  // 1. Busca por Sinônimo Exato
+  for (const model of availableModels) {
+    const synonyms = MODEL_SYNONYMS[model] || [model.toLowerCase()];
+    for (const syn of synonyms) {
+      const compactSyn = syn.replace(/^(iphone|ip|apple)\s*/i, '').replace(/[\s\-\_\.]/g, '');
+      if (compactSyn === compactQ) {
+        return model;
+      }
+    }
+  }
+
+  // 2. Busca por Início/Contém nos Sinônimos
+  for (const model of availableModels) {
+    const synonyms = MODEL_SYNONYMS[model] || [model.toLowerCase()];
+    for (const syn of synonyms) {
+      const compactSyn = syn.replace(/^(iphone|ip|apple)\s*/i, '').replace(/[\s\-\_\.]/g, '');
+      if (compactSyn.startsWith(compactQ) || compactSyn.includes(compactQ)) {
+        return model;
+      }
+    }
+  }
+
+  return null;
+}
+
+function setupMobileDeviceSearchAndChips(sortedModels, dropdown) {
+  const searchInput = document.getElementById("device-search-input");
+  const clearBtn = document.getElementById("search-input-clear-btn");
+  const matchedBadgeName = document.getElementById("matched-model-name");
+  const suggestionsContainer = document.getElementById("search-autocomplete-suggestions");
+
+  if (!searchInput) return;
+
+  function selectModel(model, updateInput = false) {
+    if (!sortedModels.includes(model)) return;
+    dropdown.value = model;
+    renderSelectorResults(model);
+
+    if (matchedBadgeName) {
+      matchedBadgeName.textContent = `iPhone ${model}`;
+    }
+
+    if (updateInput && searchInput) {
+      searchInput.value = `iPhone ${model}`;
+      if (clearBtn) clearBtn.style.display = "block";
+    }
+
+    renderSuggestions(searchInput ? searchInput.value : "");
+  }
+
+  function renderSuggestions(queryText) {
+    if (!suggestionsContainer) return;
+    suggestionsContainer.innerHTML = "";
+
+    const rawQ = queryText.toLowerCase().trim();
+    const cleanQ = rawQ.replace(/^(iphone|ip|apple)\s*/i, '').trim();
+    const compactQ = cleanQ.replace(/[\s\-\_\.]/g, '');
+
+    let candidates = [];
+    if (!compactQ) {
+      // Sugestões populares por padrão
+      candidates = ["15 Pro Max", "14 Pro Max", "13", "11", "XR", "12 Pro Max"].filter(m => sortedModels.includes(m));
+    } else {
+      candidates = sortedModels.filter(model => {
+        const synonyms = MODEL_SYNONYMS[model] || [model.toLowerCase()];
+        return synonyms.some(syn => {
+          const compactSyn = syn.replace(/^(iphone|ip|apple)\s*/i, '').replace(/[\s\-\_\.]/g, '');
+          return compactSyn.includes(compactQ);
+        });
+      });
+    }
+
+    // Renderiza chips de atalho rápido para as opções encontradas
+    candidates.slice(0, 8).forEach(model => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = `model-chip-btn ${dropdown.value === model ? 'active' : ''}`;
+      chip.textContent = `iPhone ${model}`;
+      chip.addEventListener("click", () => {
+        selectModel(model, true);
+      });
+      suggestionsContainer.appendChild(chip);
+    });
+  }
+
+  // Evento em tempo real no campo de busca
+  searchInput.addEventListener("input", (e) => {
+    const val = e.target.value;
+    if (clearBtn) {
+      clearBtn.style.display = val.trim().length > 0 ? "block" : "none";
+    }
+
+    const matched = findMatchingModel(val, sortedModels);
+    if (matched) {
+      selectModel(matched, false);
+    } else {
+      renderSuggestions(val);
+    }
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      clearBtn.style.display = "none";
+      const defaultModel = dropdown.value || sortedModels[0];
+      selectModel(defaultModel, false);
+      searchInput.focus();
+    });
+  }
+
+  // Inicialização
+  const initial = dropdown.value || sortedModels[0];
+  selectModel(initial, false);
+}
+
+function syncActiveModelChip(selectedModel) {
+  const matchedBadgeName = document.getElementById("matched-model-name");
+  if (matchedBadgeName) {
+    matchedBadgeName.textContent = `iPhone ${selectedModel}`;
   }
 }
 

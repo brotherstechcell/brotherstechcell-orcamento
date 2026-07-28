@@ -1,104 +1,194 @@
 ---
 export const faqItems = [
   {
-    question: "Qual é a garantia das telas e baterias?",
-    answer: "Qualidade Premium: Garantia de 6 meses (180 dias) com Película + Capinha grátis. Qualidade Econômica: Garantia de 3 meses (90 dias). Ambas as peças são de alta performance com certificação."
+    question: "Onde consertar a tela do iPhone 15 Pro Max hoje em Manaus com atendimento no mesmo dia?",
+    answer: "A Brothers Techcell realiza a troca de tela do iPhone 15 Pro Max hoje mesmo em Manaus através do nosso serviço de atendimento delivery em domicílio ou no trabalho. O técnico vai até você em poucos minutos e efetua a troca na sua frente com total transparência e garantia real."
   },
   {
-    question: "Quanto tempo leva o reparo?",
-    answer: "A maioria dos reparos de tela e bateria é concluída em 20 a 40 minutos, diretamente na sua frente, onde você estiver em Manaus."
+    question: "Como funciona o conserto de iPhone em domicílio nos bairros Adrianópolis, Vieiralves, Ponta Negra e Parque 10 em Manaus?",
+    answer: "O atendimento delivery atende todos os bairros de Manaus (como Adrianópolis, Vieiralves, Ponta Negra, Parque 10, Dom Pedro, Aleixo, Flores e Centro). O processo segue 4 passos simples:\n1. Agendamento rápido via WhatsApp.\n2. Deslocamento do técnico equipado com manta antiestática e ferramentas profissionais.\n3. Reparo concluído em 20 a 40 minutos na sua presença.\n4. Testes completos de funcionamento (True Tone, Touch, Câmeras) e emissão de garantia de 3 a 6 meses."
   },
   {
-    question: "Vocês cobram taxa de deslocamento?",
-    answer: "Não cobramos taxa de deslocamento para a maioria dos bairros de Manaus. Nosso serviço delivery é totalmente gratuito na maioria das regiões."
+    question: "A troca de tela do iPhone mantém o True Tone e o Face ID funcionando perfeitamente em Manaus?",
+    answer: "Sim! Na Brothers Techcell realizamos a transferência e calibração de código dos sensores originais utilizando gravadores de EEPROM. Isso garante que as funções de True Tone, brilho automático e o biometria facial Face ID permaneçam 100% operacionais após a substituição do display."
   },
   {
-    question: "Em quantas vezes posso parcelar?",
-    answer: "Você pode parcelar em até 12x no cartão de crédito. Também aceitamos Pix com desconto especial."
+    question: "Quanto tempo demora a troca de bateria de iPhone mantendo a Saúde da Bateria e sem mensagem de erro?",
+    answer: "A troca da bateria leva entre 20 e 35 minutos. Utilizamos baterias de alta performance homologadas Anatel com chip controlador de carga Texas Instruments (TI). Em modelos compatíveis, efetuamos a reprogramação do microchip de carga para preservar os Ciclos de Carga e a leitura correta de Saúde da Bateria (Battery Health)."
   },
   {
-    question: "Como funciona o atendimento delivery?",
-    answer: "Basta agendar pelo WhatsApp. Nosso técnico especializado vai até sua casa, escritório ou local de preferência, realiza o reparo na sua frente com total transparência e segurança."
+    question: "O iPhone continua resistente à água após a troca de tela ou bateria na Brothers Techcell?",
+    answer: "Sim. Em todos os reparos efetuados em Manaus, realizamos a remoção do adesivo antigo e a restauração do selo de vedação original contra umidade e poeira (padrão IP68), garantindo máxima proteção ao seu dispositivo Apple."
+  },
+  {
+    question: "Qual o valor da troca de tela e bateria de iPhone com garantia de 3 a 6 meses em Manaus?",
+    answer: "Os valores variam de acordo com o modelo e a linha da peça escolhida:\n- Qualidade Premium: Garantia de 6 meses (180 dias) + Película de Vidro 3D + Capinha Protetora grátis.\n- Qualidade Econômica: Garantia de 3 meses (90 dias).\nAceitamos parcelamento em até 12x no cartão de crédito ou desconto especial via Pix."
+  },
+  {
+    question: "A Brothers Techcell busca e entrega o iPhone no meu local de trabalho em Manaus?",
+    answer: "Com certeza! Nosso técnico pode realizar a troca da tela ou bateria diretamente na sala de reuniões, recepção ou escritório da sua empresa em Manaus, sem que você precise interromper sua rotina de trabalho."
   }
 ];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer
+    }
+  }))
+};
 ---
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+
     <!-- Seção FAQ -->
     <section class="faq-section" id="faq">
       <div class="container">
         <div class="faq-grid">
           <div class="faq-text-side scroll-reveal scroll-left">
-            <span class="section-label">Perguntas Frequentes</span>
-            <h2 class="section-title type-h2-44" style="text-align: left;">Tire Suas Dúvidas</h2>
-            <p class="section-subtitle type-subheading-20" style="text-align: left;">Confira as respostas para as
-              perguntas mais comuns ou entre em contato conosco pelo WhatsApp.</p>
-            <a href="#" class="btn-glow btn-whatsapp-global" style="margin-top: 32px; align-self: flex-start;">
+            <span class="section-label">Perguntas Frequentes & AEO</span>
+            <h2 class="section-title type-h2-44" style="text-align: left;">Respostas Rápidas para Sua Busca</h2>
+            <p class="section-subtitle type-subheading-20" style="text-align: left;">Confira informações completas sobre prazos, peças com chip Texas Instruments, selo de vedação IP68 e atendimento delivery em Manaus.</p>
+            
+            <!-- Tabela Sintética para Zero-Click / Featured Snippet -->
+            <div class="zero-click-summary-table" style="margin-top: 24px; overflow-x: auto; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color, rgba(255,255,255,0.1)); border-radius: 12px; padding: 16px;">
+              <h3 style="font-size: 1rem; color: #fff; margin-bottom: 12px; font-weight: 700;">Resumo dos Serviços Apple em Manaus</h3>
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+                <thead>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.15); color: var(--primary, #29a251);">
+                    <th style="padding: 8px;">Serviço</th>
+                    <th style="padding: 8px;">Tempo Estimado</th>
+                    <th style="padding: 8px;">Garantia</th>
+                    <th style="padding: 8px;">Local</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 8px; font-weight: 600;">Troca de Tela OLED</td>
+                    <td style="padding: 8px;">20 a 40 min</td>
+                    <td style="padding: 8px;">3 a 6 meses</td>
+                    <td style="padding: 8px;">Delivery Manaus</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 8px; font-weight: 600;">Troca de Bateria TI</td>
+                    <td style="padding: 8px;">20 a 30 min</td>
+                    <td style="padding: 8px;">3 a 6 meses</td>
+                    <td style="padding: 8px;">Delivery Manaus</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 8px; font-weight: 600;">Restauração Vedação IP68</td>
+                    <td style="padding: 8px;">Incluso no reparo</td>
+                    <td style="padding: 8px;">Garantia Total</td>
+                    <td style="padding: 8px;">Delivery Manaus</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <a href="#" class="btn-glow btn-whatsapp-global" style="margin-top: 24px; align-self: flex-start;">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
               </svg>
-              <span>FALE CONOSCO</span>
+              <span>FALE CONOSCO NO WHATSAPP</span>
             </a>
           </div>
+
           <div class="faq-list scroll-reveal scroll-right">
             <div class="faq-item">
               <button class="faq-question" aria-expanded="false">
-                <span>Qual é a garantia das telas e baterias?</span>
+                <span>Onde consertar a tela do iPhone 15 Pro Max hoje em Manaus com atendimento no mesmo dia?</span>
                 <span class="faq-question-icon">+</span>
               </button>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  <p><strong>Qualidade Premium:</strong> Garantia de 6 meses (180 dias) + Película e Capinha grátis.<br><strong>Qualidade Econômica:</strong> Garantia de 3 meses (90 dias).<br>Ambas as opções contam com peças de alta performance e certificação.</p>
+                  <p>A <strong>Brothers Techcell</strong> realiza a troca da tela do seu iPhone 15 Pro Max <strong>hoje mesmo em Manaus</strong> através do nosso serviço exclusivo de delivery em domicílio ou no trabalho. O técnico vai até você em minutos e faz a substituição na sua presença com total transparência e garantia real.</p>
                 </div>
               </div>
             </div>
+
             <div class="faq-item">
               <button class="faq-question" aria-expanded="false">
-                <span>Quanto tempo leva o reparo?</span>
+                <span>Como funciona o conserto de iPhone nos bairros Adrianópolis, Vieiralves, Ponta Negra e Parque 10 em Manaus?</span>
                 <span class="faq-question-icon">+</span>
               </button>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  <p>A maioria dos reparos de tela e bateria é concluída em <strong>20 a 40 minutos</strong>,
-                    diretamente na sua frente, onde você estiver em Manaus.</p>
+                  <p>Atendemos todos os bairros de Manaus em 4 passos simples:</p>
+                  <ul style="margin-left: 20px; margin-top: 8px; line-height: 1.6;">
+                    <li><strong>1. Agendamento:</strong> Solicite via WhatsApp em menos de 2 minutos.</li>
+                    <li><strong>2. Deslocamento Técnico:</strong> Nosso especialista vai até seu endereço equipado com mantas antiestáticas (ESD).</li>
+                    <li><strong>3. Reparo Transparente:</strong> Concluído em 20 a 40 minutos à sua frente.</li>
+                    <li><strong>4. Testes e Garantia:</strong> Calibração de True Tone, Face ID e emissão do certificado de garantia de até 6 meses.</li>
+                  </ul>
                 </div>
               </div>
             </div>
+
             <div class="faq-item">
               <button class="faq-question" aria-expanded="false">
-                <span>Vocês cobram taxa de deslocamento?</span>
+                <span>A troca de tela do iPhone mantém o True Tone e o Face ID funcionando perfeitamente em Manaus?</span>
                 <span class="faq-question-icon">+</span>
               </button>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  <p>Não cobramos taxa de deslocamento para a maioria dos bairros de Manaus. Nosso serviço delivery é
-                    <strong>totalmente gratuito</strong> na maioria das regiões.</p>
+                  <p><strong>Sim!</strong> Transferimos os códigos originais do display antigo utilizando gravadoras de EEPROM profissionais, preservando 100% o <strong>True Tone</strong>, o ajuste automático de brilho e a biometria facial <strong>Face ID</strong> do seu iPhone.</p>
                 </div>
               </div>
             </div>
+
             <div class="faq-item">
               <button class="faq-question" aria-expanded="false">
-                <span>Em quantas vezes posso parcelar?</span>
+                <span>Quanto tempo demora a troca de bateria mantendo a Saúde da Bateria (Battery Health)?</span>
                 <span class="faq-question-icon">+</span>
               </button>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  <p>Você pode parcelar em até <strong>12x no cartão de crédito</strong>. Também aceitamos Pix com
-                    desconto especial.</p>
+                  <p>A troca leva de <strong>20 a 35 minutos</strong>. Utilizamos exclusivamente baterias homologadas Anatel com chip controlador de carga <strong>Texas Instruments (TI)</strong>, prevenindo aquecimentos e mantendo a integridade dos ciclos de carga.</p>
                 </div>
               </div>
             </div>
+
             <div class="faq-item">
               <button class="faq-question" aria-expanded="false">
-                <span>Como funciona o atendimento delivery?</span>
+                <span>O iPhone continua resistente à água após o reparo com a Brothers Techcell em Manaus?</span>
                 <span class="faq-question-icon">+</span>
               </button>
               <div class="faq-answer">
                 <div class="faq-answer-inner">
-                  <p>Basta agendar pelo WhatsApp. Nosso técnico especializado vai até sua casa, escritório ou local de
-                    preferência, realiza o reparo na sua frente com total transparência e segurança.</p>
+                  <p><strong>Sim.</strong> Em todos os reparos realizamos a aplicação da nova borracha de vedação com restauração do <strong>selo de vedação original IP68</strong> contra umidade e poeira.</p>
                 </div>
               </div>
             </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                <span>Qual é o valor e a garantia das telas e baterias?</span>
+                <span class="faq-question-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  <p><strong>Qualidade Premium:</strong> Garantia de 6 meses (180 dias) + Película de Vidro 3D + Capinha grátis.<br><strong>Qualidade Econômica:</strong> Garantia de 3 meses (90 dias).<br>Parcelamos em até 12x no cartão de crédito ou oferecemos desconto via Pix.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                <span>A Brothers Techcell atende no meu local de trabalho em Manaus?</span>
+                <span class="faq-question-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  <p><strong>Sim!</strong> Nosso técnico efetua o conserto na sala de reuniões, recepção ou escritório da sua empresa em Manaus com extrema discrição e sem pausar sua rotina.</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

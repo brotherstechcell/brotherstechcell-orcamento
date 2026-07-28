@@ -1,28 +1,27 @@
   <!-- Rodapé (Footer) -->
-  <footer class="footer-main">
+  <footer class="footer-main" itemscope itemtype="https://schema.org/LocalBusiness">
     <div class="container footer-grid">
       <div>
-        <a href="#" class="brand-logo-link">
-          <img src="/Logo Brotherstechcell.jpeg" class="logo-img" alt="Logo Brothers Techcell"
-            style="filter: brightness(0.9);">
+        <a href="#inicio" class="brand-logo-link" aria-label="Voltar para o início do site">
+          <img src="/Logo Brotherstechcell.jpeg" class="logo-img" alt="Brothers Techcell - Assistência Técnica Especializada Apple em Manaus AM"
+            style="filter: brightness(0.9);" loading="lazy" decoding="async" width="48" height="48">
           <div class="brand-text-container">
-            <span class="brand-name">Brothers Techcell</span>
-            <span class="brand-subtitle">Delivery Apple</span>
+            <span class="brand-name" itemprop="name">Brothers Techcell</span>
+            <span class="brand-subtitle">Delivery Apple Manaus</span>
           </div>
         </a>
-        <p class="footer-brand-desc type-small-body">Somos uma assistência técnica especializada Apple que vai até você
-          em Manaus. Transparência, peças premium e rapidez garantida.</p>
-        <p class="footer-brand-desc type-small-body">Atendemos toda Manaus com serviço de delivery para troca de tela,
-          bateria, câmera e conector de carga de iPhone.</p>
+        <p class="footer-brand-desc type-small-body" itemprop="description">Somos a principal assistência técnica especializada Apple que atende em domicílio em Manaus. Transparência 100%, peças premium com garantia de até 6 meses e rapidez no reparo.</p>
+        <p class="footer-brand-desc type-small-body">Atendimento delivery em toda Manaus (Adrianópolis, Vieiralves, Ponta Negra, Parque 10, Dom Pedro, Aleixo, Flores e regiões) para troca de tela OLED, bateria, câmera e conector de carga de iPhone.</p>
       </div>
 
       <div>
         <h4 class="footer-title type-heading-16">Links Rápidos</h4>
         <ul class="footer-links type-link">
-          <li class="footer-link-item"><a href="#diferenciais">Diferenciais</a></li>
-          <li class="footer-link-item"><a href="#telas-precos">Troca de Telas</a></li>
-          <li class="footer-link-item"><a href="#baterias-precos">Troca de Baterias</a></li>
-          <li class="footer-link-item"><a href="#transparencia">Nossos Vídeos</a></li>
+          <li class="footer-link-item"><a href="#diferenciais">Diferenciais Técnicos</a></li>
+          <li class="footer-link-item"><a href="#comparativo-telas">Guia de Qualidade de Telas</a></li>
+          <li class="footer-link-item"><a href="#telas-precos">Troca de Telas iPhone</a></li>
+          <li class="footer-link-item"><a href="#baterias-precos">Troca de Baterias iPhone</a></li>
+          <li class="footer-link-item"><a href="#faq">Perguntas Frequentes (FAQ)</a></li>
           <li class="footer-link-item"><a href="#sobre">Quem Somos</a></li>
         </ul>
       </div>
@@ -37,7 +36,7 @@
       </div>
 
       <div>
-        <h4 class="footer-title type-heading-16">Fale Conosco</h4>
+        <h4 class="footer-title type-heading-16">Fale Conosco (NAP)</h4>
         <ul class="footer-contact-list type-body-16">
           <li class="footer-contact-item">
             <span class="footer-contact-icon">
@@ -46,7 +45,7 @@
                   d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
               </svg>
             </span>
-            <a href="#" class="contact-phone-text btn-whatsapp-global">(92) 99395-1193</a>
+            <a href="#" class="contact-phone-text btn-whatsapp-global" itemprop="telephone">(92) 99395-1193</a>
           </li>
           <li class="footer-contact-item">
             <span class="footer-contact-icon">
@@ -55,7 +54,7 @@
                   d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
               </svg>
             </span>
-            <a href="#" class="contact-email-link">contato@brotherstechcell.com.br</a>
+            <a href="mailto:brotherstechcelloficial@gmail.com" class="contact-email-link" itemprop="email">brotherstechcelloficial@gmail.com</a>
           </li>
           <li class="footer-contact-item">
             <span class="footer-contact-icon">
@@ -76,14 +75,14 @@
             </span>
             <span>Todos os dias, das 8h às 20h</span>
           </li>
-          <li class="footer-contact-item">
+          <li class="footer-contact-item" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
             <span class="footer-contact-icon">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6.5a2.5 2.5 0 010 5z" />
               </svg>
             </span>
-            <span>Manaus - AM (Atendimento Delivery)</span>
+            <span itemprop="addressLocality">Manaus</span> - <span itemprop="addressRegion">AM</span> (<span>Atendimento Delivery em Domicílio</span>)
           </li>
         </ul>
       </div>
@@ -91,6 +90,6 @@
 
     <div class="container footer-bottom type-caption">
       <span>2026 © Todos os Direitos Reservados Brothers Techcell.</span>
-      <span>Desenvolvido com excelência para a melhor assistência de Manaus.</span>
+      <span>Assistência Técnica Apple Delivery recomendada em Manaus - AM.</span>
     </div>
   </footer>
