@@ -1188,7 +1188,7 @@ section {
    ============================================================ */
 
 .diagnostic-section {
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   border-bottom: 1px solid var(--border);
 }
 
@@ -1200,7 +1200,7 @@ section {
   overflow: hidden;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-xs);
 }
 
 .diagnostic-card-inner {
@@ -1211,6 +1211,7 @@ section {
 }
 
 .diagnostic-glow {
+  display: none;
   position: absolute;
   top: -50%;
   left: -50%;
@@ -1275,7 +1276,7 @@ section {
   background: rgba(41, 162, 81, 0.06);
   border-color: var(--primary);
   color: var(--primary-dark);
-  box-shadow: var(--shadow-green);
+  box-shadow: var(--shadow-sm);
 }
 
 .symptom-btn.active span {
