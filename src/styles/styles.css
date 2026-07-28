@@ -2436,10 +2436,36 @@ section {
    ============================================================ */
 
 .footer-main {
-  background: var(--accent-blue-dark);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 80px 0 40px;
-  color: rgba(255, 255, 255, 0.7);
+  background: #111214;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 0 var(--space-4);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.footer-cta-banner {
+  padding: var(--space-7) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: var(--space-6);
+}
+
+.footer-cta-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.footer-cta-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+  max-width: 560px;
+}
+
+.footer-cta-btn {
+  flex-shrink: 0;
 }
 
 .mobile-menu-toggle {
@@ -2500,7 +2526,7 @@ section {
 }
 
 .footer-main .brand-name { color: #FFFFFF; }
-.footer-main .brand-subtitle { color: var(--primary-glow); }
+.footer-main .brand-subtitle { color: var(--text-muted); }
 
 .footer-brand-desc {
   font-size: 0.95rem;
