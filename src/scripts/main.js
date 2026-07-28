@@ -879,10 +879,12 @@ function setupHeroScrollVideo() {
   // and on a client-side transition back to this page that attempt can be rejected by Chromium
   // with MEDIA_ERR_SRC_NOT_SUPPORTED ("Media load rejected by URL safety check"), leaving the
   // element stuck in NETWORK_NO_SOURCE. There's no event to listen for after the fact (it already
-  // fired before we could attach a handler), so unconditionally re-running the resource-selection
-  // algorithm via load() before every play attempt clears that stale state; it's a no-op on a
-  // normal first load where nothing has failed.
-  video.load();
+  // fired before we could attach a handler). Only reset via load() when that broken state is
+  // actually present — on a normal, non-transitioned first load nothing has failed, and calling
+  // load() unconditionally would snap an already-playing video back to frame 0 for no reason.
+  if (video.error || video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+    video.load();
+  }
   tryPlay();
 
   const videoObserver = new IntersectionObserver((entries) => {
@@ -969,9 +971,14 @@ function setupReelsAutoplay() {
 
       // Same cross-document adoption issue as the Hero video (see setupHeroScrollVideo): after
       // a client-side page transition lands back on this page, these elements can be stuck in
-      // NETWORK_NO_SOURCE from the browser's own invalidated resource selection. load() forces
-      // a fresh selection cycle before play(); harmless no-op on a normal first load.
-      activeVideo.load();
+      // NETWORK_NO_SOURCE from the browser's own invalidated resource selection. Only reset via
+      // load() when that broken state is actually present, rather than unconditionally on every
+      // call (this video is always paused at this point either way, so there's no visible-restart
+      // risk here like the always-playing Hero video, but the guard keeps both call sites
+      // consistent and avoids resetting currentTime/buffered state for no reason).
+      if (activeVideo.error || activeVideo.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+        activeVideo.load();
+      }
 
       activeVideo.play()
         .then(() => {
