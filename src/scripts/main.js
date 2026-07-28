@@ -6,7 +6,7 @@
 import iconeTelaSrc from '../../assets/icone-tela.jpg';
 import iconeBateriaSrc from '../../assets/icone-bateria.jpg';
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("astro:page-load", async () => {
   // Sincroniza preços em tempo real com o banco de dados se houver pricingEndpoint definido
   const configObj = window.CONFIG || (typeof CONFIG !== "undefined" ? CONFIG : null);
   if (configObj && configObj.pricingEndpoint) {

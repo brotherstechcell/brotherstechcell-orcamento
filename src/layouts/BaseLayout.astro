@@ -1,5 +1,6 @@
 ---
 import '../styles/styles.css';
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   title: string;
@@ -106,6 +107,8 @@ const baseLocalBusinessSchema = JSON.stringify({
   {extraJsonLd.map((json) => (
     <script type="application/ld+json" set:html={json} />
   ))}
+
+  <ClientRouter />
 </head>
 
 <body>
