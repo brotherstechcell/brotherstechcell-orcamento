@@ -2459,38 +2459,6 @@ section {
   margin-top: 12px;
 }
 
-.symptom-btn {
-  background: var(--bg-primary);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(20, 51, 79, 0.03);
-}
-
-.symptom-btn:hover {
-  border-color: var(--primary);
-  color: var(--text-primary);
-  background: rgba(41, 162, 81, 0.05);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(41, 162, 81, 0.15);
-}
-
-.symptom-btn.active {
-  border-color: var(--primary);
-  background: rgba(41, 162, 81, 0.1);
-  color: var(--primary-dark);
-  font-weight: 700;
-  box-shadow: 0 4px 15px rgba(41, 162, 81, 0.12);
-}
-
 .footer-grid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr 0.9fr 1fr;
