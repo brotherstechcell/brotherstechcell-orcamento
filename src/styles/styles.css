@@ -2170,7 +2170,7 @@ section {
    ============================================================ */
 
 .about-section {
-  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  background: var(--bg-primary);
 }
 
 .about-grid {
@@ -2188,11 +2188,11 @@ section {
 
 .experience-badge {
   background: var(--card-bg);
-  border: 1px solid var(--primary);
+  border: 1px solid var(--border);
   padding: 40px;
   border-radius: var(--radius-md);
   text-align: center;
-  box-shadow: var(--shadow-green);
+  box-shadow: var(--shadow-sm);
   position: relative;
   max-width: 320px;
   z-index: 1;
@@ -2227,50 +2227,6 @@ section {
 }
 
 .about-description p { margin-bottom: 16px; }
-
-.about-highlight-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 40px;
-}
-
-.about-highlight-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.check-icon {
-  width: 24px;
-  height: 24px;
-  background: var(--primary-transparent);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary);
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-
-.check-icon svg {
-  width: 14px;
-  height: 14px;
-  fill: currentColor;
-}
-
-.about-highlight-text h5 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-  color: var(--text-primary);
-}
-
-.about-highlight-text p {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
 
 /* ============================================================
    FAQ SECTION
