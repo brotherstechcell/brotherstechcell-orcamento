@@ -33,8 +33,10 @@
 
 - [ ] **Step 1: Create `src/scripts/motion.js`**
 
+**Correction (found during Task 1's implementation):** `splitText` is a `motion-plus` (paid, not installed) feature — it is NOT exported by the free `motion` package (confirmed: `motion@12.42.2`'s export list has no `splitText`). The code below has been corrected to split Hero words manually via DOM manipulation instead, while still preserving the `<span class="text-gradient">` nested inside the H1 (a naive `textContent`-based split would destroy that span's gradient styling). `animate` and `stagger` are both confirmed free/available and used as originally planned.
+
 ```js
-import { animate, inView, stagger, splitText } from "motion";
+import { animate, inView, stagger } from "motion";
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -83,7 +85,29 @@ function initHeroTextReveal() {
     return;
   }
 
-  const { words } = splitText(".hero-title");
+  const words = [];
+  const childNodes = Array.from(heroTitle.childNodes);
+  heroTitle.textContent = "";
+
+  childNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const parts = node.textContent.split(" ").filter((part) => part.length > 0);
+      parts.forEach((part) => {
+        const span = document.createElement("span");
+        span.textContent = part;
+        span.style.display = "inline-block";
+        heroTitle.appendChild(span);
+        heroTitle.appendChild(document.createTextNode(" "));
+        words.push(span);
+      });
+    } else {
+      node.style.display = "inline-block";
+      heroTitle.appendChild(node);
+      heroTitle.appendChild(document.createTextNode(" "));
+      words.push(node);
+    }
+  });
+
   animate(words, { opacity: [0, 1], y: [12, 0] }, { duration: 0.5, delay: stagger(0.04) });
 }
 
