@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://brotherstechcell-orcamento.vercel.app',
+  site: 'https://brotherstechcell.vercel.app',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],

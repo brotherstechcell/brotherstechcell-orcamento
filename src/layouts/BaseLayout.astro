@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { title, description, canonicalPath, ogDescription, extraJsonLd = [] } = Astro.props;
-const siteUrl = 'https://brotherstechcell-orcamento.vercel.app';
+const siteUrl = 'https://brotherstechcell.vercel.app';
 const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
 const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
 const socialDescription = ogDescription ?? description;
