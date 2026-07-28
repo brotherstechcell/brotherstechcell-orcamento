@@ -20,7 +20,7 @@
   --text-24: 24px;
   --text-40: 40px;
   --text-44: 44px;
-  --text-58: 58px;
+  --text-64: 64px;
 
   --leading-h2: 1.15;
   --tracking-h2: -1.2px;
@@ -50,41 +50,12 @@
   --leading-caption: 1.57;
   --tracking-caption: 0.2px;
 
-  --color-dark-gray-800: #333333;
-  --color-dark-gray-900: #121314;
-  --color-blue-300: #6EC1E4;
-  --color-blue-400: #1FC3FF;
-  --color-blue-500: #5F778B;
-  --color-blue-600: #3F527A;
-  --color-blue-700: #3F444B;
-  --color-blue-800: #14334F;
-  --color-white-50: #FFFFFF;
-  --color-white-100: #F1F1F1;
-  --color-light-gray-100: #DDDDDD;
-  --color-light-gray-200: #CCD6DF;
-  --color-black: #000000;
-  --color-green-600: #29A251;
-  --color-green-800: #1A532D;
-  --color-red: #CC3366;
-  --color-purple: #BFCDDA;
-
-  --radius-none: 999px;
-  --radius-sm: 100px;
-  --radius-md: 16px;
-  --radius-lg: 5px;
-  --radius-xl: 45px;
-  --radius-2xl: 3px;
-
-  --shadow-sm: rgba(0, 0, 0, 0.05) 0px 0px 30px 0px;
-  --shadow-DEFAULT: rgba(87, 248, 141, 0.18) 0px 0px 3.60981px 23.6828px;
-  --shadow-md: rgba(0, 0, 0, 0.2) 0px 4px 8px 0px;
-  --shadow-lg: rgba(87, 248, 141, 0.18) 0px 0px 3.60983px 23.6828px;
 }
 
 @layer components {
   .type-h2 {
     font-family: var(--font-gilroy);
-    font-size: var(--text-58);
+    font-size: var(--text-64);
     font-weight: 600;
     line-height: var(--leading-h2);
     letter-spacing: var(--tracking-h2);
@@ -211,41 +182,50 @@
    ============================================================ */
 
 :root {
+  /* Cor */
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F8FAFB;
-  --bg-tertiary: #F0F4F7;
+  --bg-secondary: #FAFAFA;
   --card-bg: #FFFFFF;
 
   --primary: #29A251;
   --primary-dark: #1A532D;
-  --primary-glow: #57F88D;
   --primary-transparent: rgba(41, 162, 81, 0.08);
-  --primary-glow-trans: rgba(87, 248, 141, 0.2);
 
-  --accent-blue: #2D7ABF;
-  --accent-blue-dark: #14334F;
-  --accent-blue-light: #1FC3FF;
-  --accent-blue-bg: #EDF3FF;
+  --text-primary: #111214;
+  --text-secondary: #4B5563;
+  --text-muted: #8A8F98;
 
-  --text-primary: #14334F;
-  --text-secondary: #5F778B;
-  --text-muted: #9BB0C1;
-
-  --border: #E1E8ED;
+  --border: #E5E7EB;
   --border-hover: rgba(41, 162, 81, 0.4);
 
-  --shadow-card: 0 2px 20px rgba(20, 51, 79, 0.06);
-  --shadow-card-hover: 0 12px 40px rgba(20, 51, 79, 0.12);
-  --shadow-green: 0 0 20px -5px rgb(87, 248, 141);
-  --shadow-green-lg: 0 0 35px -5px rgba(87, 248, 141, 0.6);
+  /* Sombra — neutra, sem tint de cor, quase imperceptível */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.10);
+
+  /* Retrocompat — mapeados para a escala neutra acima, evita ter que tocar toda regra que ainda referencia esses nomes nesta etapa */
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
 
   --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
+  /* Radius — fonte única, sem duplicidade com @theme */
   --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-pill: 100px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Espaçamento — grid de 8px */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+  --space-6: 64px;
+  --space-7: 96px;
+  --space-8: 128px;
 }
 
 *, *::before, *::after {
@@ -2464,28 +2444,6 @@ section {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 80px 0 40px;
   color: rgba(255, 255, 255, 0.7);
-}
-
-.header-cta-btn {
-  background: var(--primary);
-  border: none;
-  color: #FFFFFF;
-  font-size: 0.825rem;
-  font-weight: 800;
-  padding: 10px 24px;
-  border-radius: var(--radius-pill);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: var(--shadow-green);
-  transition: var(--transition-smooth);
-}
-
-.header-cta-btn:hover {
-  background: var(--primary-dark);
-  color: #FFFFFF;
-  box-shadow: var(--shadow-green-lg);
-  transform: translateY(-2px);
 }
 
 .mobile-menu-toggle {
