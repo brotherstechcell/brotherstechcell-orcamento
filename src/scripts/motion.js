@@ -47,6 +47,8 @@ function initHeroTextReveal() {
     return;
   }
 
+  heroTitle.style.opacity = "1";
+
   // motion-plus's text-splitting helper (a paid add-on) isn't available in
   // the installed "motion" package, so words are split manually here. Text
   // nodes are split into per-word spans; non-text child nodes (e.g. the
