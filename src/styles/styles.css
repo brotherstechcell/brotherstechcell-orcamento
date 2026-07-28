@@ -310,10 +310,8 @@ img, svg {
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 24px 0;
+  padding: var(--space-3) 0;
   background: transparent;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
   border-bottom: 1px solid transparent;
   transition: padding 0.4s cubic-bezier(0.25, 1, 0.5, 1),
               background 0.4s cubic-bezier(0.25, 1, 0.5, 1),
@@ -323,12 +321,12 @@ img, svg {
 }
 
 .header-main.scrolled {
-  padding: 12px 0;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border-bottom: 1px solid rgba(20, 51, 79, 0.06);
-  box-shadow: 0 8px 32px -10px rgba(20, 51, 79, 0.08);
+  padding: var(--space-2) 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .header-container {
@@ -365,9 +363,7 @@ img, svg {
 .brand-subtitle {
   font-size: 0.7rem;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--primary);
+  color: var(--text-muted);
 }
 
 .nav-links {
@@ -409,24 +405,24 @@ img, svg {
 }
 
 .header-cta-btn {
-  background: transparent;
-  border: 2px solid var(--primary);
-  color: var(--primary-dark);
+  background: var(--primary);
+  border: none;
+  color: #FFFFFF;
   font-size: 0.825rem;
   font-weight: 700;
-  padding: 10px 24px;
+  padding: 10px 22px;
   border-radius: var(--radius-pill);
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: var(--shadow-green);
+  box-shadow: var(--shadow-xs);
+  transition: var(--transition-smooth);
 }
 
 .header-cta-btn:hover {
-  background: var(--primary);
-  color: #FFFFFF;
-  box-shadow: var(--shadow-green-lg);
-  transform: translateY(-2px);
+  background: var(--primary-dark);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
 /* ============================================================
