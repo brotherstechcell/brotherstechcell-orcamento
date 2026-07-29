@@ -715,7 +715,7 @@ function updateWhatsAppLinks() {
   });
   
   // Atualiza botões genéricos de agendamento que possuem a classe "btn-whatsapp-global"
-  document.querySelectorAll(".btn-whatsapp-global:not([data-message])").forEach(el => {
+  document.querySelectorAll(".btn-whatsapp-global:not([data-message]):not(#sticky-price-bar-cta)").forEach(el => {
     const defaultMsg = encodeURIComponent("Olá! Vi o site de vocês e gostaria de agendar uma assistência técnica delivery para meu iPhone.");
     el.setAttribute("href", `${baseWhatsAppUrl}?text=${defaultMsg}`);
     el.setAttribute("target", "_blank");

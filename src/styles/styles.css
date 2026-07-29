@@ -3445,13 +3445,16 @@ section {
   padding: var(--space-2) 0;
   transform: translateY(100%);
   opacity: 0;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  visibility: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
   pointer-events: none;
 }
 
 .sticky-price-bar.visible {
   transform: translateY(0);
   opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
   pointer-events: auto;
 }
 
@@ -3482,7 +3485,8 @@ section {
 
 .floating-whatsapp-container.sticky-bar-active {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
 }
 

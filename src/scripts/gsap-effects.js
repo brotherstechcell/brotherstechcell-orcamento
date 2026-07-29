@@ -10,8 +10,12 @@ document.addEventListener("astro:page-load", () => {
   mm = gsap.matchMedia();
 
   mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", (context, contextSafe) => {
-    initHeroScrollScrub(contextSafe);
-    initStickyPriceBar();
+    const cleanupScrub = initHeroScrollScrub(contextSafe);
+    const cleanupBar = initStickyPriceBar();
+    return () => {
+      cleanupScrub?.();
+      cleanupBar?.();
+    };
   });
 });
 
@@ -52,18 +56,19 @@ function initHeroScrollScrub(contextSafe) {
 
   if (video.readyState >= 1) {
     setScrub();
-  } else {
-    // loadedmetadata fires asynchronously, after gsap.matchMedia()'s onMatch callback has
-    // already returned, so ScrollTrigger.create() called directly from this listener would
-    // fall outside the matchMedia Context's synchronous tracking window and never get
-    // revert()'d on the next astro:page-load - a real leak, not just a theoretical one
-    // (reproduced: 4 repeated Home<->inner-page transitions before video metadata finished
-    // loading grew ScrollTrigger.getAll().length from 2 to 5). contextSafe() re-enters that
-    // tracking window for setScrub()'s synchronous execution so the trigger stays trackable.
-    video.addEventListener("loadedmetadata", contextSafe ? contextSafe(setScrub) : setScrub, {
-      once: true,
-    });
+    return undefined;
   }
+
+  // loadedmetadata fires asynchronously, after gsap.matchMedia()'s onMatch callback has
+  // already returned, so ScrollTrigger.create() called directly from this listener would
+  // fall outside the matchMedia Context's synchronous tracking window and never get
+  // revert()'d on the next astro:page-load - a real leak, not just a theoretical one
+  // (reproduced: 4 repeated Home<->inner-page transitions before video metadata finished
+  // loading grew ScrollTrigger.getAll().length from 2 to 5). contextSafe() re-enters that
+  // tracking window for setScrub()'s synchronous execution so the trigger stays trackable.
+  const handler = contextSafe ? contextSafe(setScrub) : setScrub;
+  video.addEventListener("loadedmetadata", handler, { once: true });
+  return () => video.removeEventListener("loadedmetadata", handler);
 }
 
 function initStickyPriceBar() {
@@ -83,4 +88,9 @@ function initStickyPriceBar() {
       floatingBtn?.classList.toggle("sticky-bar-active", self.isActive);
     },
   });
+
+  return () => {
+    bar.classList.remove("visible");
+    floatingBtn?.classList.remove("sticky-bar-active");
+  };
 }
