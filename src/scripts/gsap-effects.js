@@ -48,6 +48,7 @@ function initStickyPriceBar() {
   const bar = document.getElementById("sticky-price-bar");
   const pricingSection = document.getElementById("telas-precos");
   const footer = document.querySelector(".footer-main");
+  const floatingBtn = document.querySelector(".floating-whatsapp-container");
   if (!bar || !pricingSection || !footer) return;
 
   ScrollTrigger.create({
@@ -55,6 +56,9 @@ function initStickyPriceBar() {
     start: "bottom top",
     endTrigger: footer,
     end: "top bottom",
-    toggleClass: { targets: bar, className: "visible" },
+    onToggle: (self) => {
+      bar.classList.toggle("visible", self.isActive);
+      floatingBtn?.classList.toggle("sticky-bar-active", self.isActive);
+    },
   });
 }
