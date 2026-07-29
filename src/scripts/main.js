@@ -132,6 +132,7 @@ document.addEventListener("astro:page-load", async () => {
     return devices;
   }
 
+  setupMobileMenuToggle(pageSignal);
   initPricingSelector(pageSignal);
   updateWhatsAppLinks();
   setupScrollEffects(pageSignal);
@@ -241,23 +242,25 @@ function setupMobileMenuToggle(signal) {
   const navList = document.getElementById("nav-menu-list");
   if (!toggleBtn || !navList) return;
 
+  const setOpen = (isOpen) => {
+    navList.classList.toggle("mobile-open", isOpen);
+    toggleBtn.classList.toggle("active", isOpen);
+    toggleBtn.setAttribute("aria-expanded", String(isOpen));
+    toggleBtn.setAttribute("aria-label", isOpen ? "Fechar Menu" : "Abrir Menu");
+  };
+
   toggleBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    navList.classList.toggle("mobile-open");
-    toggleBtn.classList.toggle("active");
+    setOpen(!navList.classList.contains("mobile-open"));
   });
 
   document.querySelectorAll("#nav-menu-list a").forEach(link => {
-    link.addEventListener("click", () => {
-      navList.classList.remove("mobile-open");
-      toggleBtn.classList.remove("active");
-    });
+    link.addEventListener("click", () => setOpen(false));
   });
 
   document.addEventListener("click", (e) => {
     if (!navList.contains(e.target) && !toggleBtn.contains(e.target)) {
-      navList.classList.remove("mobile-open");
-      toggleBtn.classList.remove("active");
+      setOpen(false);
     }
   }, { signal });
 }
@@ -274,8 +277,6 @@ function initPricingSelector(signal) {
 
   const diagDropdown = document.getElementById("diagnostic-device-select");
   if (!dropdown || !CONFIG.devices) return;
-
-  setupMobileMenuToggle(signal);
 
   // 1. Popular o Dropdown ordenado de forma lógica com optgroups
   const sortedModels = Object.keys(CONFIG.devices).sort((a, b) => {
