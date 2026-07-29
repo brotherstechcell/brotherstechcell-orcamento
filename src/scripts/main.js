@@ -689,6 +689,14 @@ function renderSelectorResults(modelName) {
   
   resultsGrid.appendChild(screenCard);
   resultsGrid.appendChild(batteryCard);
+
+  const stickyModelName = document.getElementById("sticky-price-bar-model-name");
+  const stickyCta = document.getElementById("sticky-price-bar-cta");
+  if (stickyModelName) stickyModelName.textContent = modelName;
+  if (stickyCta) {
+    const message = encodeURIComponent(`Olá! Quero saber o preço da troca de tela/bateria do meu iPhone ${modelName}.`);
+    stickyCta.setAttribute("href", `https://wa.me/${CONFIG.contact.phoneRaw}?text=${message}`);
+  }
 }
 
 
