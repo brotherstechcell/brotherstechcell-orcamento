@@ -3487,6 +3487,13 @@ section {
   .sticky-price-bar {
     transition-duration: 0.01ms;
   }
+
+  .btn-glow,
+  .pulse-dot,
+  .btn-whatsapp-floating::before,
+  .bottom-nav-item.bottom-nav-cta {
+    animation: none;
+  }
 }
 
 @media (max-width: 1023px) {
