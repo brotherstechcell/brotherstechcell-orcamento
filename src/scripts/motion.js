@@ -24,9 +24,8 @@ function initCounterAnimation() {
       return;
     }
 
-    el.textContent = `${prefix}0${suffix}`;
-
     const stop = inView(el, () => {
+      el.textContent = `${prefix}0${suffix}`;
       animate(0, to, {
         duration: 1.2,
         onUpdate: (latest) => {
@@ -57,26 +56,30 @@ function initHeroTextReveal() {
   // rather than being split further.
   const words = [];
   const childNodes = Array.from(heroTitle.childNodes);
-  heroTitle.textContent = "";
+  const fragment = document.createDocumentFragment();
 
   childNodes.forEach((node) => {
     if (node.nodeType === Node.TEXT_NODE) {
-      const parts = node.textContent.split(" ").filter((part) => part.length > 0);
+      const parts = node.textContent.split(/\s+/).filter((part) => part.length > 0);
       parts.forEach((part) => {
         const span = document.createElement("span");
         span.textContent = part;
         span.style.display = "inline-block";
-        heroTitle.appendChild(span);
-        heroTitle.appendChild(document.createTextNode(" "));
+        fragment.appendChild(span);
+        fragment.appendChild(document.createTextNode(" "));
         words.push(span);
       });
-    } else {
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
       node.style.display = "inline-block";
-      heroTitle.appendChild(node);
-      heroTitle.appendChild(document.createTextNode(" "));
+      fragment.appendChild(node);
+      fragment.appendChild(document.createTextNode(" "));
       words.push(node);
     }
+    // any other node type (comments, etc.) is intentionally dropped — nothing to animate
   });
+
+  heroTitle.textContent = "";
+  heroTitle.appendChild(fragment);
 
   animate(words, { opacity: [0, 1], y: [12, 0] }, { duration: 0.5, delay: stagger(0.04) });
 }

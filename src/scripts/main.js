@@ -6,7 +6,13 @@
 import iconeTelaSrc from '../../assets/icone-tela.jpg';
 import iconeBateriaSrc from '../../assets/icone-bateria.jpg';
 
+let pageAbortController;
+
 document.addEventListener("astro:page-load", async () => {
+  pageAbortController?.abort();
+  pageAbortController = new AbortController();
+  const pageSignal = pageAbortController.signal;
+
   // Sincroniza preços em tempo real com o banco de dados se houver pricingEndpoint definido
   const configObj = window.CONFIG || (typeof CONFIG !== "undefined" ? CONFIG : null);
   if (configObj && configObj.pricingEndpoint) {
@@ -42,7 +48,7 @@ document.addEventListener("astro:page-load", async () => {
             const dropdown = document.getElementById("device-search-select");
             if (dropdown) {
               const currentValue = dropdown.value;
-              initPricingSelector();
+              initPricingSelector(pageSignal);
               if (currentValue && configObj.devices[currentValue]) {
                 dropdown.value = currentValue;
                 renderSelectorResults(currentValue);
@@ -126,14 +132,14 @@ document.addEventListener("astro:page-load", async () => {
     return devices;
   }
 
-  initPricingSelector();
+  initPricingSelector(pageSignal);
   updateWhatsAppLinks();
-  setupScrollEffects();
+  setupScrollEffects(pageSignal);
   setupVideoCarousel();
-  setupHeroScrollVideo();
-  setupScrollReveal();
+  setupHeroScrollVideo(pageSignal);
+  setupScrollReveal(pageSignal);
   setupFaqAccordion();
-  setupReelsAutoplay();
+  setupReelsAutoplay(pageSignal);
   setupDiagnosticWizard();
 });
 
@@ -230,7 +236,7 @@ function populateSelectWithOptgroups(selectEl, sortedModels, defaultText) {
   });
 }
 
-function setupMobileMenuToggle() {
+function setupMobileMenuToggle(signal) {
   const toggleBtn = document.getElementById("mobile-menu-toggle");
   const navList = document.getElementById("nav-menu-list");
   if (!toggleBtn || !navList) return;
@@ -253,23 +259,23 @@ function setupMobileMenuToggle() {
       navList.classList.remove("mobile-open");
       toggleBtn.classList.remove("active");
     }
-  });
+  }, { signal });
 }
 
 /**
  * Inicializa o componente de Seletor Único de iPhone e abas de serviços
  */
-function initPricingSelector() {
+function initPricingSelector(signal) {
   const dropdown = document.getElementById("device-search-select");
   const tabTelasBaterias = document.getElementById("tab-btn-telas-baterias");
   const tabOutrosServicos = document.getElementById("tab-btn-outros-servicos");
   const panelTelasBaterias = document.getElementById("panel-telas-baterias");
   const panelOutrosServicos = document.getElementById("panel-outros-servicos");
-  
+
   const diagDropdown = document.getElementById("diagnostic-device-select");
   if (!dropdown || !CONFIG.devices) return;
-  
-  setupMobileMenuToggle();
+
+  setupMobileMenuToggle(signal);
 
   // 1. Popular o Dropdown ordenado de forma lógica com optgroups
   const sortedModels = Object.keys(CONFIG.devices).sort((a, b) => {
@@ -729,10 +735,10 @@ function updateWhatsAppLinks() {
 /**
  * Adiciona efeitos interativos de scroll, menu ativo e header flutuante
  */
-function setupScrollEffects() {
+function setupScrollEffects(signal) {
   const header = document.querySelector(".header-main");
   const floatingBtn = document.querySelector(".floating-whatsapp-container");
-  
+
   window.addEventListener("scroll", () => {
     // Efeito translúcido no Header ao rolar a página
     if (window.scrollY > 20) {
@@ -766,7 +772,7 @@ function setupScrollEffects() {
         });
       }
     });
-  });
+  }, { signal });
 }
 
 /**
@@ -852,7 +858,7 @@ function getQualityBenefitsHtml(quality) {
 /**
  * Configura o vídeo do Hero com reprodução contínua e 0 atraso no scroll
  */
-function setupHeroScrollVideo() {
+function setupHeroScrollVideo(signal) {
   const video = document.getElementById("hero-scroll-video");
   const heroSection = document.getElementById("inicio");
   if (!video || !heroSection) return;
@@ -866,8 +872,8 @@ function setupHeroScrollVideo() {
           window.removeEventListener("touchstart", startPlay);
           window.removeEventListener("scroll", startPlay);
         };
-        window.addEventListener("touchstart", startPlay, { passive: true, once: true });
-        window.addEventListener("scroll", startPlay, { passive: true, once: true });
+        window.addEventListener("touchstart", startPlay, { passive: true, once: true, signal });
+        window.addEventListener("scroll", startPlay, { passive: true, once: true, signal });
       });
     }
   };
@@ -898,9 +904,10 @@ function setupHeroScrollVideo() {
   }, { threshold: 0.05 });
 
   videoObserver.observe(heroSection);
+  signal.addEventListener("abort", () => videoObserver.disconnect());
 }
 
-function setupScrollReveal() {
+function setupScrollReveal(signal) {
   const elements = document.querySelectorAll('.scroll-reveal');
   if (!elements.length) return;
 
@@ -914,6 +921,7 @@ function setupScrollReveal() {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   elements.forEach(el => observer.observe(el));
+  signal.addEventListener("abort", () => observer.disconnect());
 }
 
 function setupFaqAccordion() {
@@ -935,7 +943,7 @@ function setupFaqAccordion() {
  * Se o usuário migrar para tags <video> locais no futuro, gerencia o Autoplay sequencial (1 por 1).
  * Para os iframes atuais, garante efeitos interativos de foco visual premium.
  */
-function setupReelsAutoplay() {
+function setupReelsAutoplay(signal) {
   const cards = document.querySelectorAll(".reel-card");
   const localVideos = document.querySelectorAll(".reel-video-wrapper video");
   
@@ -992,7 +1000,7 @@ function setupReelsAutoplay() {
           // Em caso de bloqueio, adiciona evento de clique para destravar
           document.addEventListener("click", () => {
             activeVideo.play().catch(() => {});
-          }, { once: true });
+          }, { once: true, signal });
         });
     }
     
