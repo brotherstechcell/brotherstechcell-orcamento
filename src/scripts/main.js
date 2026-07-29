@@ -863,6 +863,11 @@ function setupHeroScrollVideo(signal) {
   const heroSection = document.getElementById("inicio");
   if (!video || !heroSection) return;
 
+  const isDesktopScrollScrub =
+    window.matchMedia("(min-width: 1024px)").matches &&
+    window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  if (isDesktopScrollScrub) return;
+
   const tryPlay = () => {
     const playPromise = video.play();
     if (playPromise !== undefined) {
