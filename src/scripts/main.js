@@ -1045,14 +1045,14 @@ function setupReelsAutoplay(signal) {
         });
       });
       
-      // Clique no frame do vídeo liga/desliga o som ou alterna o foco
+      // Clique (ou Enter/Espaço) no frame do vídeo liga/desliga o som ou alterna o foco
       const frame = card.querySelector(".reel-frame");
       if (frame) {
         frame.style.cursor = "pointer";
-        frame.addEventListener("click", (e) => {
+        const activateFrame = (e) => {
           // Evita que o clique dispare ações se clicar no botão do Instagram
           if (e.target.closest(".reel-insta-btn")) return;
-          
+
           // Se o vídeo clicado não for o ativo, ativa ele
           if (currentActiveIndex !== index) {
             playVideoAtIndex(index);
@@ -1066,6 +1066,13 @@ function setupReelsAutoplay(signal) {
             } else {
               card.classList.remove("sound-active");
             }
+          }
+        };
+        frame.addEventListener("click", activateFrame);
+        frame.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            activateFrame(e);
           }
         });
       }

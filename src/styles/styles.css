@@ -2280,6 +2280,13 @@ section {
   outline: none;
 }
 
+.symptom-btn:focus-visible,
+.selector-tab:focus-visible,
+.faq-question:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 .faq-question-icon {
   width: 24px;
   height: 24px;
