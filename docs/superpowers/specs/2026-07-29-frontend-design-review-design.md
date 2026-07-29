@@ -49,6 +49,14 @@ Cada frente produz uma lista de achados com severidade (Critical/Important/Minor
 6. Nenhuma regressão nas páginas tocadas (Home, chrome compartilhado, amostra de páginas de modelo/serviço/bairro).
 7. Lighthouse (mobile + desktop, Home) documentado como baseline nesta rodada — não há critério de nota mínima definido a priori, mas achados de performance claros (imagem não otimizada, render-blocking, etc.) são corrigidos.
 
+## Resultado da Fase A (auditoria) e decisão pós-auditoria
+
+A auditoria paralela (a11y-architect + e2e-runner + checagem visual/UX inline) rodou em 2026-07-29 e encontrou 42 achados no total, consolidados em `​.superpowers/sdd/2026-07-29-frontend-design-review/consolidated-findings.md`. Achado principal: o menu hambúrguer está quebrado em **todas** as páginas, inclusive a Home (dois bugs distintos: fora da Home `setupMobileMenuToggle()` nunca é chamada; na Home ela é chamada duas vezes e os dois listeners se cancelam num único clique) — confirma e aprofunda o bug já suspeitado 3x em reviews anteriores.
+
+O Lighthouse desta rodada confirmou impacto real do chunk do GSAP em mobile (44.8KB, 70% código morto), então esse item — antes listado como "fora de escopo, só entra se Lighthouse confirmar" — passa a fazer parte do plano de correção, conforme a condição já prevista neste spec.
+
+**Decisão confirmada com o usuário:** o único achado de natureza "gosto/trade-off" (vídeo do Hero sem controle de pausa, WCAG 2.2.2, exige nova UI) — usuário optou por corrigir, adicionando um botão de pausa/play discreto sobreposto ao vídeo.
+
 ## Fora de escopo
 
 - Redesign visual das ~297 páginas de modelo/bairro/serviço — item futuro já identificado, precisa de seu próprio ciclo spec→plano.
