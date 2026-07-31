@@ -331,9 +331,23 @@ function initPricingSelector(signal) {
       tabOutrosServicos.setAttribute("aria-selected", "true");
       tabTelasBaterias.classList.remove("active");
       tabTelasBaterias.setAttribute("aria-selected", "false");
-      
+
       panelOutrosServicos.classList.add("active");
       panelTelasBaterias.classList.remove("active");
+    });
+  }
+
+  if (tabTelasBaterias && tabOutrosServicos) {
+    const tabOrder = [tabTelasBaterias, tabOutrosServicos];
+    tabOrder.forEach((tab, i) => {
+      tab.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        e.preventDefault();
+        const nextIndex = (i + (e.key === "ArrowRight" ? 1 : -1) + tabOrder.length) % tabOrder.length;
+        const nextTab = tabOrder[nextIndex];
+        nextTab.focus();
+        nextTab.click();
+      });
     });
   }
 }
@@ -1117,8 +1131,12 @@ function setupDiagnosticWizard() {
   // 1. Escuta cliques nos botões de sintomas
   symptomBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-      symptomBtns.forEach(b => b.classList.remove("active"));
+      symptomBtns.forEach(b => {
+        b.classList.remove("active");
+        b.setAttribute("aria-pressed", "false");
+      });
       btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
       selectedSymptom = btn.getAttribute("data-symptom");
       updateDiagnosticLink();
     });
