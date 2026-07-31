@@ -956,12 +956,21 @@ function setupFaqAccordion() {
   const faqItems = document.querySelectorAll('.faq-item');
   faqItems.forEach(item => {
     const question = item.querySelector('.faq-question');
-    if (!question) return;
+    const answer = item.querySelector('.faq-answer');
+    if (!question || !answer) return;
 
     question.addEventListener('click', () => {
       const isActive = item.classList.contains('active');
-      faqItems.forEach(i => i.classList.remove('active'));
-      if (!isActive) item.classList.add('active');
+      faqItems.forEach(i => {
+        i.classList.remove('active');
+        i.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+        i.querySelector('.faq-answer')?.setAttribute('aria-hidden', 'true');
+      });
+      if (!isActive) {
+        item.classList.add('active');
+        question.setAttribute('aria-expanded', 'true');
+        answer.setAttribute('aria-hidden', 'false');
+      }
     });
   });
 }

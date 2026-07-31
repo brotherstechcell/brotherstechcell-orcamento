@@ -60,10 +60,10 @@ const faqJsonLd = {
               <table class="zero-click-table">
                 <thead>
                   <tr>
-                    <th>Serviço</th>
-                    <th>Tempo Estimado</th>
-                    <th>Garantia</th>
-                    <th>Local</th>
+                    <th scope="col">Serviço</th>
+                    <th scope="col">Tempo Estimado</th>
+                    <th scope="col">Garantia</th>
+                    <th scope="col">Local</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -100,11 +100,11 @@ const faqJsonLd = {
 
           <div class="faq-list scroll-reveal scroll-right">
             <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
+              <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-1">
                 <span>Onde consertar a tela do iPhone 15 Pro Max hoje em Manaus com atendimento no mesmo dia?</span>
-                <span class="faq-question-icon">+</span>
+                <span class="faq-question-icon" aria-hidden="true">+</span>
               </button>
-              <div class="faq-answer">
+              <div class="faq-answer" id="faq-answer-1" aria-hidden="true">
                 <div class="faq-answer-inner">
                   <p>A <strong>Brothers Techcell</strong> realiza a troca de tela do iPhone 15 Pro Max <strong>hoje mesmo em Manaus</strong> através do nosso serviço de atendimento delivery em domicílio ou no trabalho. O técnico vai até você em poucos minutos e efetua a troca na sua frente com total transparência e garantia real.</p>
                 </div>
@@ -112,11 +112,11 @@ const faqJsonLd = {
             </div>
 
             <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
+              <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-2">
                 <span>Como funciona o conserto de iPhone em domicílio nos bairros Adrianópolis, Vieiralves, Ponta Negra e Parque 10 em Manaus?</span>
-                <span class="faq-question-icon">+</span>
+                <span class="faq-question-icon" aria-hidden="true">+</span>
               </button>
-              <div class="faq-answer">
+              <div class="faq-answer" id="faq-answer-2" aria-hidden="true">
                 <div class="faq-answer-inner">
                   <p>O atendimento delivery atende todos os bairros de Manaus (como Adrianópolis, Vieiralves, Ponta Negra, Parque 10, Dom Pedro, Aleixo, Flores e Centro). O processo segue 4 passos simples:</p>
                   <ul style="margin-left: 20px; margin-top: 8px; line-height: 1.6;">
@@ -130,11 +130,11 @@ const faqJsonLd = {
             </div>
 
             <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
+              <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-3">
                 <span>A troca de tela do iPhone mantém o True Tone e o Face ID funcionando perfeitamente em Manaus?</span>
-                <span class="faq-question-icon">+</span>
+                <span class="faq-question-icon" aria-hidden="true">+</span>
               </button>
-              <div class="faq-answer">
+              <div class="faq-answer" id="faq-answer-3" aria-hidden="true">
                 <div class="faq-answer-inner">
                   <p><strong>Sim!</strong> Na Brothers Techcell realizamos a transferência e calibração de código dos sensores originais utilizando gravadores de EEPROM. Isso garante que as funções de <strong>True Tone</strong>, brilho automático e o biometria facial <strong>Face ID</strong> permaneçam 100% operacionais após a substituição do display.</p>
                 </div>
@@ -142,11 +142,11 @@ const faqJsonLd = {
             </div>
 
             <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
+              <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-4">
                 <span>Quanto tempo demora a troca de bateria de iPhone mantendo a Saúde da Bateria e sem mensagem de erro?</span>
-                <span class="faq-question-icon">+</span>
+                <span class="faq-question-icon" aria-hidden="true">+</span>
               </button>
-              <div class="faq-answer">
+              <div class="faq-answer" id="faq-answer-4" aria-hidden="true">
                 <div class="faq-answer-inner">
                   <p>A troca da bateria leva entre <strong>20 e 35 minutos</strong>. Utilizamos baterias de alta performance homologadas Anatel com chip controlador de carga <strong>Texas Instruments (TI)</strong>. Em modelos compatíveis, efetuamos a reprogramação do microchip de carga para preservar os Ciclos de Carga e a leitura correta de <strong>Saúde da Bateria (Battery Health)</strong>.</p>
                 </div>
@@ -154,11 +154,11 @@ const faqJsonLd = {
             </div>
 
             <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
+              <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-5">
                 <span>O iPhone continua resistente à água após a troca de tela ou bateria na Brothers Techcell?</span>
-                <span class="faq-question-icon">+</span>
+                <span class="faq-question-icon" aria-hidden="true">+</span>
               </button>
-              <div class="faq-answer">
+              <div class="faq-answer" id="faq-answer-5" aria-hidden="true">
                 <div class="faq-answer-inner">
                   <p><strong>Sim.</strong> Em todos os reparos efetuados em Manaus, realizamos a remoção do adesivo antigo e a restauração do selo de vedação original contra umidade e poeira (<strong>padrão IP68</strong>), garantindo máxima proteção ao seu dispositivo Apple.</p>
                 </div>
@@ -166,11 +166,11 @@ const faqJsonLd = {
             </div>
 
             <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
+              <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-6">
                 <span>Qual o valor da troca de tela e bateria de iPhone com garantia de 3 a 6 meses em Manaus?</span>
-                <span class="faq-question-icon">+</span>
+                <span class="faq-question-icon" aria-hidden="true">+</span>
               </button>
-              <div class="faq-answer">
+              <div class="faq-answer" id="faq-answer-6" aria-hidden="true">
                 <div class="faq-answer-inner">
                   <p>Os valores variam de acordo com o modelo e a linha da peça escolhida:</p>
                   <ul style="margin-left: 20px; margin-top: 8px; line-height: 1.6;">
@@ -183,11 +183,11 @@ const faqJsonLd = {
             </div>
 
             <div class="faq-item">
-              <button class="faq-question" aria-expanded="false">
+              <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-7">
                 <span>A Brothers Techcell busca e entrega o iPhone no meu local de trabalho em Manaus?</span>
-                <span class="faq-question-icon">+</span>
+                <span class="faq-question-icon" aria-hidden="true">+</span>
               </button>
-              <div class="faq-answer">
+              <div class="faq-answer" id="faq-answer-7" aria-hidden="true">
                 <div class="faq-answer-inner">
                   <p><strong>Com certeza!</strong> Nosso técnico pode realizar a troca da tela ou bateria diretamente na sala de reuniões, recepção ou escritório da sua empresa em Manaus, sem que você precise interromper sua rotina de trabalho.</p>
                 </div>
