@@ -893,7 +893,10 @@ function setupHeroScrollVideo(signal) {
     window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
   if (isDesktopScrollScrub) return;
 
+  let userPaused = false;
+
   const tryPlay = () => {
+    if (userPaused) return;
     const playPromise = video.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
@@ -926,7 +929,7 @@ function setupHeroScrollVideo(signal) {
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        video.play().catch(() => {});
+        if (!userPaused) video.play().catch(() => {});
       } else {
         video.pause();
       }
@@ -935,6 +938,27 @@ function setupHeroScrollVideo(signal) {
 
   videoObserver.observe(heroSection);
   signal.addEventListener("abort", () => videoObserver.disconnect());
+
+  const toggleBtn = document.getElementById("hero-video-toggle");
+  if (toggleBtn) {
+    const updateToggleUI = (paused) => {
+      toggleBtn.setAttribute("aria-pressed", String(paused));
+      toggleBtn.setAttribute("aria-label", paused ? "Reproduzir vídeo" : "Pausar vídeo");
+      toggleBtn.querySelector(".icon-pause").style.display = paused ? "none" : "";
+      toggleBtn.querySelector(".icon-play").style.display = paused ? "" : "none";
+    };
+    toggleBtn.addEventListener("click", () => {
+      if (video.paused) {
+        userPaused = false;
+        video.play().catch(() => {});
+        updateToggleUI(false);
+      } else {
+        userPaused = true;
+        video.pause();
+        updateToggleUI(true);
+      }
+    }, { signal });
+  }
 }
 
 function setupScrollReveal(signal) {
