@@ -789,8 +789,10 @@ function setupScrollEffects(signal) {
       if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
         document.querySelectorAll(".nav-link, .bottom-nav-item").forEach(link => {
           link.classList.remove("active");
+          link.removeAttribute("aria-current");
           if (link.getAttribute("href") === `#${sectionId}`) {
             link.classList.add("active");
+            link.setAttribute("aria-current", "true");
           }
         });
       }
