@@ -1,8 +1,12 @@
+---
+import { Image } from 'astro:assets';
+import logoSrc from '../assets/logo-brotherstechcell.jpeg';
+---
   <!-- Cabeçalho (Header) -->
   <header class="header-main">
     <div class="container header-container">
       <a href="/" class="brand-logo-link" aria-label="Voltar para o início do site">
-        <img src="/Logo Brotherstechcell.jpeg" class="logo-img" alt="Logo Brothers Techcell - Voltar para o início">
+        <Image src={logoSrc} class="logo-img" alt="Logo Brothers Techcell - Voltar para o início" width={90} height={102} format="webp" quality={80} />
         <div class="brand-text-container">
           <span class="brand-name">Brothers Techcell</span>
           <span class="brand-subtitle">Delivery Apple</span>

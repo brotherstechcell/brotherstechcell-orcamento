@@ -1,6 +1,8 @@
 ---
 import '../styles/styles.css';
 import { ClientRouter } from "astro:transitions";
+import { getImage } from 'astro:assets';
+import logoSrc from '../assets/logo-brotherstechcell.jpeg';
 
 interface Props {
   title: string;
@@ -15,6 +17,10 @@ const siteUrl = 'https://brotherstechcell.vercel.app';
 const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
 const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
 const socialDescription = ogDescription ?? description;
+// Logo now lives under src/assets/ and goes through astro:assets (see Header/Footer) instead of
+// public/ — resolve its built, hashed URL here for the favicon/apple-touch-icon links and the
+// JSON-LD "logo" field, which need a plain URL string rather than an <Image> component.
+const logoIcon = await getImage({ src: logoSrc, format: 'jpeg' });
 
 const baseLocalBusinessSchema = JSON.stringify({
   "@context": "https://schema.org",
@@ -22,7 +28,7 @@ const baseLocalBusinessSchema = JSON.stringify({
   "@id": `${siteUrl}/#organization`,
   "name": "Brothers Techcell - Assistência Técnica Apple Delivery Manaus",
   "url": siteUrl,
-  "logo": new URL('/Logo Brotherstechcell.jpeg', siteUrl).toString(),
+  "logo": new URL(logoIcon.src, siteUrl).toString(),
   "image": ogImageUrl,
   "telephone": "+55-92-99395-1193",
   "email": "brotherstechcelloficial@gmail.com",
@@ -74,6 +80,10 @@ const baseLocalBusinessSchema = JSON.stringify({
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap">
+
   <title>{title}</title>
   <meta name="description" content={description}>
   <meta name="robots" content="follow, index">
@@ -85,8 +95,8 @@ const baseLocalBusinessSchema = JSON.stringify({
   <meta name="geo.position" content="-3.119027;-60.021731">
   <meta name="ICBM" content="-3.119027, -60.021731">
 
-  <link rel="icon" type="image/jpeg" href="/Logo Brotherstechcell.jpeg">
-  <link rel="apple-touch-icon" href="/Logo Brotherstechcell.jpeg">
+  <link rel="icon" type="image/jpeg" href={logoIcon.src}>
+  <link rel="apple-touch-icon" href={logoIcon.src}>
 
   <meta property="og:locale" content="pt_BR">
   <meta property="og:type" content="website">

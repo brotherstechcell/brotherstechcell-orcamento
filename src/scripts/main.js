@@ -1043,8 +1043,24 @@ function setupReelsAutoplay(signal) {
         });
     }
     
-    // Inicializa tocando o primeiro vídeo
-    playVideoAtIndex(0);
+    // Só inicia o autoplay quando a seção de reels estiver próxima da viewport —
+    // evita baixar/tocar o vídeo de 3.5MB do primeiro reel em todo carregamento de página,
+    // mesmo quando a seção está fora de tela (mesmo padrão já usado no vídeo do Hero).
+    const reelsSection = document.getElementById("transparencia");
+    if (reelsSection) {
+      const reelsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            playVideoAtIndex(0);
+            reelsObserver.disconnect();
+          }
+        });
+      }, { threshold: 0.05 });
+      reelsObserver.observe(reelsSection);
+      signal.addEventListener("abort", () => reelsObserver.disconnect());
+    } else {
+      playVideoAtIndex(0);
+    }
 
     // INTERATIVIDADE PREMIUM: Hover de foco + Clique para Mutar/Desmutar
     cards.forEach((card, index) => {

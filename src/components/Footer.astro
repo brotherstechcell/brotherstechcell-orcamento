@@ -1,3 +1,7 @@
+---
+import { Image } from 'astro:assets';
+import logoSrc from '../assets/logo-brotherstechcell.jpeg';
+---
   <!-- Rodapé (Footer) -->
   <footer class="footer-main" itemscope itemtype="https://schema.org/LocalBusiness">
     <div class="container footer-cta-banner">
@@ -15,8 +19,8 @@
     <div class="container footer-grid">
       <div>
         <a href="#inicio" class="brand-logo-link" aria-label="Voltar para o início do site">
-          <img src="/Logo Brotherstechcell.jpeg" class="logo-img" alt="Brothers Techcell - Assistência Técnica Especializada Apple em Manaus AM"
-            style="filter: brightness(0.9);" loading="lazy" decoding="async" width="48" height="48">
+          <Image src={logoSrc} class="logo-img" alt="Brothers Techcell - Assistência Técnica Especializada Apple em Manaus AM" width={90} height={102} format="webp" quality={80}
+            style="filter: brightness(0.9);" loading="lazy" decoding="async" />
           <div class="brand-text-container">
             <span class="brand-name" itemprop="name">Brothers Techcell</span>
             <span class="brand-subtitle">Delivery Apple Manaus</span>
