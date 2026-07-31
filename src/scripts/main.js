@@ -13,6 +13,8 @@ document.addEventListener("astro:page-load", async () => {
   pageAbortController = new AbortController();
   const pageSignal = pageAbortController.signal;
 
+  setupMobileMenuToggle(pageSignal);
+
   // Sincroniza preços em tempo real com o banco de dados se houver pricingEndpoint definido
   const configObj = window.CONFIG || (typeof CONFIG !== "undefined" ? CONFIG : null);
   if (configObj && configObj.pricingEndpoint) {
@@ -132,7 +134,6 @@ document.addEventListener("astro:page-load", async () => {
     return devices;
   }
 
-  setupMobileMenuToggle(pageSignal);
   initPricingSelector(pageSignal);
   updateWhatsAppLinks();
   setupScrollEffects(pageSignal);

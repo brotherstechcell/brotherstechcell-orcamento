@@ -124,7 +124,9 @@ const faqJsonLd = JSON.stringify({
       if (gsapEffectsLoaded) return;
       if (window.matchMedia("(min-width: 1024px)").matches) {
         gsapEffectsLoaded = true;
-        import("../scripts/gsap-effects.js");
+        import("../scripts/gsap-effects.js")
+          .then((module) => module.initGsapEffects())
+          .catch((err) => console.warn("Falha ao carregar efeitos GSAP:", err));
       }
     }
     loadGsapEffectsIfDesktop();

@@ -5,7 +5,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 let mm;
 
-document.addEventListener("astro:page-load", () => {
+export function initGsapEffects() {
   mm?.revert();
   mm = gsap.matchMedia();
 
@@ -17,7 +17,9 @@ document.addEventListener("astro:page-load", () => {
       cleanupBar?.();
     };
   });
-});
+}
+
+document.addEventListener("astro:page-load", initGsapEffects);
 
 function initHeroScrollScrub(contextSafe) {
   const video = document.getElementById("hero-scroll-video");
