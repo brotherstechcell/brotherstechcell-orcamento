@@ -119,11 +119,15 @@ const faqJsonLd = JSON.stringify({
   <script src="../scripts/main.js"></script>
   <script src="../scripts/motion.js"></script>
   <script>
+    let gsapEffectsLoaded = false;
     function loadGsapEffectsIfDesktop() {
+      if (gsapEffectsLoaded) return;
       if (window.matchMedia("(min-width: 1024px)").matches) {
+        gsapEffectsLoaded = true;
         import("../scripts/gsap-effects.js");
       }
     }
+    loadGsapEffectsIfDesktop();
     document.addEventListener("astro:page-load", loadGsapEffectsIfDesktop);
   </script>
 </BaseLayout>
