@@ -1,0 +1,465 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import TrustFacts from '../../../components/TrustFacts.astro';
+import CtaFinal from '../../../components/CtaFinal.astro';
+import Footer from '../../../components/Footer.astro';
+import FloatingWhatsapp from '../../../components/FloatingWhatsapp.astro';
+import BottomNav from '../../../components/BottomNav.astro';
+import { getAllModelOverviewPages, getServiceVisualMeta, type ModelOverviewData } from '../../../data/modelPages';
+import { SITE_URL, BUSINESS_INFO, getWhatsAppLink } from '../../../data/siteConfig';
+
+export function getStaticPaths() {
+  return getAllModelOverviewPages().map((modelData) => ({
+    params: { model: modelData.routeSlug },
+    props: { modelData },
+  }));
+}
+
+interface Props {
+  modelData: ModelOverviewData;
+}
+
+const { modelData } = Astro.props;
+const siteUrl = SITE_URL;
+
+const serviceJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `${siteUrl}/iphone/${modelData.routeSlug}#service`,
+  "name": `Assistência Técnica iPhone ${modelData.modelName} em Manaus`,
+  "description": modelData.description,
+  "areaServed": [
+    { "@type": "City", "name": "Manaus" },
+    { "@type": "AdministrativeArea", "name": "Amazonas" }
+  ],
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": BUSINESS_INFO.name,
+    "telephone": BUSINESS_INFO.phone,
+    "url": siteUrl
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": `Serviços para iPhone ${modelData.modelName}`,
+    "itemListElement": modelData.services.map((s) => ({
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": `${getServiceVisualMeta(s.serviceSlug).cleanName} iPhone ${modelData.modelName}`,
+        "description": `${s.deliveryLabel} com garantia de ${s.warranty}`
+      },
+      "price": s.prices[0]?.price.replace(",", "."),
+      "priceCurrency": "BRL"
+    }))
+  }
+});
+
+const faqJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": modelData.faq.map(({ question, answer }) => ({
+    "@type": "Question",
+    "name": question,
+    "acceptedAnswer": { "@type": "Answer", "text": answer }
+  }))
+});
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Início", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": "iPhones", "item": `${siteUrl}/iphone` },
+    { "@type": "ListItem", "position": 3, "name": modelData.modelFullName, "item": `${siteUrl}/iphone/${modelData.routeSlug}` },
+  ],
+});
+---
+<BaseLayout
+  title={modelData.title}
+  description={modelData.description}
+  canonicalPath={`/iphone/${modelData.routeSlug}`}
+  extraJsonLd={[serviceJsonLd, faqJsonLd, breadcrumbJsonLd]}
+>
+  <Header />
+  <Breadcrumb items={[
+    { name: "iPhones", url: "/iphone" },
+    { name: modelData.modelFullName }
+  ]} />
+  <main>
+    <!-- Hero do Modelo Apple Style -->
+    <section class="model-page-hero section-canvas-white">
+      <div class="container">
+        <div class="section-header scroll-reveal scroll-top">
+          <span class="section-label">Assistência Especializada Delivery</span>
+          <h1 class="section-title type-h2-44">Assistência Técnica para {modelData.modelFullName} em Manaus</h1>
+          <p class="section-subtitle type-subheading-20">
+            Nós vamos até você! Troca de tela, bateria, tampa traseira e periféricos no seu endereço em 20 a 40 minutos com garantia de até 6 meses.
+          </p>
+        </div>
+
+        <div class="hero-actions-wrap">
+          <a href={getWhatsAppLink(modelData.whatsappMessage)} class="btn-glow btn-whatsapp-global">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+            </svg>
+            <span>Pedir Orçamento no WhatsApp</span>
+          </a>
+          <a href="#tabela-servicos" class="button-secondary-pill">
+            <span>Ver Tabela de Serviços Abaixo ↓</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catálogo de Serviços do Modelo com Preços Reais -->
+    <section class="model-services-section section-canvas-parchment" id="tabela-servicos">
+      <div class="container">
+        <div class="section-header scroll-reveal scroll-top">
+          <span class="section-label">Tabela de Serviços & Valores</span>
+          <h2 class="section-title type-h2-44">Serviços e Valores para {modelData.modelFullName}</h2>
+          <p class="section-subtitle type-subheading-20">
+            Valores reais atualizados com atendimento delivery em domicílio ou trabalho em Manaus.
+          </p>
+        </div>
+
+        <div class="model-services-grid">
+          {modelData.services.map((svc) => {
+            const visualMeta = getServiceVisualMeta(svc.serviceSlug);
+            const bookingMsg = `Olá! Gostaria de agendar o serviço de ${visualMeta.cleanName} para o meu ${modelData.modelFullName} com atendimento delivery em Manaus.`;
+            return (
+              <div class="model-service-card store-utility-card">
+                <!-- Cabeçalho do Card com Ícone e Badge -->
+                <div class="svc-card-header">
+                  <div class="svc-card-top-row">
+                    <div class="svc-icon-box">{visualMeta.icon}</div>
+                    <span class="svc-delivery-badge">{visualMeta.badge}</span>
+                  </div>
+                  <h3 class="svc-clean-title">{visualMeta.cleanName}</h3>
+                  {visualMeta.highlightText && (
+                    <p class="svc-highlight-desc">{visualMeta.highlightText}</p>
+                  )}
+                </div>
+
+                <!-- Tiers de Preços -->
+                <div class="svc-pricing-tiers">
+                  {svc.prices.map((p) => {
+                    const isPremium = p.label?.toLowerCase().includes("premium") || false;
+                    const isEconomic = p.label?.toLowerCase().includes("econômica") || false;
+                    return (
+                      <div class={`svc-price-box ${isPremium ? 'featured' : ''}`}>
+                        <div class="svc-price-top">
+                          <span class={`tier-pill ${isPremium ? 'prem' : isEconomic ? 'econ' : 'standard'}`}>
+                            {p.label ? p.label : 'Peça Genuína / Premium'}
+                          </span>
+                          <span class="tier-warranty-badge">
+                            {isPremium ? '🛡️ 6 meses' : isEconomic ? '🛡️ 3 meses' : `🛡️ ${svc.warranty}`}
+                          </span>
+                        </div>
+
+                        <div class="svc-price-bottom">
+                          <div class="svc-price-main">
+                            <span class="currency-symbol">R$</span>
+                            <span class="price-digits">{p.price}</span>
+                          </div>
+                          {p.installment && (
+                            <span class="installment-text">{p.installment}</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <!-- Ações do Card -->
+                <div class="svc-card-actions">
+                  <a
+                    href={getWhatsAppLink(bookingMsg)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn-book-service btn-whatsapp-global"
+                  >
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                    <span>Agendar Delivery</span>
+                  </a>
+                  <a
+                    href={`/iphone/${modelData.routeSlug}/${svc.serviceSlug}`}
+                    class="btn-details-service"
+                  >
+                    <span>Ver sintomas e detalhes</span>
+                    <span class="arrow-ico">→</span>
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+
+    <!-- Fatos de Confiança -->
+    <TrustFacts />
+
+    <!-- FAQ do Modelo -->
+    <section class="faq-section">
+      <div class="container">
+        <div class="section-header scroll-reveal scroll-top">
+          <span class="section-label">Dúvidas Frequentes</span>
+          <h2 class="section-title type-h2-44">Perguntas sobre o {modelData.modelFullName}</h2>
+        </div>
+
+        <div class="faq-list" style="max-width: 760px; margin: 32px auto 0;">
+          {modelData.faq.map((faq) => (
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                <span>{faq.question}</span>
+                <span class="faq-question-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-inner">
+                  <p>{faq.answer}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../../../scripts/prices.js"></script>
+  <script src="../../../scripts/main.js"></script>
+</BaseLayout>
+
+<style>
+  .model-page-hero {
+    padding: 40px 0 50px;
+    text-align: center;
+    background-color: #FFFFFF;
+  }
+  .hero-actions-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .btn-hero-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    border-radius: var(--radius-pill, 999px);
+    border: 1px solid var(--border, #E5E7EB);
+    background: var(--bg-secondary, #FAFAFA);
+    color: var(--text-primary, #111214);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .btn-hero-secondary:hover {
+    border-color: rgba(41, 162, 81, 0.4);
+    color: var(--primary, #29A251);
+    background: #FFFFFF;
+  }
+  .model-services-section {
+    padding: 60px 0 80px;
+    background-color: var(--bg-secondary, #FAFAFA);
+    border-top: 1px solid var(--border, #E5E7EB);
+    border-bottom: 1px solid var(--border, #E5E7EB);
+  }
+  .model-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .model-service-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: var(--radius-lg, 20px);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .model-service-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(41, 162, 81, 0.4);
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(15, 23, 42, 0.08));
+  }
+  .svc-card-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border, #E5E7EB);
+  }
+  .svc-card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .svc-icon-box {
+    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--primary-transparent, rgba(41, 162, 81, 0.08));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .svc-delivery-badge {
+    font-size: 0.78rem;
+    color: var(--primary-dark, #1A532D);
+    background: var(--primary-transparent, rgba(41, 162, 81, 0.08));
+    border: 1px solid rgba(41, 162, 81, 0.15);
+    padding: 4px 10px;
+    border-radius: var(--radius-pill, 999px);
+    font-weight: 600;
+    white-space: normal;
+    text-align: right;
+  }
+  .svc-clean-title {
+    color: var(--text-primary, #111214);
+    font-size: 1.35rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .svc-highlight-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #4B5563);
+    margin: 0;
+    line-height: 1.4;
+  }
+  .svc-pricing-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-grow: 1;
+  }
+  .svc-price-box {
+    background: var(--bg-secondary, #FAFAFA);
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: var(--radius-md, 14px);
+    padding: 14px 16px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .svc-price-box.featured {
+    background: rgba(41, 162, 81, 0.03);
+    border-color: rgba(41, 162, 81, 0.3);
+  }
+  .svc-price-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .tier-pill {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-secondary, #4B5563);
+  }
+  .tier-pill.prem {
+    color: var(--primary-dark, #1A532D);
+  }
+  .tier-pill.econ {
+    color: var(--text-primary, #111214);
+  }
+  .tier-warranty-badge {
+    font-size: 0.75rem;
+    color: var(--text-muted, #6B7280);
+    font-weight: 600;
+  }
+  .svc-price-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .svc-price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    color: var(--primary, #29A251);
+    font-family: 'Outfit', sans-serif;
+  }
+  .currency-symbol {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .price-digits {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .installment-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary, #4B5563);
+    font-weight: 500;
+  }
+  .svc-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .btn-book-service {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px 20px;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--primary, #29A251);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(41, 162, 81, 0.25);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-book-service:hover {
+    background: var(--primary-dark, #1A532D);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(41, 162, 81, 0.35);
+  }
+  .btn-details-service {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    color: var(--text-muted, #6B7280);
+    font-size: 0.85rem;
+    text-decoration: none;
+    padding: 4px;
+    transition: color 0.2s ease, gap 0.2s ease;
+    font-weight: 600;
+  }
+  .btn-details-service:hover {
+    color: var(--primary, #29A251);
+    gap: 9px;
+  }
+  .arrow-ico {
+    transition: transform 0.2s ease;
+  }
+  .btn-details-service:hover .arrow-ico {
+    transform: translateX(3px);
+  }
+</style>

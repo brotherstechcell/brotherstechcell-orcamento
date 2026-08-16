@@ -1,38 +1,42 @@
 ---
 import { Image } from 'astro:assets';
 import logoSrc from '../assets/logo-brotherstechcell.jpeg';
+import { getWhatsAppLink } from '../data/siteConfig';
 ---
-  <!-- Cabeçalho (Header) -->
-  <header class="header-main">
-    <div class="container header-container">
-      <a href="/" class="brand-logo-link" aria-label="Voltar para o início do site">
-        <Image src={logoSrc} class="logo-img" alt="Logo Brothers Techcell - Voltar para o início" width={90} height={102} format="webp" quality={80} loading="eager" />
-        <div class="brand-text-container">
-          <span class="brand-name">Brothers Techcell</span>
-          <span class="brand-subtitle">Delivery Apple</span>
-        </div>
-      </a>
-
-      <nav class="nav-main">
-        <ul class="nav-links" id="nav-menu-list">
-          <li><a href="#diferenciais" class="nav-link">Diferenciais</a></li>
-          <li><a href="#telas-precos" class="nav-link">Tabela de Preços</a></li>
-          <li><a href="#transparencia" class="nav-link">Transparência</a></li>
-          <li><a href="#sobre" class="nav-link">Sobre</a></li>
-        </ul>
-      </nav>
-
-      <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
-        <a href="#" class="header-cta-btn btn-whatsapp-global">
-          <span>AGENDAR DELIVERY</span>
-        </a>
-        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Abrir Menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
+<!-- Cabeçalho Principal Brothers Techcell (Design Original com Navegação de SEO) -->
+<header class="header-main">
+  <div class="container header-container">
+    <a href="/" class="brand-logo-link" aria-label="Voltar para o início do site">
+      <Image src={logoSrc} class="logo-img" alt="Logo Brothers Techcell - Voltar para o início" width={90} height={102} format="webp" quality={80} loading="eager" />
+      <div class="brand-text-container">
+        <span class="brand-name">Brothers Techcell</span>
+        <span class="brand-subtitle">Assistência Técnica Delivery</span>
       </div>
+    </a>
+
+    <nav class="nav-main" aria-label="Navegação Principal">
+      <ul class="nav-links" id="nav-menu-list">
+        <li><a href="/" class="nav-link">Início</a></li>
+        <li><a href="/#telas-precos" class="nav-link">Preços</a></li>
+        <li><a href="/iphone" class="nav-link">Modelos</a></li>
+        <li><a href="/como-funciona" class="nav-link">Como Funciona</a></li>
+        <li><a href="/areas-atendidas-manaus" class="nav-link">Bairros</a></li>
+        <li><a href="/blog" class="nav-link">Blog</a></li>
+        <li><a href="/sobre" class="nav-link">Sobre</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+      <a href={getWhatsAppLink("Olá! Gostaria de agendar um atendimento delivery de iPhone agora.")} class="header-cta-btn btn-whatsapp-global" aria-label="Agendar atendimento via WhatsApp">
+        <span>AGENDAR DELIVERY</span>
+      </a>
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Abrir Menu" aria-expanded="false" aria-controls="nav-menu-list">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
     </div>
-  </header>
+  </div>
+</header>

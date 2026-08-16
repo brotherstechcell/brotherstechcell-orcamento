@@ -53,7 +53,7 @@ import BottomNav from '../components/BottomNav.astro';
     background-color: var(--bg-secondary, #FAFAFA);
   }
   .legal-content-card {
-    background: var(--card-bg, #FFFFFF);
+    background: #FFFFFF;
     border: 1px solid var(--border, #E5E7EB);
     border-radius: var(--radius-lg, 20px);
     padding: 48px 40px;
@@ -66,7 +66,10 @@ import BottomNav from '../components/BottomNav.astro';
     color: var(--text-secondary, #4B5563);
     line-height: 1.8;
   }
-  .legal-sections section p {
-    margin-bottom: 8px;
+  .legal-sections section {
+    padding: 0;
+  }
+  .legal-sections strong {
+    color: var(--text-primary, #111214);
   }
 </style>

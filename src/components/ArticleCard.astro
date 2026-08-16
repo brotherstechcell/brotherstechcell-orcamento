@@ -1,0 +1,236 @@
+---
+import type { ArticleData } from '../data/articles';
+
+interface Props {
+  article: ArticleData;
+}
+
+const { article } = Astro.props;
+---
+<!-- Card de Artigo Brothers Techcell com Thumbnail Rica e Mini-CTA Delivery -->
+<article class="article-card" data-category={article.category}>
+  <!-- Capa / Thumbnail Ilustrada -->
+  <a href={`/blog/${article.slug}`} class="article-thumb-header" style={`background: ${article.thumbnailGradient}`} aria-label={`Ler artigo: ${article.title}`}>
+    <div class="thumb-top-badges">
+      <span class="thumb-cat-badge">{article.category}</span>
+      <span class="thumb-time-badge">⏱️ {article.readTime}</span>
+    </div>
+    
+    <div class="thumb-center-illustration">
+      <div class="thumb-icon-pod">
+        <span class="thumb-main-emoji">{article.thumbnailIcon || '📱'}</span>
+      </div>
+    </div>
+
+    <div class="thumb-sub-label">
+      <span>{article.thumbnailBadge}</span>
+    </div>
+  </a>
+
+  <!-- Corpo do Card -->
+  <div class="article-card-content">
+    <h3 class="article-title">
+      <a href={`/blog/${article.slug}`}>{article.title}</a>
+    </h3>
+
+    <p class="article-summary-text">
+      {article.summary}
+    </p>
+
+    <!-- Mini-CTA Delivery -->
+    {article.ctaDeliveryPhrase && (
+      <div class="article-delivery-callout">
+        <span class="delivery-callout-icon">⚡</span>
+        <span class="delivery-callout-text">{article.ctaDeliveryPhrase}</span>
+      </div>
+    )}
+
+    <!-- Rodapé de Ação -->
+    <div class="article-action-footer">
+      <a href={`/blog/${article.slug}`} class="article-read-btn" aria-label={`Ler artigo completo: ${article.title}`}>
+        <span>Ler artigo completo →</span>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .article-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: var(--radius-lg, 20px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .article-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(41, 162, 81, 0.45);
+    box-shadow: var(--shadow-md, 0 10px 28px rgba(15, 23, 42, 0.09));
+  }
+
+  /* Thumbnail Header */
+  .article-thumb-header {
+    height: 150px;
+    padding: 14px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  .thumb-top-badges {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .thumb-cat-badge {
+    background: #FFFFFF;
+    color: var(--text-primary, #111214);
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill, 999px);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .thumb-time-badge {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(6px);
+    color: var(--text-secondary, #4B5563);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill, 999px);
+  }
+
+  .thumb-center-illustration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    margin: 2px 0;
+  }
+
+  .thumb-icon-pod {
+    width: 48px;
+    height: 48px;
+    background: #FFFFFF;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    transition: transform 0.25s ease;
+  }
+  .article-card:hover .thumb-icon-pod {
+    transform: scale(1.08);
+  }
+
+  .thumb-main-emoji {
+    font-size: 1.65rem;
+    line-height: 1;
+  }
+
+  .thumb-sub-label {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .thumb-sub-label span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-primary, #111214);
+    background: rgba(255, 255, 255, 0.92);
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+    display: inline-block;
+  }
+
+  /* Card Content */
+  .article-card-content {
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .article-title {
+    margin-bottom: 10px;
+    line-height: 1.3;
+    font-size: 1.15rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+  }
+  .article-title a {
+    color: var(--text-primary, #111214);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .article-title a:hover {
+    color: var(--primary, #29A251);
+  }
+
+  .article-summary-text {
+    color: var(--text-secondary, #4B5563);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    flex-grow: 1;
+  }
+
+  /* Delivery Mini-Callout */
+  .article-delivery-callout {
+    background: var(--primary-transparent, rgba(41, 162, 81, 0.08));
+    border: 1px dashed rgba(41, 162, 81, 0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .delivery-callout-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .delivery-callout-text {
+    font-size: 0.82rem;
+    color: var(--primary-dark, #1A532D);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  /* Footer */
+  .article-action-footer {
+    border-top: 1px solid var(--border, #E5E7EB);
+    padding-top: 12px;
+    margin-top: auto;
+  }
+  .article-read-btn {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--primary, #29A251);
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
+    display: inline-block;
+  }
+  .article-read-btn:hover {
+    color: var(--primary-dark, #1A532D);
+    transform: translateX(3px);
+  }
+</style>

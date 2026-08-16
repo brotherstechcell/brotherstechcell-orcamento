@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import TrustFacts from '../../components/TrustFacts.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import Footer from '../../components/Footer.astro';
+import FloatingWhatsapp from '../../components/FloatingWhatsapp.astro';
+import BottomNav from '../../components/BottomNav.astro';
+import { getAllModelOverviewPages, LOGICAL_MODEL_ORDER } from '../../data/modelPages';
+import { SITE_URL } from '../../data/siteConfig';
+
+const siteUrl = SITE_URL;
+const allModels = getAllModelOverviewPages().sort((a, b) => {
+  const idxA = LOGICAL_MODEL_ORDER.indexOf(a.modelName);
+  const idxB = LOGICAL_MODEL_ORDER.indexOf(b.modelName);
+  if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+  if (idxA !== -1) return -1;
+  if (idxB !== -1) return 1;
+  return a.modelName.localeCompare(b.modelName);
+});
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Início", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": "Modelos de iPhone Atendidos", "item": `${siteUrl}/iphone` },
+  ],
+});
+---
+<BaseLayout
+  title="Modelos de iPhone Atendidos em Manaus | Brothers Techcell"
+  description="Conserto e assistência técnica para todos os modelos de iPhone em Manaus. iPhone 11 ao 16 Pro Max com atendimento delivery. Confira preços e opções."
+  canonicalPath="/iphone"
+  extraJsonLd={[breadcrumbJsonLd]}
+>
+  <Header />
+  <Breadcrumb items={[{ name: "Modelos de iPhone" }]} />
+  <main>
+    <section class="models-hub-hero section-canvas-parchment">
+      <div class="container">
+        <div class="section-header scroll-reveal scroll-top">
+          <span class="section-label">Catálogo Apple</span>
+          <h1 class="section-title type-h2-44">Modelos de iPhone Atendidos em Manaus</h1>
+          <p class="section-subtitle type-subheading-20">
+            Selecione o modelo do seu iPhone para ver todos os serviços, preços de tela, bateria, tampa traseira, conector e prazos de atendimento delivery.
+          </p>
+        </div>
+
+        <div class="models-hub-grid">
+          {allModels.map((item) => (
+            <a href={`/iphone/${item.routeSlug}`} class="model-hub-card store-utility-card">
+              <div class="model-icon-tag">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+                  <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+              </div>
+              <h2 class="model-hub-name">{item.modelFullName}</h2>
+              <span class="model-services-count">{item.services.length} serviços disponíveis</span>
+              <span class="model-arrow-link text-link">
+                Ver preços e serviços →
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <TrustFacts />
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../../scripts/prices.js"></script>
+  <script src="../../scripts/main.js"></script>
+</BaseLayout>
+
+<style>
+  .models-hub-hero {
+    padding: 50px 0 70px;
+  }
+  .models-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 36px;
+  }
+  .model-hub-card {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    padding: 26px 22px;
+  }
+  .model-icon-tag {
+    color: var(--apple-primary, #0066cc);
+    background: rgba(0, 102, 204, 0.06);
+    border: 1px solid rgba(0, 102, 204, 0.12);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .model-hub-name {
+    color: var(--apple-ink, #1d1d1f);
+    font-size: 1.22rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+  .model-services-count {
+    display: block;
+    font-size: 0.84rem;
+    color: var(--apple-body-muted, #86868b);
+    margin-bottom: 18px;
+    flex-grow: 1;
+  }
+  .model-arrow-link {
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-top: 1px solid var(--apple-hairline, #e0e0e0);
+    padding-top: 12px;
+  }
+</style>

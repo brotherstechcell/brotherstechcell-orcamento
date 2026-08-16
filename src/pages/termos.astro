@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsapp from '../components/FloatingWhatsapp.astro';
+import BottomNav from '../components/BottomNav.astro';
+---
+<BaseLayout
+  title="Termos de Uso | Brothers Techcell Manaus"
+  description="Termos de uso e condições gerais da prestação de serviços de assistência técnica delivery da Brothers Techcell em Manaus."
+  canonicalPath="/termos-de-uso"
+>
+  <Header />
+  <Breadcrumb items={[{ name: "Termos de Uso" }]} />
+  <main class="legal-page-container">
+    <div class="container" style="max-width: 820px;">
+      <div class="legal-content-card">
+        <span class="section-label">Condições de Serviço</span>
+        <h1 class="type-h2-44" style="margin-bottom: 12px; color: var(--text-primary);">Termos de Uso</h1>
+        <p class="type-small-body" style="color: var(--text-muted); margin-bottom: 36px;">Condições gerais para solicitação de serviços delivery em Manaus</p>
+
+        <div class="legal-sections">
+          <section>
+            <h2 class="type-h3" style="color: var(--text-primary); margin-bottom: 12px;">1. Aceite dos Termos</h2>
+            <p>Ao solicitar um orçamento ou agendar um atendimento delivery com a Brothers Techcell através do site ou WhatsApp, o cliente concorda com as condições de atendimento, prazos e políticas de garantia vigentes.</p>
+          </section>
+
+          <section>
+            <h2 class="type-h3" style="color: var(--text-primary); margin-bottom: 12px;">2. Atendimento Delivery</h2>
+            <p>O atendimento delivery é realizado em endereços dentro do perímetro urbano do município de Manaus - AM. O cliente deve garantir acesso seguro ao local combinado (casa, portaria de condomínio ou recepção comercial).</p>
+          </section>
+
+          <section>
+            <h2 class="type-h3" style="color: var(--text-primary); margin-bottom: 12px;">3. Pagamento</h2>
+            <p>O pagamento é realizado após a conclusão e teste satisfatório do reparo no local, aceitando-se Pix, cartões de débito e cartões de crédito em até 12x.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../scripts/prices.js"></script>
+  <script src="../scripts/main.js"></script>
+</BaseLayout>
+
+<style>
+  .legal-page-container {
+    padding: 40px 0 80px;
+    background-color: var(--bg-secondary, #FAFAFA);
+  }
+  .legal-content-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: var(--radius-lg, 20px);
+    padding: 48px 40px;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
+  }
+  .legal-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    color: var(--text-secondary, #4B5563);
+    line-height: 1.8;
+  }
+  .legal-sections section {
+    padding: 0;
+  }
+  .legal-sections strong {
+    color: var(--text-primary, #111214);
+  }
+</style>

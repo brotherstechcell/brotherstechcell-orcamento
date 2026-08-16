@@ -1,0 +1,69 @@
+{
+  "timestamp": "2026-08-16T18:21:38.299Z",
+  "target": ".",
+  "depth": "standard",
+  "type": "all",
+  "summary": {
+    "critical": 0,
+    "high": 2,
+    "medium": 7,
+    "low": 0,
+    "total": 9
+  },
+  "findings": [
+    {
+      "severity": "HIGH",
+      "type": "Dependency CVE",
+      "location": "package.json:js-yaml",
+      "description": "JS-YAML: Quadratic CPU consumption "
+    },
+    {
+      "severity": "HIGH",
+      "type": "Dependency CVE",
+      "location": "package.json:nanoid",
+      "description": "nanoid: custom generators can loop "
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "Dependency CVE",
+      "location": "package.json:postcss",
+      "description": "PostCSS: incomplete fix of GHSA-6g5"
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "innerHTML",
+      "location": "src\\scripts\\main.js:218",
+      "description": "XSS risk with innerHTML"
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "innerHTML",
+      "location": "src\\scripts\\main.js:470",
+      "description": "XSS risk with innerHTML"
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "innerHTML",
+      "location": "src\\scripts\\main.js:548",
+      "description": "XSS risk with innerHTML"
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "innerHTML",
+      "location": "src\\scripts\\main.js:611",
+      "description": "XSS risk with innerHTML"
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "innerHTML",
+      "location": "src\\scripts\\main.js:684",
+      "description": "XSS risk with innerHTML"
+    },
+    {
+      "severity": "MEDIUM",
+      "type": "innerHTML",
+      "location": "src\\scripts\\main.js:822",
+      "description": "XSS risk with innerHTML"
+    }
+  ]
+}

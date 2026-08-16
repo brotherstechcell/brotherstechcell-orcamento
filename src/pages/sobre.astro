@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import TrustFacts from '../components/TrustFacts.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsapp from '../components/FloatingWhatsapp.astro';
+import BottomNav from '../components/BottomNav.astro';
+import { SITE_URL, BUSINESS_INFO, getWhatsAppLink } from '../data/siteConfig';
+
+const siteUrl = SITE_URL;
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Início", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": "Quem Somos", "item": `${siteUrl}/sobre` },
+  ],
+});
+---
+<BaseLayout
+  title="Quem Somos | Brothers Techcell - Assistência iPhone Delivery Manaus"
+  description="Conheça a Brothers Techcell: assistência técnica especializada em iPhone em Manaus. Nossa história, metodologia delivery transparente e garantia real."
+  canonicalPath="/sobre"
+  extraJsonLd={[breadcrumbJsonLd]}
+>
+  <Header />
+  <Breadcrumb items={[{ name: "Quem Somos" }]} />
+  <main>
+    <section class="about-hero-section">
+      <div class="container" style="max-width: 860px;">
+        <div class="section-header scroll-reveal scroll-top">
+          <span class="section-label">Nossa História & Valores</span>
+          <h1 class="section-title type-h2-44">Especialistas em iPhone com Foco Total na Sua Comodidade</h1>
+          <p class="section-subtitle type-subheading-20">
+            Nascemos para acabar com a insegurança e o transtorno de deixar seu iPhone por dias em assistências fechadas.
+          </p>
+        </div>
+
+        <div class="about-content-body">
+          <div class="about-card">
+            <h2 class="type-h2-32" style="color: var(--text-primary); margin-bottom: 20px;">O Conceito da Assistência Delivery em Manaus</h2>
+            <p class="type-body-16" style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+              A <strong>Brothers Techcell</strong> foi fundada em Manaus com um propósito claro: trazer transparência absoluta para o mercado de assistência técnica de smartphones Apple. Percebemos que os clientes tinham dois grandes receios: ter seus dados e fotos privadas acessadas em bancadas fechadas e a perda de tempo no trânsito de Manaus para levar e buscar aparelhos.
+            </p>
+            <p class="type-body-16" style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+              Criamos o modelo de <strong>Assistência Técnica Delivery</strong>: nossos técnicos vão até a residência, escritório ou condomínio do cliente equipados com ferramental profissional e peças de alto padrão. O cliente acompanha o reparo do início ao fim, na sua frente, em cerca de 20 a 40 minutos.
+            </p>
+          </div>
+
+          <div class="about-pillars-grid">
+            <div class="pillar-card">
+              <div class="pillar-icon">🔍</div>
+              <h3 class="type-heading-18" style="color: var(--text-primary); margin-bottom: 10px;">Transparência Total</h3>
+              <p class="type-small-body" style="color: var(--text-secondary); line-height: 1.6;">
+                Você vê a peça sendo desembalada, instalada e testada no seu aparelho. Sem trocas indevidas de componentes e com total sigilo dos seus dados.
+              </p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">⏱️</div>
+              <h3 class="type-heading-18" style="color: var(--text-primary); margin-bottom: 10px;">Agilidade Real</h3>
+              <p class="type-small-body" style="color: var(--text-secondary); line-height: 1.6;">
+                A maioria dos reparos de tela e bateria é concluída em menos de 40 minutos, sem que você precise parar sua rotina de trabalho ou estudos.
+              </p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">🛡️</div>
+              <h3 class="type-heading-18" style="color: var(--text-primary); margin-bottom: 10px;">Garantia de até 6 Meses</h3>
+              <p class="type-small-body" style="color: var(--text-secondary); line-height: 1.6;">
+                Trabalhamos apenas com componentes rigorosamente testados das linhas Econômica e Premium, emitindo termo formal de garantia.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <TrustFacts />
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../scripts/prices.js"></script>
+  <script src="../scripts/main.js"></script>
+</BaseLayout>
+
+<style>
+  .about-hero-section {
+    padding: 40px 0 80px;
+    background-color: var(--bg-secondary, #FAFAFA);
+  }
+  .about-content-body {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .about-card {
+    background: var(--card-bg, #FFFFFF);
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: var(--radius-lg, 20px);
+    padding: 40px 36px;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
+  }
+  .about-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .pillar-card {
+    background: var(--card-bg, #FFFFFF);
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: var(--radius-md, 16px);
+    padding: 28px 24px;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.06));
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .pillar-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(41, 162, 81, 0.4);
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(15, 23, 42, 0.08));
+  }
+  .pillar-icon {
+    font-size: 2.2rem;
+    margin-bottom: 14px;
+  }
+</style>

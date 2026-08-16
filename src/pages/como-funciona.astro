@@ -1,0 +1,153 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import ServiceHowItWorks, { type Step } from '../components/ServiceHowItWorks.astro';
+import TrustFacts from '../components/TrustFacts.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsapp from '../components/FloatingWhatsapp.astro';
+import BottomNav from '../components/BottomNav.astro';
+import { SITE_URL } from '../data/siteConfig';
+
+const siteUrl = SITE_URL;
+
+const steps: Step[] = [
+  {
+    step: 1,
+    icon: "💬",
+    title: "1. Solicite seu Orçamento",
+    desc: "Entre em contato via WhatsApp ou consulte nossa tabela online. Informe o <strong>modelo do seu iPhone</strong>, o <strong>defeito apresentado</strong> e seu <strong>bairro em Manaus</strong> para receber o valor exato na hora."
+  },
+  {
+    step: 2,
+    icon: "📅",
+    title: "2. Agendamento Imediato",
+    desc: "Combinamos o melhor dia, horário e local da sua preferência: atendemos na <strong>sua residência</strong>, <strong>apartamento</strong>, <strong>condomínio</strong> ou no seu <strong>ambiente de trabalho</strong> sem você perder tempo no trânsito."
+  },
+  {
+    step: 3,
+    icon: "🛵",
+    title: "3. Chegada do Técnico",
+    desc: "Nosso técnico especializado chega pontualmente no endereço combinado com uma <strong>bancada móvel profissional</strong>, manta antiestática, peças lacradas e todo o ferramental de precisão necessário."
+  },
+  {
+    step: 4,
+    icon: "🔧",
+    title: "4. Reparo na Sua Frente",
+    desc: "A troca de tela, bateria ou periférico é executada <strong>na sua presença em 20 a 40 minutos</strong>. Você acompanha tudo ao vivo, com <strong>100% de sigilo e sem precisar informar sua senha pessoal</strong>."
+  },
+  {
+    step: 5,
+    icon: "✅",
+    title: "5. Teste Rigoroso em Conjunto",
+    desc: "Realizamos uma checagem completa de todas as funções (<strong>toque, biometria Face ID, câmeras, sensores, True Tone, carregamento e microfones</strong>) junto com você antes de fechar o aparelho."
+  },
+  {
+    step: 6,
+    icon: "🛡️",
+    title: "6. Garantia Real e Pagamento",
+    desc: "Você recebe o <strong>certificado de garantia formal de até 6 meses</strong> e realiza o pagamento de forma segura via <strong>Pix</strong> ou em <strong>até 12x no cartão de crédito</strong> após o serviço finalizado."
+  }
+];
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Início", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": "Como Funciona", "item": `${siteUrl}/como-funciona` },
+  ],
+});
+---
+<BaseLayout
+  title="Como Funciona o Atendimento Delivery | Brothers Techcell Manaus"
+  description="Entenda o passo a passo da assistência técnica delivery de iPhone em Manaus. Agendamento, conserto no seu endereço em 30 min e garantia real."
+  canonicalPath="/como-funciona"
+  extraJsonLd={[breadcrumbJsonLd]}
+>
+  <Header />
+  <Breadcrumb items={[{ name: "Como Funciona" }]} />
+  <main>
+    <section class="how-it-works-hero section-canvas-white">
+      <div class="container" style="max-width: 860px;">
+        <div class="section-header scroll-reveal scroll-top">
+          <span class="section-label">Simples, Rápido e Seguro</span>
+          <h1 class="section-title type-h2-44">Como Funciona a Assistência Técnica Delivery?</h1>
+          <p class="section-subtitle type-subheading-20">
+            Saiba como consertamos seu iPhone no conforto da sua casa ou trabalho em Manaus sem você precisar se deslocar.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <ServiceHowItWorks
+      steps={steps}
+      title="O Passo a Passo do Seu Atendimento"
+      subtitle="Total comodidade e transparência técnica da solicitação à entrega com garantia."
+    />
+
+    <!-- FAQ do Como Funciona -->
+    <section class="faq-section section-canvas-white">
+      <div class="container" style="max-width: 780px;">
+        <div class="section-header scroll-reveal scroll-top">
+          <span class="section-label">Dúvidas Comuns</span>
+          <h2 class="section-title type-h2-44">Perguntas sobre o Atendimento</h2>
+        </div>
+
+        <div class="faq-list" style="margin-top: 32px;">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Preciso disponibilizar algum espaço especial para o técnico?</span>
+              <span class="faq-question-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                <p>Apenas uma mesa ou superfície limpa e iluminada com uma cadeira. O técnico leva manta antiestática e todo o ferramental necessário.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>O que acontece se o defeito for na placa mãe?</span>
+              <span class="faq-question-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                <p>Se o diagnóstico presencial apontar necessidade de maquinário pesado de bancada (microssolda), o aparelho é recolhido mediante recibo formal e ordem de serviço com prazo combinado.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Vocês atendem em condomínios fechados ou empresas?</span>
+              <span class="faq-question-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                <p>Sim, com frequência. Nossos técnicos atendem em recepções, salas de reunião, áreas comuns ou no próprio apartamento em condomínios de toda Manaus.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <TrustFacts />
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../scripts/prices.js"></script>
+  <script src="../scripts/main.js"></script>
+</BaseLayout>
+
+<style>
+  .how-it-works-hero {
+    padding: 44px 0 20px;
+    text-align: center;
+  }
+</style>

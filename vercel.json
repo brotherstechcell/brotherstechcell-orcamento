@@ -1,0 +1,33 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/servicos/troca-de-tela", "destination": "/troca-de-tela-iphone-manaus", "permanent": true },
+    { "source": "/servicos/troca-de-bateria", "destination": "/troca-de-bateria-iphone-manaus", "permanent": true },
+    { "source": "/servicos/troca-de-vidro", "destination": "/troca-de-vidro-iphone-manaus", "permanent": true },
+    { "source": "/servicos/tampa-traseira", "destination": "/tampa-traseira-iphone-manaus", "permanent": true },
+    { "source": "/servicos/conector-de-carga", "destination": "/conector-de-carga-iphone-manaus", "permanent": true },
+    { "source": "/servicos/dock", "destination": "/conector-de-carga-iphone-manaus", "permanent": true },
+    { "source": "/servicos/face-id", "destination": "/face-id-iphone-manaus", "permanent": true },
+    { "source": "/servicos/camera", "destination": "/camera-iphone-manaus", "permanent": true },
+    { "source": "/servicos/reparo-de-placa", "destination": "/reparo-de-placa-iphone-manaus", "permanent": true },
+    { "source": "/servicos/reparo-em-placa", "destination": "/reparo-de-placa-iphone-manaus", "permanent": true },
+    { "source": "/servicos/iphone-caiu-na-agua", "destination": "/iphone-caiu-na-agua-manaus", "permanent": true },
+    { "source": "/atendimento/:bairro*", "destination": "/areas-atendidas-manaus", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

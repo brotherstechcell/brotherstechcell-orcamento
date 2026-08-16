@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import ServiceHero from '../components/ServiceHero.astro';
+import ServiceDeliveryBanner from '../components/ServiceDeliveryBanner.astro';
+import ServiceSymptoms from '../components/ServiceSymptoms.astro';
+import ServiceHowItWorks from '../components/ServiceHowItWorks.astro';
+import ServicePricing from '../components/ServicePricing.astro';
+import ModelDirectory from '../components/ModelDirectory.astro';
+import TrustFacts from '../components/TrustFacts.astro';
+import ServiceFaq from '../components/ServiceFaq.astro';
+import OtherServicesList from '../components/OtherServicesList.astro';
+import CtaFinal from '../components/CtaFinal.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsapp from '../components/FloatingWhatsapp.astro';
+import BottomNav from '../components/BottomNav.astro';
+import { services, type ServiceData } from '../data/services';
+import { getServiceStartingPrice, type ServiceSlug } from '../data/modelPages';
+import { SITE_URL, BUSINESS_INFO } from '../data/siteConfig';
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { service: service.canonicalSlug },
+    props: { service },
+  }));
+}
+
+interface Props {
+  service: ServiceData;
+}
+
+const { service } = Astro.props;
+const siteUrl = SITE_URL;
+
+const startingPrice = service.hasFixedPricing
+  ? getServiceStartingPrice(service.slug as ServiceSlug)
+  : undefined;
+
+const metaDescription = startingPrice
+  ? service.metaDescription.replace("{price}", startingPrice)
+  : service.metaDescription;
+
+const faqItems = startingPrice
+  ? service.faq.map((item) =>
+      item.question.toLowerCase().includes("quanto custa")
+        ? { question: item.question, answer: item.answer.replace("{price}", startingPrice) }
+        : item
+    )
+  : service.faq;
+
+const serviceJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `${siteUrl}/${service.canonicalSlug}#service`,
+  "name": service.name,
+  "serviceType": service.shortName,
+  "description": metaDescription,
+  "areaServed": [
+    { "@type": "City", "name": "Manaus" },
+    { "@type": "AdministrativeArea", "name": "Amazonas" }
+  ],
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": BUSINESS_INFO.name,
+    "telephone": BUSINESS_INFO.phone,
+    "url": siteUrl
+  },
+  "offers": startingPrice ? {
+    "@type": "Offer",
+    "price": startingPrice.replace(",", "."),
+    "priceCurrency": "BRL",
+    "priceValidUntil": "2026-12-31",
+    "availability": "https://schema.org/InStock",
+    "url": `${siteUrl}/${service.canonicalSlug}`
+  } : undefined
+});
+
+const faqJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqItems.map(({ question, answer }) => ({
+    "@type": "Question",
+    "name": question,
+    "acceptedAnswer": { "@type": "Answer", "text": answer }
+  }))
+});
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Início", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": "Serviços", "item": `${siteUrl}/#telas-precos` },
+    { "@type": "ListItem", "position": 3, "name": service.shortName, "item": `${siteUrl}/${service.canonicalSlug}` },
+  ],
+});
+---
+<BaseLayout
+  title={service.metaTitle}
+  description={metaDescription}
+  canonicalPath={`/${service.canonicalSlug}`}
+  extraJsonLd={[serviceJsonLd, faqJsonLd, breadcrumbJsonLd]}
+>
+  <Header />
+  <Breadcrumb items={[
+    { name: "Serviços", url: "/#telas-precos" },
+    { name: service.name }
+  ]} />
+  <main>
+    <!-- Hero do Serviço -->
+    <ServiceHero service={service} />
+
+    <!-- Destaque Delivery -->
+    <ServiceDeliveryBanner
+      serviceName={service.shortName}
+      deliveryLabel={service.deliveryLabel}
+      estimatedTime={service.estimatedTime}
+    />
+
+    <!-- Sintomas e Diagnóstico -->
+    <ServiceSymptoms symptoms={service.symptoms} />
+
+    <!-- Como Funciona o Atendimento -->
+    {service.howItWorks && (
+      <ServiceHowItWorks
+        steps={service.howItWorks}
+        title={`Como Funciona a ${service.shortName} Delivery`}
+      />
+    )}
+
+    <!-- Preços e Orçamento -->
+    <ServicePricing
+      hasFixedPricing={service.hasFixedPricing}
+      startingPrice={startingPrice}
+      homeTableAvailable={service.slug === "troca-de-tela" || service.slug === "troca-de-bateria"}
+      whatsappMessage={service.whatsappMessage}
+    />
+
+    <!-- Modelos Compatíveis -->
+    {service.hasFixedPricing && <ModelDirectory serviceSlug={service.slug as ServiceSlug} />}
+
+    <!-- Diferenciais de Confiança -->
+    <TrustFacts />
+
+    <!-- Perguntas Frequentes (FAQ) -->
+    <ServiceFaq faq={faqItems} />
+
+    <!-- Outros Serviços -->
+    <OtherServicesList currentSlug={service.slug} />
+
+    <!-- Chamada Final -->
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../scripts/prices.js"></script>
+  <script src="../scripts/main.js"></script>
+</BaseLayout>

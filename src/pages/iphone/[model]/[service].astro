@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import ModelHero from '../../../components/ModelHero.astro';
+import ServiceSymptoms from '../../../components/ServiceSymptoms.astro';
+import TrustFacts from '../../../components/TrustFacts.astro';
+import ServiceFaq from '../../../components/ServiceFaq.astro';
+import ModelCrossLinks from '../../../components/ModelCrossLinks.astro';
+import CtaFinal from '../../../components/CtaFinal.astro';
+import Footer from '../../../components/Footer.astro';
+import FloatingWhatsapp from '../../../components/FloatingWhatsapp.astro';
+import BottomNav from '../../../components/BottomNav.astro';
+import { getAllModelPages, type ModelPageData } from '../../../data/modelPages';
+import { SITE_URL, BUSINESS_INFO } from '../../../data/siteConfig';
+
+export function getStaticPaths() {
+  return getAllModelPages().map((page) => ({
+    params: { model: page.routeSlug, service: page.serviceSlug },
+    props: { page },
+  }));
+}
+
+interface Props {
+  page: ModelPageData;
+}
+
+const { page } = Astro.props;
+const siteUrl = SITE_URL;
+
+const serviceJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `${siteUrl}/iphone/${page.routeSlug}/${page.serviceSlug}#service`,
+  "name": `${page.serviceName} - ${page.modelFullName}`,
+  "description": page.description,
+  "areaServed": [
+    { "@type": "City", "name": "Manaus" },
+    { "@type": "AdministrativeArea", "name": "Amazonas" }
+  ],
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": BUSINESS_INFO.name,
+    "telephone": BUSINESS_INFO.phone,
+    "url": siteUrl
+  }
+});
+
+const priceValues = page.prices
+  .map((p) => parseFloat(p.price.replace(",", ".")))
+  .filter((n) => !isNaN(n) && n > 0);
+
+const lowPrice = priceValues.length > 0 ? Math.min(...priceValues).toFixed(2) : "199.90";
+const highPrice = priceValues.length > 0 ? Math.max(...priceValues).toFixed(2) : "499.90";
+
+const productJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": `${page.serviceName} ${page.modelFullName} Manaus`,
+  "description": page.description,
+  "brand": { "@type": "Brand", "name": "Apple" },
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "BRL",
+    "lowPrice": lowPrice,
+    "highPrice": highPrice,
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "https://schema.org/InStock",
+    "seller": { "@type": "LocalBusiness", "name": BUSINESS_INFO.name }
+  }
+});
+
+const faqJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": page.faq.map(({ question, answer }) => ({
+    "@type": "Question",
+    "name": question,
+    "acceptedAnswer": { "@type": "Answer", "text": answer }
+  }))
+});
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Início", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": page.modelFullName, "item": `${siteUrl}/iphone/${page.routeSlug}` },
+    { "@type": "ListItem", "position": 3, "name": page.serviceName, "item": `${siteUrl}/iphone/${page.routeSlug}/${page.serviceSlug}` },
+  ],
+});
+---
+<BaseLayout
+  title={page.title}
+  description={page.description}
+  canonicalPath={`/iphone/${page.routeSlug}/${page.serviceSlug}`}
+  extraJsonLd={[serviceJsonLd, productJsonLd, faqJsonLd, breadcrumbJsonLd]}
+>
+  <Header />
+  <Breadcrumb items={[
+    { name: "iPhones", url: "/iphone" },
+    { name: page.modelFullName, url: `/iphone/${page.routeSlug}` },
+    { name: page.serviceName }
+  ]} />
+  <main>
+    <ModelHero page={page} />
+    <ServiceSymptoms symptoms={page.symptoms} />
+    <TrustFacts />
+    <ServiceFaq faq={page.faq} />
+    <ModelCrossLinks modelSlug={page.routeSlug} currentServiceSlug={page.serviceSlug} />
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../../../scripts/prices.js"></script>
+  <script src="../../../scripts/main.js"></script>
+</BaseLayout>

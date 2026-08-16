@@ -1,0 +1,572 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import TrustFacts from '../../components/TrustFacts.astro';
+import CtaFinal from '../../components/CtaFinal.astro';
+import Footer from '../../components/Footer.astro';
+import FloatingWhatsapp from '../../components/FloatingWhatsapp.astro';
+import BottomNav from '../../components/BottomNav.astro';
+import { articles, type ArticleData } from '../../data/articles';
+import { SITE_URL, BUSINESS_INFO, getWhatsAppLink } from '../../data/siteConfig';
+
+export function getStaticPaths() {
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: ArticleData;
+}
+
+const { article } = Astro.props;
+const siteUrl = SITE_URL;
+
+const articleJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": `${siteUrl}/blog/${article.slug}#article`,
+  "headline": article.title,
+  "description": article.metaDescription,
+  "datePublished": article.publishDate,
+  "dateModified": article.publishDate,
+  "author": {
+    "@type": "Organization",
+    "name": article.author,
+    "url": siteUrl
+  },
+  "publisher": {
+    "@type": "LocalBusiness",
+    "name": BUSINESS_INFO.name,
+    "url": siteUrl
+  },
+  "mainEntityOfPage": `${siteUrl}/blog/${article.slug}`,
+  "inLanguage": "pt-BR"
+});
+
+const videoJsonLd = article.videoDemo ? JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": article.videoDemo.title,
+  "description": article.videoDemo.description,
+  "thumbnailUrl": [`${siteUrl}/og-image.png`],
+  "uploadDate": article.publishDate,
+  "duration": "PT1M",
+  "contentUrl": article.videoDemo.youtubeUrl || `${siteUrl}/blog/${article.slug}#video-bancada`,
+  "embedUrl": article.videoDemo.youtubeId ? `https://www.youtube.com/embed/${article.videoDemo.youtubeId}` : `${siteUrl}/blog/${article.slug}`
+}) : undefined;
+
+const faqJsonLd = article.faq && article.faq.length > 0 ? JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": article.faq.map(({ question, answer }) => ({
+    "@type": "Question",
+    "name": question,
+    "acceptedAnswer": { "@type": "Answer", "text": answer }
+  }))
+}) : undefined;
+
+const breadcrumbJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Início", "item": `${siteUrl}/` },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${siteUrl}/blog` },
+    { "@type": "ListItem", "position": 3, "name": article.title, "item": `${siteUrl}/blog/${article.slug}` },
+  ],
+});
+
+const extraJsonLd = [articleJsonLd, breadcrumbJsonLd];
+if (videoJsonLd) extraJsonLd.push(videoJsonLd);
+if (faqJsonLd) extraJsonLd.push(faqJsonLd);
+---
+<BaseLayout
+  title={article.metaTitle}
+  description={article.metaDescription}
+  canonicalPath={`/blog/${article.slug}`}
+  ogType="article"
+  extraJsonLd={extraJsonLd}
+>
+  <Header />
+  <Breadcrumb items={[
+    { name: "Blog", url: "/blog" },
+    { name: article.title }
+  ]} />
+  <main>
+    <article class="article-detail-container">
+      <div class="container" style="max-width: 800px;">
+        <!-- Cabeçalho do Artigo Otimizado -->
+        <header class="article-header">
+          <div class="article-meta-top">
+            <span class="article-cat-badge">{article.category}</span>
+            <span class="article-date">Publicado por {article.author}</span>
+            <span class="article-read-badge">⏱️ {article.readTime} de leitura</span>
+          </div>
+
+          <h1 class="article-main-title">{article.title}</h1>
+          <p class="article-lead-summary">{article.summary}</p>
+        </header>
+
+        <!-- Conteúdo do Artigo -->
+        <div class="article-body-content">
+          {article.sections.map((section) => (
+            <section class="article-content-section">
+              <h2 class="section-subheading">{section.heading}</h2>
+              {section.content.map((p) => (
+                <p class="article-paragraph">{p}</p>
+              ))}
+
+              {section.callout && (
+                <div class={`article-callout ${section.callout.type}`}>
+                  <div class="callout-icon">
+                    {section.callout.type === 'tip' && '💡'}
+                    {section.callout.type === 'warning' && '⚠️'}
+                    {section.callout.type === 'important' && '📌'}
+                  </div>
+                  <div class="callout-text">
+                    <strong>{section.callout.type === 'tip' ? 'Dica Técnica:' : section.callout.type === 'warning' ? 'Atenção:' : 'Importante:'}</strong>
+                    <p>{section.callout.text}</p>
+                  </div>
+                </div>
+              )}
+            </section>
+          ))}
+        </div>
+
+        <!-- Seção de Demonstração em Vídeo Real do YouTube -->
+        {article.videoDemo && (
+          <section class="article-video-showcase" id="video-bancada">
+            <div class="video-showcase-header">
+              <div class="video-header-badge">
+                <span class="pulse-rec-dot"></span>
+                <span>BASTIDORES DO REPARO EM VÍDEO</span>
+              </div>
+              <span class="video-duration-pill">⏱️ Duração: {article.videoDemo.duration}</span>
+            </div>
+
+            <!-- Player Real Embutido do YouTube -->
+            <div class="video-player-wrapper">
+              {article.videoDemo.youtubeId ? (
+                <div class="video-iframe-container">
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${article.videoDemo.youtubeId}?rel=0&modestbranding=1`}
+                    title={article.videoDemo.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                    class="video-iframe"
+                  ></iframe>
+                </div>
+              ) : (
+                <div class="video-mockup-frame">
+                  <div class="video-frame-inner" style={`background: ${article.thumbnailGradient || 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'}`}>
+                    <div class="play-button-visual">
+                      <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                    </div>
+                    <h3 class="video-inner-title">{article.videoDemo.title}</h3>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <!-- Passos Técnicos Demonstrados no Vídeo -->
+            <div class="video-demo-details">
+              <div class="video-hud-info">
+                <span class="hud-label">🔧 Ferramental:</span>
+                <span class="hud-value">{article.videoDemo.equipment}</span>
+              </div>
+
+              <p class="video-demo-desc">{article.videoDemo.description}</p>
+              
+              <div class="video-steps-list">
+                <span class="steps-list-title">Procedimento executado pelo técnico:</span>
+                <div class="steps-chips-grid">
+                  {article.videoDemo.steps.map((st, idx) => (
+                    <div class="step-chip-item">
+                      <span class="step-chip-num">{idx + 1}</span>
+                      <span class="step-chip-text">{st}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <!-- CTA Direto do Reparo Delivery -->
+              <div class="video-cta-wrap">
+                <a href={getWhatsAppLink(`Olá! Vi a demonstração de "${article.videoDemo.title}" no blog e gostaria de agendar esse reparo para o meu iPhone em Manaus.`)} class="btn-glow btn-whatsapp-global">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                  </svg>
+                  <span>AGENDAR ESTE REPARO DELIVERY NO WHATSAPP</span>
+                </a>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <!-- Links Internos Contextuais -->
+        <div class="article-internal-links-box">
+          <h3 class="internal-box-title">Precisa de Assistência Técnica em Manaus?</h3>
+          <p class="internal-box-text">
+            A Brothers Techcell atende em toda a cidade de Manaus com assistência delivery. Nós vamos até sua casa ou trabalho e realizamos o reparo na sua frente em cerca de 30 minutos.
+          </p>
+          <div class="internal-links-buttons">
+            {article.relatedServiceSlug && (
+              <a href={`/${article.relatedServiceSlug}`} class="btn-internal-link">
+                Ver Serviço Relacionado →
+              </a>
+            )}
+            {article.relatedModelSlug && (
+              <a href={`/iphone/${article.relatedModelSlug}`} class="btn-internal-link">
+                Ver Reparos para este Modelo →
+              </a>
+            )}
+            <a href={getWhatsAppLink(`Olá! Li o artigo sobre "${article.title}" e gostaria de tirar uma dúvida com um técnico em Manaus.`)} class="btn-internal-whatsapp btn-whatsapp-global">
+              Falar com Técnico no WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- FAQ do Artigo -->
+        {article.faq && article.faq.length > 0 && (
+          <section class="article-faq-section">
+            <h2 class="faq-section-title">Perguntas Frequentes</h2>
+            <div class="faq-list">
+              {article.faq.map((item) => (
+                <div class="faq-item">
+                  <button class="faq-question" aria-expanded="false">
+                    <span>{item.question}</span>
+                    <span class="faq-question-icon">+</span>
+                  </button>
+                  <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                      <p>{item.answer}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </article>
+
+    <TrustFacts />
+    <CtaFinal />
+  </main>
+  <Footer />
+  <FloatingWhatsapp />
+  <BottomNav />
+  <script src="../../scripts/prices.js"></script>
+  <script src="../../scripts/main.js"></script>
+</BaseLayout>
+
+<style>
+  .article-detail-container {
+    padding: 28px 0 56px;
+    background-color: #FFFFFF;
+  }
+  .article-header {
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--border, #E5E7EB);
+    padding-bottom: 22px;
+  }
+  .article-meta-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+    color: var(--text-muted, #6B7280);
+  }
+  .article-cat-badge {
+    background: var(--primary-transparent, rgba(41, 162, 81, 0.08));
+    color: var(--primary-dark, #1A532D);
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill, 999px);
+    border: 1px solid rgba(41, 162, 81, 0.15);
+  }
+  .article-main-title {
+    color: var(--text-primary, #111214);
+    line-height: 1.25;
+    margin-bottom: 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.15rem);
+    font-weight: 700;
+  }
+  .article-lead-summary {
+    color: var(--text-secondary, #4B5563);
+    line-height: 1.6;
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  .article-body-content {
+    margin-bottom: 36px;
+  }
+  .article-content-section {
+    margin-bottom: 24px;
+  }
+  .section-subheading {
+    color: var(--text-primary, #111214);
+    margin-bottom: 12px;
+    line-height: 1.3;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.28rem;
+    font-weight: 700;
+  }
+  .article-paragraph {
+    color: var(--text-secondary, #4B5563);
+    line-height: 1.7;
+    margin-bottom: 14px;
+    font-size: 1rem;
+  }
+  .article-callout {
+    display: flex;
+    gap: 14px;
+    background: var(--primary-transparent, rgba(41, 162, 81, 0.06));
+    border-left: 4px solid var(--primary, #29A251);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin: 18px 0;
+  }
+  .article-callout.warning {
+    border-left-color: #F59E0B;
+    background: rgba(245, 158, 11, 0.08);
+  }
+  .article-callout.important {
+    border-left-color: #3B82F6;
+    background: rgba(59, 130, 246, 0.08);
+  }
+  .callout-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .callout-text strong {
+    color: var(--text-primary, #111214);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.92rem;
+  }
+  .callout-text p {
+    color: var(--text-secondary, #4B5563);
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  /* Seção de Vídeo do YouTube / Bastidores de Bancada */
+  .article-video-showcase {
+    background: #FFFFFF;
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: var(--radius-lg, 20px);
+    padding: 24px 22px;
+    margin: 36px 0;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.05));
+  }
+  .video-showcase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .video-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-primary, #111214);
+    letter-spacing: 0.05em;
+  }
+  .pulse-rec-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #EF4444;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    animation: recPulse 1.8s infinite;
+  }
+  @keyframes recPulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(239, 68, 68, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  }
+  .video-duration-pill {
+    background: #F3F4F6;
+    color: var(--text-muted, #6B7280);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill, 999px);
+  }
+
+  /* Player Wrapper */
+  .video-player-wrapper {
+    margin-bottom: 18px;
+  }
+  .video-iframe-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000000;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+  .video-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .video-hud-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-secondary, #FAFAFA);
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+  }
+  .hud-label {
+    color: var(--text-muted, #6B7280);
+    font-weight: 600;
+  }
+  .hud-value {
+    color: var(--text-primary, #111214);
+    font-weight: 700;
+  }
+  .video-demo-desc {
+    color: var(--text-secondary, #4B5563);
+    line-height: 1.55;
+    margin-bottom: 16px;
+    font-size: 0.94rem;
+  }
+  .steps-list-title {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted, #6B7280);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+  .steps-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .step-chip-item {
+    background: var(--bg-secondary, #FAFAFA);
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.83rem;
+    color: var(--text-primary, #111214);
+  }
+  .step-chip-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary, #29A251);
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 0.72rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .video-cta-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 14px;
+  }
+
+  /* Internal links box */
+  .article-internal-links-box {
+    background: var(--bg-secondary, #FAFAFA);
+    border: 1px solid var(--border, #E5E7EB);
+    border-radius: var(--radius-md, 16px);
+    padding: 24px 22px;
+    margin: 36px 0;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(15, 23, 42, 0.05));
+  }
+  .internal-box-title {
+    color: var(--text-primary, #111214);
+    margin-bottom: 8px;
+    font-size: 1.15rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+  }
+  .internal-box-text {
+    color: var(--text-secondary, #4B5563);
+    margin-bottom: 16px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .internal-links-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .btn-internal-link {
+    background: #FFFFFF;
+    color: var(--text-primary, #111214);
+    padding: 8px 16px;
+    border-radius: var(--radius-pill, 999px);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border, #E5E7EB);
+  }
+  .btn-internal-link:hover {
+    border-color: rgba(41, 162, 81, 0.4);
+    color: var(--primary, #29A251);
+  }
+  .btn-internal-whatsapp {
+    background: var(--primary, #29A251);
+    color: #FFFFFF;
+    padding: 8px 18px;
+    border-radius: var(--radius-pill, 999px);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+  .btn-internal-whatsapp:hover {
+    background: var(--primary-dark, #1A532D);
+  }
+
+  /* FAQ */
+  .article-faq-section {
+    margin-top: 36px;
+    border-top: 1px solid var(--border, #E5E7EB);
+    padding-top: 28px;
+  }
+  .faq-section-title {
+    color: var(--text-primary, #111214);
+    margin-bottom: 18px;
+    font-size: 1.28rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+  }
+</style>
