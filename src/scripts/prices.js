@@ -13,7 +13,7 @@ const CONFIG = {
     "email": "brotherstechcelloficial@gmail.com",
     "instagram": "brothers_techcell",
     "instagramUrl": "https://www.instagram.com/brothers_techcell/",
-    "cnpj": "",
+    "cnpj": "67.801.378/0001-65",
     "city": "Manaus",
     "address": "Manaus - AM (Atendimento Delivery)"
   },

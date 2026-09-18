@@ -7,7 +7,9 @@ export const SITE_URL = import.meta.env.SITE_URL || 'https://brotherstechcell.ve
 
 export const BUSINESS_INFO = {
   name: 'Brothers Techcell',
-  legalName: 'Brothers Techcell - Assistência Especializada em iPhone',
+  legalName: 'BROTHERSTECHCELL MANUTENCOES LTDA',
+  cnpj: '67.801.378/0001-65',
+  cnpjRaw: '67801378000165',
   headline: 'Assistência Técnica de iPhone Delivery em Manaus | Nós Vamos Até Você',
   shortDescription: 'Assistência técnica especializada em iPhone com atendimento delivery em Manaus. Troca de tela, bateria, tampa traseira e reparos com garantia.',
   phone: '(92) 99395-1193',

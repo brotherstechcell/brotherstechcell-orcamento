@@ -10,9 +10,19 @@ interface Props {
   canonicalPath: string;
   ogDescription?: string;
   extraJsonLd?: string[];
+  noindex?: boolean;
+  ogType?: string;
 }
 
-const { title, description, canonicalPath, ogDescription, extraJsonLd = [] } = Astro.props;
+const {
+  title,
+  description,
+  canonicalPath,
+  ogDescription,
+  extraJsonLd = [],
+  noindex = false,
+  ogType = 'website',
+} = Astro.props;
 const siteUrl = 'https://brotherstechcell.vercel.app';
 const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
 const ogImageUrl = new URL('/og-image.png', siteUrl).toString();
@@ -27,6 +37,8 @@ const baseLocalBusinessSchema = JSON.stringify({
   "@type": "LocalBusiness",
   "@id": `${siteUrl}/#organization`,
   "name": "Brothers Techcell - Assistência Técnica Apple Delivery Manaus",
+  "legalName": "BROTHERSTECHCELL MANUTENCOES LTDA",
+  "taxID": "67.801.378/0001-65",
   "url": siteUrl,
   "logo": new URL(logoIcon.src, siteUrl).toString(),
   "image": ogImageUrl,
@@ -86,7 +98,11 @@ const baseLocalBusinessSchema = JSON.stringify({
 
   <title>{title}</title>
   <meta name="description" content={description}>
-  <meta name="robots" content="follow, index">
+  {noindex ? (
+    <meta name="robots" content="noindex, nofollow" />
+  ) : (
+    <meta name="robots" content="follow, index" />
+  )}
   <link rel="canonical" href={canonicalUrl}>
 
   <!-- Geo Localização Meta Tags -->
@@ -99,7 +115,7 @@ const baseLocalBusinessSchema = JSON.stringify({
   <link rel="apple-touch-icon" href={logoIcon.src}>
 
   <meta property="og:locale" content="pt_BR">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content={ogType}>
   <meta property="og:url" content={canonicalUrl}>
   <meta property="og:title" content={title}>
   <meta property="og:description" content={socialDescription}>

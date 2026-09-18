@@ -5,6 +5,8 @@ import { BUSINESS_INFO, getWhatsAppLink } from '../data/siteConfig';
 ---
 <!-- Rodapé Principal Brothers Techcell (Design Original com Catálogo de Links SEO) -->
 <footer class="footer-main" itemscope itemtype="https://schema.org/LocalBusiness">
+  <meta itemprop="legalName" content={BUSINESS_INFO.legalName} />
+  <meta itemprop="taxID" content={BUSINESS_INFO.cnpj} />
   <!-- Banner Superior de Ação Rápida -->
   <div class="container footer-cta-banner">
     <div class="footer-cta-banner-inner">
@@ -130,7 +132,58 @@ import { BUSINESS_INFO, getWhatsAppLink } from '../data/siteConfig';
   </div>
 
   <div class="container footer-bottom type-caption">
-    <span>2026 © Todos os Direitos Reservados Brothers Techcell.</span>
-    <span>Assistência Técnica Apple Delivery recomendada em Manaus - AM.</span>
+    <div class="footer-legal-info">
+      <span class="footer-company-name" itemprop="legalName"><strong>{BUSINESS_INFO.legalName}</strong></span>
+      <span class="footer-divider" aria-hidden="true">•</span>
+      <span class="footer-company-cnpj">CNPJ: <span itemprop="taxID">{BUSINESS_INFO.cnpj}</span></span>
+      <span class="footer-divider" aria-hidden="true">•</span>
+      <span class="footer-copy">2026 © Todos os Direitos Reservados.</span>
+    </div>
+    <div class="footer-bottom-badge">
+      <span>Assistência Técnica Apple Delivery recomendada em Manaus - AM.</span>
+    </div>
   </div>
 </footer>
+
+<style>
+  .footer-legal-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    font-size: 0.8125rem;
+  }
+  .footer-company-name {
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .footer-company-cnpj {
+    color: rgba(255, 255, 255, 0.72);
+    font-weight: 500;
+  }
+  .footer-copy {
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .footer-divider {
+    color: rgba(255, 255, 255, 0.25);
+    user-select: none;
+  }
+  .footer-bottom-badge {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.8125rem;
+  }
+  @media (max-width: 768px) {
+    .footer-legal-info {
+      flex-direction: column;
+      text-align: center;
+      gap: 6px;
+    }
+    .footer-divider {
+      display: none;
+    }
+    .footer-bottom-badge {
+      text-align: center;
+    }
+  }
+</style>
